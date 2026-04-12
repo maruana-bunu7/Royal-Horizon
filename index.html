@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f4f4f4" media="(prefers-color-scheme: light)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Royal Horizon Workspace</title>
 <link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -337,8 +341,8 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
         <textarea class="profile-input profile-textarea" id="profileBio" placeholder="A few words about yourself…"></textarea>
       </div>
       <div class="profile-field">
-        <label class="profile-label">Anthropic API Key <span style="opacity:.45;font-size:10px;">(optional)</span></label>
-        <input class="profile-input" type="password" id="profileApiKey" placeholder="sk-ant-…">
+        <label class="profile-label">Gemini API Key <span style="opacity:.45;font-size:10px;">(optional)</span></label>
+        <input class="profile-input" type="password" id="profileApiKey" placeholder="AIza…">
       </div>
       <div class="profile-field">
         <label class="profile-label">Member Since</label>
@@ -871,21 +875,30 @@ async function sendAI() {
   btn.disabled = true; btn.textContent = '…'; resp.textContent = 'Thinking…';
   const ctx = `${cachedProjects.length} project(s): ${cachedProjects.map(p=>`"${p.title}" (${p.status}, ${p.priority}${p.due?', due '+p.due:''})`).join('; ')||'none'}.`;
   const apiKey = (currentProfile||{}).apiKey||'';
+  if (!apiKey) {
+    resp.textContent = 'Add your Gemini API key in My Profile to enable the AI assistant.';
+    btn.disabled = false; btn.textContent = '→'; inp.value = '';
+    return;
+  }
   try {
-    const headers = { 'Content-Type': 'application/json' };
-    if (apiKey) headers['x-api-key'] = apiKey;
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST', headers,
-      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000,
-        system: 'You are a concise workspace assistant. Context: '+ctx,
-        messages: [{ role:'user', content:prompt }] })
-    });
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: 'You are a concise workspace assistant. Context: '+ctx }] },
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          generationConfig: { maxOutputTokens: 1000 }
+        })
+      }
+    );
     const data = await res.json();
     if (data.error) throw new Error(data.error.message);
-    resp.textContent = data.content?.map(b=>b.text||'').join('')||'No response.';
+    resp.textContent = data.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('')||'No response.';
   } catch(e) {
-    resp.textContent = e.message.includes('401')||e.message.includes('auth')
-      ? 'Add your Anthropic API key in My Profile to use AI outside claude.ai.'
+    resp.textContent = e.message.includes('API_KEY')||e.message.includes('403')||e.message.includes('401')
+      ? 'Invalid API key. Check the key entered in My Profile.'
       : 'Could not reach the AI. Check your connection.';
   }
   btn.disabled = false; btn.textContent = '→'; inp.value = '';
