@@ -21,12 +21,10 @@ body.theme-login{background:var(--soft-black);color:#e0e0e0;}
 body.theme-signup{background:var(--soft-white);color:#1a1a1a;}
 h1,h2,h3,.btn-main,.btn-submit,.modal-btn,.proj-detail-title{font-family:'Playfair Display',Georgia,serif;letter-spacing:.5px;}
 ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:rgba(128,128,128,.3);border-radius:3px;}
-/* LOADING */
 .loading-overlay{position:fixed;inset:0;background:#111;z-index:2000;display:flex;align-items:center;justify-content:center;transition:opacity .5s;}
 .loading-overlay.hidden{opacity:0;pointer-events:none;}
 @keyframes pulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.2);opacity:1}}
 .loading-spinner{font-size:38px;animation:pulse 1.6s ease-in-out infinite;}
-/* PORTAL */
 .container{width:100%;max-width:420px;text-align:center;position:relative;z-index:10;}
 .selection-screen{display:flex;gap:20px;justify-content:center;transition:.3s ease,transform var(--ui-speed) var(--ui-curve);}
 .selection-screen.fade-out{opacity:0;transform:scale(.97);pointer-events:none;}
@@ -44,23 +42,20 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .btn-submit:active{transform:scale(.98);}
 .theme-login .btn-submit{background:#f4f4f4;color:#121212;}.theme-signup .btn-submit{background:#121212;color:#f4f4f4;}
 .error-msg{color:#e05252;font-size:12px;margin-bottom:12px;min-height:14px;text-align:left;}
-/* DASHBOARD */
 .dashboard-wrapper{position:fixed;top:0;left:0;width:100vw;height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:100;opacity:0;transition:.8s var(--slide-curve);}
 .header-row{position:absolute;top:40px;width:85%;display:flex;justify-content:space-between;align-items:center;}
 .header-right{display:flex;gap:14px;align-items:center;}
 .avatar-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;border:none;font-family:'Playfair Display',serif;flex-shrink:0;color:#fff;}
 .theme-toggle{cursor:pointer;font-size:22px;opacity:.5;transition:.2s;}.theme-toggle:hover{opacity:1;}
-/* CAROUSEL */
 .carousel-container{width:100%;height:75vh;display:flex;align-items:center;overflow:visible;padding:0 10%;}
 .workspace-track{display:flex;gap:30px;transition:transform var(--slide-speed) var(--slide-curve);will-change:transform;}
 .workspace-card{min-width:80vw;height:65vh;background:rgba(128,128,128,.08);backdrop-filter:blur(15px);border:1px solid rgba(128,128,128,.15);border-radius:40px;padding:35px;opacity:.15;transform:scale(.92);transition:opacity var(--slide-speed) var(--slide-curve),transform var(--slide-speed) var(--slide-curve);display:flex;flex-direction:column;}
 .workspace-card.active{opacity:1;transform:scale(1);background:rgba(128,128,128,.12);}
-/* OVERVIEW */
-.overview-stats{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:20px;}
+.overview-stats{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:16px;}
 .stat-box{background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.12);border-radius:18px;padding:16px;}
 .stat-number{font-family:'Playfair Display';font-size:32px;font-weight:700;}
 .stat-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;margin-top:3px;}
-.section-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;margin-top:18px;margin-bottom:9px;}
+.section-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;margin-top:14px;margin-bottom:9px;}
 .recent-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(128,128,128,.1);font-size:13px;}
 .recent-item:last-child{border-bottom:none;}
 .recent-tag{font-size:10px;opacity:.4;text-transform:uppercase;letter-spacing:1px;}
@@ -70,40 +65,42 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .ai-input{flex:1;font-size:13px;padding:9px 13px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.15);border-radius:12px;color:inherit;}
 .ai-send-btn{width:34px;height:34px;border-radius:11px;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);cursor:pointer;font-size:15px;color:inherit;transition:.2s;flex-shrink:0;}
 .ai-send-btn:hover{background:rgba(128,128,128,.25);}.ai-send-btn:disabled{opacity:.3;cursor:not-allowed;}
-/* PROJECTS CARD */
 .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
 .add-btn{width:32px;height:32px;border-radius:50%;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:19px;opacity:.7;transition:.2s;color:inherit;}
 .add-btn:hover{opacity:1;}
-.search-filter-row{display:flex;gap:7px;margin-bottom:12px;}
-.search-input{flex:1;font-size:12px;padding:8px 12px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.12);border-radius:11px;color:inherit;}
-.search-input::placeholder{opacity:.4;}
-.filter-sel{font-size:11px;padding:8px 7px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.12);border-radius:11px;color:inherit;cursor:pointer;max-width:88px;}
-.projects-list-container{flex:1;display:flex;flex-direction:column;gap:9px;overflow-y:auto;}
-.project-bar-item{width:100%;min-height:64px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.12);border-radius:16px;padding:0 12px 0 10px;display:flex;align-items:center;gap:9px;transition:.25s var(--ui-curve);}
-.project-bar-item.dragging{opacity:.45;transform:scale(.97);}
-.project-bar-item.drag-over{border-color:rgba(128,128,128,.45);background:rgba(128,128,128,.18);}
-.drag-handle{opacity:.18;font-size:15px;flex-shrink:0;cursor:grab;padding:3px;user-select:none;}
-.project-info{display:flex;flex-direction:column;text-align:left;flex:1;min-width:0;cursor:pointer;}
-.project-title{font-family:'Playfair Display';font-weight:600;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.project-meta{display:flex;gap:5px;align-items:center;margin-top:3px;flex-wrap:wrap;}
-.project-tag{font-size:9px;opacity:.4;text-transform:uppercase;letter-spacing:1px;}
-.priority-badge{font-size:9px;font-weight:600;padding:2px 6px;border-radius:20px;text-transform:uppercase;letter-spacing:.8px;}
-.p-low{background:rgba(80,180,120,.15);color:#50b478;}.p-medium{background:rgba(200,160,60,.15);color:#c8a03c;}
-.p-high{background:rgba(200,100,60,.15);color:#c8643c;}.p-urgent{background:rgba(200,60,60,.2);color:#c83c3c;}
-.due-label{font-size:9px;opacity:.5;}.due-label.overdue{color:#e05252;opacity:1;}
-.project-actions{display:flex;gap:5px;flex-shrink:0;}
-.proj-btn{width:28px;height:28px;border-radius:8px;border:none;background:rgba(128,128,128,.1);cursor:pointer;font-size:12px;opacity:.5;transition:.2s;display:flex;align-items:center;justify-content:center;color:inherit;}
-.proj-btn:hover{opacity:1;background:rgba(128,128,128,.2);}.proj-btn.del:hover{background:rgba(220,80,80,.15);color:#e05252;}
-.empty-state{text-align:center;opacity:.3;margin:auto;}
-.empty-state p{font-size:12px;margin-top:7px;line-height:1.6;}
-
-/* SALES LOG */
+/* TASKS SLIDE */
+.task-quick-add{display:flex;gap:8px;margin-bottom:11px;}
+.task-quick-input{flex:1;font-size:13px;padding:9px 13px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.14);border-radius:12px;color:inherit;}
+.task-quick-input::placeholder{opacity:.4;}
+.task-quick-btn{width:34px;height:34px;border-radius:11px;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);cursor:pointer;font-size:18px;color:inherit;transition:.2s;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.task-quick-btn:hover{background:rgba(128,128,128,.28);}
+.task-filter-row{display:flex;gap:6px;margin-bottom:11px;}
+.task-filter-pill{padding:5px 13px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid rgba(128,128,128,.18);background:transparent;cursor:pointer;color:inherit;transition:.2s;opacity:.45;letter-spacing:.5px;}
+.task-filter-pill.active{opacity:1;background:rgba(128,128,128,.2);border-color:rgba(128,128,128,.35);}
+.tasks-scroll{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:7px;}
+.task2-item{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.11);border-radius:14px;transition:.25s var(--ui-curve);}
+.task2-item.done2{opacity:.45;border-color:rgba(128,128,128,.06);}
+.task2-check{width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(128,128,128,.4);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;margin-top:1px;transition:.2s;}
+.task2-item.done2 .task2-check{background:rgba(128,128,128,.35);border-color:transparent;}
+.task2-text{flex:1;min-width:0;font-size:14px;line-height:1.4;}
+.task2-item.done2 .task2-text{text-decoration:line-through;}
+.task2-note{font-size:11px;opacity:.42;margin-top:3px;}
+.task2-del{opacity:.22;cursor:pointer;font-size:12px;background:none;border:none;color:inherit;transition:.2s;padding:2px;flex-shrink:0;margin-top:1px;}
+.task2-del:hover{opacity:.85;color:#e05252;}
+.tasks-footer{padding-top:10px;border-top:1px solid rgba(128,128,128,.1);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+.tasks-footer-count{font-size:11px;opacity:.4;letter-spacing:.4px;}
+.clear-done-btn{font-size:11px;opacity:.35;background:none;border:none;color:inherit;cursor:pointer;transition:.2s;padding:3px 8px;border-radius:8px;}
+.clear-done-btn:hover{opacity:.8;background:rgba(128,128,128,.1);}
+/* SALES */
 .sales-form{display:flex;flex-direction:column;gap:7px;margin-bottom:12px;}
 .sales-input-row{display:flex;gap:7px;}
 .sales-input{flex:1;font-size:12px;padding:8px 11px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.12);border-radius:11px;color:inherit;}
 .sales-input::placeholder{opacity:.4;}
-.sales-add-btn{padding:8px 16px;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);border-radius:11px;cursor:pointer;font-size:12px;font-weight:600;color:inherit;transition:.2s;white-space:nowrap;}
+.sales-btn-row{display:flex;gap:7px;}
+.sales-add-btn{flex:1;padding:8px 16px;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);border-radius:11px;cursor:pointer;font-size:12px;font-weight:600;color:inherit;transition:.2s;white-space:nowrap;}
 .sales-add-btn:hover{background:rgba(128,128,128,.25);}
+.sales-report-btn{padding:8px 14px;background:rgba(90,160,120,.12);border:1px solid rgba(90,160,120,.25);border-radius:11px;cursor:pointer;font-size:11px;font-weight:600;color:inherit;transition:.2s;white-space:nowrap;letter-spacing:.3px;}
+.sales-report-btn:hover{background:rgba(90,160,120,.22);}
 .sales-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:7px;}
 .sale-item{background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;padding:10px 12px;display:flex;align-items:flex-start;gap:9px;}
 .sale-num{font-family:'Playfair Display';font-size:18px;font-weight:700;opacity:.3;min-width:22px;line-height:1.2;}
@@ -116,19 +113,14 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .summary-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;}
 .summary-total{font-family:'Playfair Display';font-size:22px;font-weight:700;}
 .summary-count{font-size:10px;opacity:.4;margin-top:1px;}
-/* ARCHIVE SALES */
-.arch-sales-scroll{display:flex;gap:11px;overflow-x:auto;padding-bottom:6px;margin-bottom:4px;}
+/* ARCHIVE */
+.arch-sales-scroll{display:flex;gap:11px;overflow-x:auto;padding-bottom:6px;}
 .arch-sales-scroll::-webkit-scrollbar{height:2px;}
-.arch-day-card{min-width:140px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.12);border-radius:16px;padding:13px;cursor:pointer;transition:.2s;flex-shrink:0;}
-.arch-day-card:hover{background:rgba(128,128,128,.15);}
+.arch-day-card{min-width:150px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.12);border-radius:16px;padding:13px;cursor:pointer;transition:.2s;flex-shrink:0;}
+.arch-day-card:hover{background:rgba(128,128,128,.18);}
 .arch-day-date{font-family:'Playfair Display';font-size:13px;font-weight:600;}
 .arch-day-meta{font-size:10px;opacity:.4;margin-top:3px;}
-.arch-day-total{font-size:13px;font-weight:600;margin-top:6px;}
-.arch-sales-detail{background:rgba(128,128,128,.05);border:1px solid rgba(128,128,128,.1);border-radius:14px;padding:12px;margin-top:8px;display:none;}
-.arch-sales-detail.open{display:block;}
-.arch-sale-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(128,128,128,.08);font-size:12px;}
-.arch-sale-row:last-child{border-bottom:none;}
-
+.arch-day-total{font-size:12px;font-weight:600;margin-top:6px;opacity:.7;}
 /* DOCK */
 .floating-dock{position:absolute;bottom:40px;height:70px;padding:0 20px;background:rgba(128,128,128,.1);backdrop-filter:blur(25px);border-radius:24px;border:1px solid rgba(128,128,128,.2);display:flex;align-items:center;gap:16px;box-shadow:0 20px 40px rgba(0,0,0,.15);}
 .dock-item{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.3;transition:.3s;font-size:19px;}
@@ -141,54 +133,32 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .back-btn{width:34px;height:34px;border-radius:50%;background:rgba(128,128,128,.1);border:1px solid rgba(128,128,128,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;transition:.2s;flex-shrink:0;color:inherit;}
 .back-btn:hover{background:rgba(128,128,128,.2);}
 .overlay-body{flex:1;overflow-y:auto;padding:0 28px 40px;}
-/* PROJECT DETAIL */
-.proj-detail-title{font-size:24px;font-weight:700;}
-.detail-meta-row{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap;}
-.detail-section{margin-top:22px;}
-.detail-section-title{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;margin-bottom:10px;}
-.task-item{display:flex;align-items:center;gap:11px;padding:11px 14px;background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:13px;margin-bottom:7px;}
-.task-check{width:19px;height:19px;border-radius:5px;border:1px solid rgba(128,128,128,.4);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;transition:.2s;}
-.task-item.done .task-check{background:rgba(128,128,128,.35);border-color:transparent;}
-.task-item.done .task-text{opacity:.4;text-decoration:line-through;}
-.task-text{flex:1;font-size:14px;}
-.task-del{opacity:.3;cursor:pointer;font-size:12px;background:none;border:none;color:inherit;transition:.2s;}
-.task-del:hover{opacity:.8;color:#e05252;}
-.add-task-row{display:flex;gap:9px;margin-top:9px;}
-.add-task-input{flex:1;font-size:14px;padding:10px 14px;background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.12);border-radius:12px;color:inherit;}
-.add-task-input::placeholder{opacity:.4;}
-.add-task-btn{padding:10px 16px;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);border-radius:12px;cursor:pointer;font-size:12px;font-weight:600;color:inherit;transition:.2s;}
-.add-task-btn:hover{background:rgba(128,128,128,.25);}
-.notes-area{width:100%;resize:none;font-size:14px;padding:13px 14px;background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.12);border-radius:14px;color:inherit;line-height:1.6;min-height:85px;}
-.notes-area::placeholder{opacity:.4;}
-.collab-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:9px;}
-.collab-tag{display:flex;align-items:center;gap:5px;padding:4px 11px;background:rgba(128,128,128,.1);border:1px solid rgba(128,128,128,.15);border-radius:20px;font-size:12px;}
-.collab-remove{opacity:.4;cursor:pointer;font-size:11px;background:none;border:none;color:inherit;}.collab-remove:hover{opacity:1;}
-.collab-add-row{display:flex;gap:7px;}
-.collab-input{flex:1;font-size:13px;padding:8px 13px;background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.12);border-radius:11px;color:inherit;}
-.collab-input::placeholder{opacity:.4;}
-.collab-add-btn{padding:8px 13px;background:rgba(128,128,128,.12);border:1px solid rgba(128,128,128,.15);border-radius:11px;cursor:pointer;font-size:17px;color:inherit;transition:.2s;}
-.collab-add-btn:hover{background:rgba(128,128,128,.22);}
 /* PROFILE */
 .profile-avatar-large{width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;font-family:'Playfair Display';margin:0 auto 22px;border:2px solid rgba(128,128,128,.3);color:#fff;}
-.profile-field{margin-bottom:18px;}
+.profile-section-divider{border:none;border-top:1px solid rgba(128,128,128,.15);margin:20px 0;}
+.profile-section-label{font-size:10px;text-transform:uppercase;letter-spacing:1.8px;opacity:.35;margin-bottom:14px;font-weight:600;}
+.profile-field{margin-bottom:16px;}
 .profile-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;opacity:.5;margin-bottom:7px;display:block;}
 .profile-input{width:100%;font-size:14px;padding:11px 14px;background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.12);border-radius:13px;color:inherit;transition:.2s;}
-.profile-input:focus{border-color:rgba(128,128,128,.4);}
-.profile-input[readonly]{opacity:.45;cursor:default;}
+.profile-input:focus:not([readonly]){border-color:rgba(128,128,128,.4);}
+.profile-input[readonly]{opacity:.42;cursor:default;}
 .profile-textarea{resize:none;min-height:75px;line-height:1.6;}
 .color-picker{display:flex;gap:9px;flex-wrap:wrap;}
 .color-swatch{width:32px;height:32px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:.2s;}
 .color-swatch.selected{border-color:rgba(255,255,255,.85);transform:scale(1.12);}
 body.theme-signup .color-swatch.selected{border-color:rgba(0,0,0,.5);}
-.profile-save-btn{width:100%;padding:13px;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:15px;color:inherit;transition:.2s;margin-top:6px;}
-.profile-save-btn:hover{background:rgba(128,128,128,.25);}.profile-save-btn:active{transform:scale(.98);}
+.profile-edit-btn{padding:9px 20px;background:rgba(128,128,128,.12);border:1px solid rgba(128,128,128,.2);border-radius:20px;cursor:pointer;font-size:13px;font-weight:600;color:inherit;transition:.2s;margin-left:auto;white-space:nowrap;}
+.profile-edit-btn:hover{background:rgba(128,128,128,.22);}
+.profile-edit-btn.active{background:rgba(220,100,80,.1);border-color:rgba(220,100,80,.25);color:#e05252;}
+.profile-save-btn{width:100%;padding:13px;background:rgba(90,160,120,.15);border:1px solid rgba(90,160,120,.3);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:15px;color:inherit;transition:.2s;margin-top:6px;}
+.profile-save-btn:hover{background:rgba(90,160,120,.25);}.profile-save-btn:active{transform:scale(.98);}
 .signout-profile-btn{width:100%;padding:13px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.15);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:15px;color:inherit;transition:.2s;margin-top:10px;}
 .signout-profile-btn:hover{background:rgba(128,128,128,.18);}
 .danger-zone{margin-top:12px;padding-top:22px;border-top:1px solid rgba(220,80,80,.2);}
 .danger-title{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#e05252;opacity:.7;margin-bottom:12px;}
 .delete-account-btn{width:100%;padding:12px;background:rgba(220,80,80,.08);border:1px solid rgba(220,80,80,.2);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:14px;color:#e05252;transition:.2s;}
 .delete-account-btn:hover{background:rgba(220,80,80,.15);}
-/* MODAL */
+/* MODALS */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(10px);z-index:500;display:none;align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
 .modal-card{border-radius:22px;padding:30px;width:90%;max-width:360px;}
@@ -205,10 +175,17 @@ select.modal-input{cursor:pointer;}
 .modal-btn.confirm{background:rgba(200,200,200,.9);color:#121212;}
 .modal-btn.danger{background:rgba(220,80,80,.8);color:#fff;}
 .modal-btn.cancel{background:rgba(128,128,128,.15);color:inherit;}
+/* REPORT */
+.report-pre{font-family:'Courier New',Courier,monospace;font-size:12px;line-height:1.75;white-space:pre-wrap;background:rgba(128,128,128,.06);border:1px solid rgba(128,128,128,.12);border-radius:16px;padding:18px;overflow-x:auto;word-break:break-word;}
 /* TOAST */
 .toast{position:fixed;bottom:125px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(30,30,30,.95);color:#e0e0e0;padding:10px 20px;border-radius:18px;font-size:13px;opacity:0;transition:.3s;z-index:900;pointer-events:none;white-space:nowrap;}
 body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+/* DAY DETAIL OVERLAY */
+.day-detail-overlay{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;transition:.4s var(--ui-curve);transform:translateY(100%);opacity:0;pointer-events:none;overflow:hidden;}
+.day-detail-overlay.open{transform:translateY(0);opacity:1;pointer-events:all;}
+/* OVERVIEW */
+.overview-sales-box{background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.12);border-radius:16px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;}
 </style>
 </head>
 <body>
@@ -262,50 +239,57 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
   </div>
   <div class="carousel-container">
     <div class="workspace-track" id="workspaceTrack">
+
+      <!-- SLIDE 0: OVERVIEW -->
       <div class="workspace-card active">
         <h2>Overview</h2>
         <div class="overview-stats">
-          <div class="stat-box"><div class="stat-number" id="statTotal">0</div><div class="stat-label">Total Projects</div></div>
-          <div class="stat-box"><div class="stat-number" id="statActive">0</div><div class="stat-label">Active</div></div>
+          <div class="stat-box"><div class="stat-number" id="statTotal">0</div><div class="stat-label">Total Tasks</div></div>
+          <div class="stat-box"><div class="stat-number" id="statActive">0</div><div class="stat-label">Pending</div></div>
         </div>
-        <div class="section-lbl">Recent Activity</div>
+        <div class="section-lbl">Today's Sales</div>
+        <div class="overview-sales-box">
+          <div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;">Revenue</div>
+            <div style="font-size:10px;opacity:.4;margin-top:2px;" id="overviewSalesCount">0 transactions</div>
+          </div>
+          <div style="font-family:'Playfair Display';font-size:20px;font-weight:700;" id="overviewSalesTotal">Ksh 0</div>
+        </div>
+        <div class="section-lbl">Recent Tasks</div>
         <div id="recentList"></div>
         <div class="ai-area">
           <div class="section-lbl">AI Assistant</div>
           <div class="ai-response" id="aiResponse">Ask me anything about your workspace…</div>
           <div class="ai-input-row">
-            <input class="ai-input" id="aiInput" placeholder="e.g. What's overdue?" onkeydown="if(event.key==='Enter')sendAI()">
+            <input class="ai-input" id="aiInput" placeholder="e.g. What tasks are pending?" onkeydown="if(event.key==='Enter')sendAI()">
             <button class="ai-send-btn" id="aiSendBtn" onclick="sendAI()">→</button>
           </div>
         </div>
       </div>
+
+      <!-- SLIDE 1: TASKS -->
       <div class="workspace-card">
         <div class="card-header">
-          <h2>Projects</h2>
-          <button class="add-btn" onclick="openAddModal()" title="New project — or press N">+</button>
+          <h2>Tasks</h2>
+          <button class="add-btn" id="clearDoneBtnHeader" onclick="clearDoneTasks()" title="Clear completed">✓</button>
         </div>
-        <div class="search-filter-row">
-          <input class="search-input" id="searchInput" placeholder="🔍  Search…" oninput="renderProjects()">
-          <select class="filter-sel" id="filterPriority" onchange="renderProjects()">
-            <option value="">Priority</option>
-            <option>Low</option><option>Medium</option><option>High</option><option>Urgent</option>
-          </select>
-          <select class="filter-sel" id="filterStatus" onchange="renderProjects()">
-            <option value="">Status</option>
-            <option>Concept Phase</option><option>Active Development</option>
-            <option>Under Review</option><option>On Hold</option>
-          </select>
+        <div class="task-quick-add">
+          <input class="task-quick-input" id="quickTaskInput" placeholder="Add a task or note…" onkeydown="if(event.key==='Enter')addQuickTask()">
+          <button class="task-quick-btn" onclick="addQuickTask()">+</button>
         </div>
-        <div class="projects-list-container" id="projectsList"></div>
+        <div class="task-filter-row">
+          <button class="task-filter-pill active" id="pill-all" onclick="setTaskFilter('all')">All</button>
+          <button class="task-filter-pill" id="pill-pending" onclick="setTaskFilter('pending')">Pending</button>
+          <button class="task-filter-pill" id="pill-done" onclick="setTaskFilter('done')">Done</button>
+        </div>
+        <div class="tasks-scroll" id="tasksList2"></div>
+        <div class="tasks-footer">
+          <span class="tasks-footer-count" id="tasksFooterCount">0 tasks</span>
+          <button class="clear-done-btn" onclick="clearDoneTasks()">Clear done</button>
+        </div>
       </div>
-      <div class="workspace-card">
-        <h2>Archive</h2>
-        <p style="opacity:.4;font-size:12px;margin-top:7px;">Completed projects.</p>
-        <div class="projects-list-container" style="margin-top:16px;" id="archiveList"></div>
-        <div class="section-lbl" style="margin-top:18px;">Sales History</div>
-        <div class="arch-sales-scroll" id="archSalesScroll"></div>
-        <div class="arch-sales-detail" id="archSalesDetail"></div>
-      </div>
+
+      <!-- SLIDE 2: SALES LOG -->
       <div class="workspace-card">
         <div class="card-header">
           <h2>Sales Log</h2>
@@ -321,7 +305,10 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
             <input class="sales-input" id="salePrice" placeholder="Price (Ksh)" type="number" min="0">
             <input class="sales-input" id="saleQty" placeholder="Qty" type="number" min="1" style="max-width:60px;">
           </div>
-          <button class="sales-add-btn" onclick="addSale()">+ Log Sale</button>
+          <div class="sales-btn-row">
+            <button class="sales-add-btn" onclick="addSale()">+ Log Sale</button>
+            <button class="sales-report-btn" onclick="generateSalesReport()">📋 Report</button>
+          </div>
         </div>
         <div class="sales-list" id="salesList"></div>
         <div class="sales-summary">
@@ -332,48 +319,22 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
           <div class="summary-total" id="salesTotalDisplay">Ksh 0</div>
         </div>
       </div>
+
+      <!-- SLIDE 3: ARCHIVE -->
+      <div class="workspace-card">
+        <h2>Archive</h2>
+        <p style="opacity:.4;font-size:12px;margin-top:7px;">Past days' sales records.</p>
+        <div class="section-lbl" style="margin-top:16px;">Sales History</div>
+        <div class="arch-sales-scroll" id="archSalesScroll" style="flex:1;align-content:flex-start;"></div>
+      </div>
+
     </div>
   </div>
   <div class="floating-dock">
     <div class="dock-item active" onclick="moveTrack(0)">✦</div>
-    <div class="dock-item" onclick="moveTrack(1)">▤</div>
-    <div class="dock-item" onclick="moveTrack(2)">⧉</div>
-    <div class="dock-item" onclick="moveTrack(3)">₭</div>
-  </div>
-</div>
-
-<!-- PROJECT DETAIL OVERLAY -->
-<div class="overlay-screen" id="projectDetailOverlay">
-  <div class="overlay-inner">
-    <div class="overlay-header">
-      <button class="back-btn" onclick="closeDetail()">←</button>
-      <div>
-        <div class="proj-detail-title" id="detailTitle"></div>
-        <div class="detail-meta-row" id="detailMeta"></div>
-      </div>
-    </div>
-    <div class="overlay-body">
-      <div class="detail-section">
-        <div class="detail-section-title">Collaborators</div>
-        <div class="collab-tags" id="collabTags"></div>
-        <div class="collab-add-row">
-          <input class="collab-input" id="collabInput" placeholder="Add name or email…" onkeydown="if(event.key==='Enter')addCollab()">
-          <button class="collab-add-btn" onclick="addCollab()">+</button>
-        </div>
-      </div>
-      <div class="detail-section">
-        <div class="detail-section-title">Tasks</div>
-        <div id="taskList"></div>
-        <div class="add-task-row">
-          <input class="add-task-input" id="taskInput" placeholder="New task…" onkeydown="if(event.key==='Enter')addTask()">
-          <button class="add-task-btn" onclick="addTask()">Add</button>
-        </div>
-      </div>
-      <div class="detail-section">
-        <div class="detail-section-title">Notes</div>
-        <textarea class="notes-area" id="notesArea" placeholder="Add notes…" oninput="debouncedSaveNotes()"></textarea>
-      </div>
-    </div>
+    <div class="dock-item" onclick="moveTrack(1)">✓</div>
+    <div class="dock-item" onclick="moveTrack(2)">₭</div>
+    <div class="dock-item" onclick="moveTrack(3)">⧉</div>
   </div>
 </div>
 
@@ -383,38 +344,70 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
     <div class="overlay-header">
       <button class="back-btn" onclick="closeProfile()">←</button>
       <h2 style="font-size:21px;">My Profile</h2>
+      <button class="profile-edit-btn" id="profileEditBtn" onclick="toggleProfileEdit()">✎ Edit</button>
     </div>
     <div class="overlay-body">
       <div class="profile-avatar-large" id="profileAvatarLarge"></div>
-      <div class="profile-field">
+
+      <!-- Avatar colour — only interactive in edit mode -->
+      <div class="profile-field" id="colorPickerSection" style="opacity:.35;pointer-events:none;transition:.3s;">
         <label class="profile-label">Avatar Colour</label>
         <div class="color-picker" id="colorPicker"></div>
       </div>
+
+      <!-- PERSONAL INFO -->
+      <hr class="profile-section-divider">
+      <div class="profile-section-label">Personal</div>
       <div class="profile-field">
         <label class="profile-label">Display Name</label>
-        <input class="profile-input" type="text" id="profileName" placeholder="Your name">
+        <input class="profile-input" type="text" id="profileName" placeholder="Your name" readonly>
       </div>
       <div class="profile-field">
-        <label class="profile-label">Username (cannot change)</label>
+        <label class="profile-label">Username <span style="opacity:.35;font-size:10px;">(cannot be changed)</span></label>
         <input class="profile-input" type="text" id="profileUsername" readonly>
       </div>
       <div class="profile-field">
-        <label class="profile-label">Email (cannot change)</label>
+        <label class="profile-label">Email <span style="opacity:.35;font-size:10px;">(cannot be changed)</span></label>
         <input class="profile-input" type="email" id="profileEmail" readonly>
       </div>
       <div class="profile-field">
         <label class="profile-label">Bio</label>
-        <textarea class="profile-input profile-textarea" id="profileBio" placeholder="A few words about yourself…"></textarea>
+        <textarea class="profile-input profile-textarea" id="profileBio" placeholder="A few words about yourself…" readonly></textarea>
+      </div>
+
+      <!-- WORK INFO -->
+      <hr class="profile-section-divider">
+      <div class="profile-section-label">Work Details</div>
+      <div class="profile-field">
+        <label class="profile-label">Name of Outlet</label>
+        <input class="profile-input" type="text" id="profileOutlet" placeholder="e.g. Nairobi Junction Mall" readonly>
       </div>
       <div class="profile-field">
-        <label class="profile-label">Gemini API Key <span style="opacity:.45;font-size:10px;">(optional)</span></label>
-        <input class="profile-input" type="password" id="profileApiKey" placeholder="AIza…">
+        <label class="profile-label">Official Names</label>
+        <input class="profile-input" type="text" id="profileOfficialNames" placeholder="Full official names" readonly>
+      </div>
+      <div class="profile-field">
+        <label class="profile-label">Brand</label>
+        <input class="profile-input" type="text" id="profileBrand" placeholder="e.g. Samsung, Tecno…" readonly>
+      </div>
+      <div class="profile-field">
+        <label class="profile-label">Branch Target (Ksh)</label>
+        <input class="profile-input" type="number" id="profileBranchTarget" placeholder="e.g. 150000" min="0" readonly>
+      </div>
+
+      <!-- SETTINGS -->
+      <hr class="profile-section-divider">
+      <div class="profile-section-label">Settings</div>
+      <div class="profile-field">
+        <label class="profile-label">Gemini API Key <span style="opacity:.45;font-size:10px;">(optional — for AI)</span></label>
+        <input class="profile-input" type="password" id="profileApiKey" placeholder="AIza…" readonly>
       </div>
       <div class="profile-field">
         <label class="profile-label">Member Since</label>
         <input class="profile-input" type="text" id="profileMemberSince" readonly>
       </div>
-      <button class="profile-save-btn" onclick="saveProfile()">Save Changes</button>
+
+      <button class="profile-save-btn" id="profileSaveBtn" onclick="saveProfile()" style="display:none;">Save Changes</button>
       <button class="signout-profile-btn" onclick="handleLogout()">Sign Out</button>
       <div class="danger-zone">
         <div class="danger-title">Danger Zone</div>
@@ -424,24 +417,34 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
   </div>
 </div>
 
-<!-- PROJECT MODAL -->
-<div class="modal-overlay" id="projectModal">
-  <div class="modal-card">
-    <h3 id="modalTitle">New Project</h3>
-    <input class="modal-input" id="modalName" placeholder="Project name…" maxlength="50">
-    <select class="modal-input" id="modalStatus">
-      <option>Concept Phase</option><option>Active Development</option>
-      <option>Under Review</option><option>On Hold</option><option>Completed</option>
-    </select>
-    <select class="modal-input" id="modalPriority">
-      <option value="Medium">Medium Priority</option><option value="Low">Low Priority</option>
-      <option value="High">High Priority</option><option value="Urgent">Urgent</option>
-    </select>
-    <input class="modal-input" type="date" id="modalDue">
-    <div class="modal-actions">
-      <button class="modal-btn cancel" onclick="closeModal('projectModal')">Cancel</button>
-      <button class="modal-btn confirm" id="modalConfirmBtn" onclick="saveProject()">Create</button>
+<!-- REPORT OVERLAY -->
+<div class="overlay-screen" id="reportOverlay">
+  <div class="overlay-inner">
+    <div class="overlay-header">
+      <button class="back-btn" onclick="closeReportOverlay()">←</button>
+      <h2 style="font-size:20px;">Daily Sales Report</h2>
     </div>
+    <div class="overlay-body">
+      <pre class="report-pre" id="reportText"></pre>
+      <div style="display:flex;gap:10px;margin-top:14px;">
+        <button onclick="copyReport()" style="flex:1;padding:13px;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:14px;color:inherit;transition:.2s;" onmouseover="this.style.background='rgba(128,128,128,.25)'" onmouseout="this.style.background='rgba(128,128,128,.15)'">Copy Report</button>
+        <button onclick="shareReport()" style="flex:1;padding:13px;background:rgba(90,160,120,.12);border:1px solid rgba(90,160,120,.3);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:14px;color:inherit;transition:.2s;" onmouseover="this.style.background='rgba(90,160,120,.22)'" onmouseout="this.style.background='rgba(90,160,120,.12)'">Share ↗</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DAY DETAIL OVERLAY -->
+<div class="day-detail-overlay" id="dayDetailOverlay">
+  <div style="display:flex;flex-direction:column;height:100%;">
+    <div style="display:flex;align-items:center;gap:13px;padding:50px 28px 18px;flex-shrink:0;">
+      <button class="back-btn" onclick="closeDayDetail()">←</button>
+      <div>
+        <div style="font-family:'Playfair Display';font-size:20px;font-weight:700;" id="dayDetailTitle"></div>
+        <div style="font-size:11px;opacity:.4;margin-top:3px;" id="dayDetailSubtitle"></div>
+      </div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:0 28px 40px;" id="dayDetailBody"></div>
   </div>
 </div>
 
@@ -459,13 +462,11 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 
 <div class="toast" id="toast"></div>
 
-<!-- FIREBASE SDKs -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
 <script>
-// ── FIREBASE INIT
 const firebaseConfig = {
   apiKey: "AIzaSyAaN87Ce6H5vyzTctlUocJvMAcJqPnW6zA",
   authDomain: "royal-horizon.firebaseapp.com",
@@ -479,32 +480,36 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db   = firebase.database();
 
-// ── CONSTANTS
 const AVATAR_COLORS = ['#8B7355','#6B8E7F','#7B6B8E','#8E7B6B','#5E8E8E','#8E6B7B','#6B7B8E','#7B8E6B'];
-const PC = { Low:'p-low', Medium:'p-medium', High:'p-high', Urgent:'p-urgent' };
 
-// ── STATE
-let CU             = null;
-let currentProfile = null;
-let cachedProjects = [];
-let projListenerRef = null;
-let projListenerFn  = null;
-let currentSlide   = 0;
-let editingId      = null;
-let openProjId     = null;
-let dragSrc        = null;
+let CU = null, currentProfile = null;
+let cachedTasks = [], tasksListenerRef = null, tasksListenerFn = null;
+let currentSlide = 0;
+let cachedSales = [], salesUnsubscribe = null;
+let taskFilter = 'all';
+let profileEditMode = false;
+let currentReportText = '';
 
-// ── AUTH STATE (entry point)
+// ── LOCAL date key
+function todayKey() {
+  const d = new Date();
+  return d.getFullYear() + '-' +
+    String(d.getMonth()+1).padStart(2,'0') + '-' +
+    String(d.getDate()).padStart(2,'0');
+}
+
+// ── AUTH
 auth.onAuthStateChanged(async (user) => {
   if (user) {
     CU = user.uid;
     const snap = await db.ref('users/' + CU + '/profile').once('value');
     currentProfile = snap.val() || { name: 'Guest', color: AVATAR_COLORS[0] };
     loadDashboard(true);
-    startProjectsListener();
+    startTasksListener();
+    initSalesListener();
   } else {
     CU = null; currentProfile = null;
-    stopProjectsListener();
+    stopTasksListener();
     showPortal();
   }
   document.getElementById('loadingOverlay').classList.add('hidden');
@@ -516,7 +521,6 @@ function showPortal() {
   dash.style.display = 'none'; dash.style.opacity = '0';
 }
 
-// ── AUTH
 function showPage(type) {
   ['loginError','signupError'].forEach(id => document.getElementById(id).textContent = '');
   document.getElementById('selectionScreen').classList.add('fade-out');
@@ -550,9 +554,9 @@ async function handleLogin() {
 }
 
 async function handleSignup() {
-  const name     = document.getElementById('signupName').value.trim();
+  const name = document.getElementById('signupName').value.trim();
   const username = document.getElementById('signupUser').value.trim().toLowerCase();
-  const email    = document.getElementById('signupEmail').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
   const password = document.getElementById('signupPass').value;
   const err = document.getElementById('signupError');
   if (!name || !username || !email || !password) { err.textContent = 'Please fill in all fields.'; return; }
@@ -564,12 +568,11 @@ async function handleSignup() {
     const cred = await auth.createUserWithEmailAndPassword(email, password);
     const uid = cred.user.uid;
     const now = Date.now();
-    const profile = { name, username, email, bio: '', color: AVATAR_COLORS[0], apiKey: '', createdAt: now };
-    const starterProject = { title: 'My First Project', status: 'Concept Phase', priority: 'Medium', due: '', order: 0, notes: '', createdAt: now };
+    const profile = { name, username, email, bio: '', color: AVATAR_COLORS[0], apiKey: '',
+      outlet: '', officialNames: '', brand: '', branchTarget: '', createdAt: now };
     await Promise.all([
       db.ref('usernames/' + username).set({ uid, email }),
       db.ref('users/' + uid + '/profile').set(profile),
-      db.ref('users/' + uid + '/projects').push(starterProject),
     ]);
     animateFormOut();
   } catch(e) {
@@ -583,9 +586,10 @@ async function handleLogout() {
   closeProfile();
   document.getElementById('dashboard').style.opacity = '0';
   setTimeout(async () => {
-    stopProjectsListener();
+    stopTasksListener();
+    if (salesUnsubscribe) salesUnsubscribe();
     await auth.signOut();
-    cachedProjects = [];
+    cachedTasks = []; cachedSales = [];
     ['loginUser','loginPass','signupName','signupUser','signupEmail','signupPass'].forEach(id => {
       const el = document.getElementById(id); if (el) el.value = '';
     });
@@ -604,7 +608,6 @@ function resetFormAnim() {
   if (f) { f.style.transform = ''; f.style.opacity = ''; }
 }
 
-// ── DASHBOARD
 function loadDashboard(instant) {
   document.getElementById('greeting').innerText = 'Welcome, ' + (currentProfile.name || 'Guest');
   updateAvatar(currentProfile);
@@ -612,85 +615,129 @@ function loadDashboard(instant) {
   const dash = document.getElementById('dashboard');
   dash.style.display = 'flex';
   moveTrack(0);
-  if (instant) { dash.style.opacity = '1'; }
-  else { setTimeout(() => { dash.style.opacity = '1'; }, 50); }
+  if (instant) dash.style.opacity = '1';
+  else setTimeout(() => { dash.style.opacity = '1'; }, 50);
 }
 
-// ── PROJECTS LISTENER (real-time)
-function startProjectsListener() {
-  stopProjectsListener();
-  projListenerRef = db.ref('users/' + CU + '/projects');
-  projListenerFn = (snap) => {
-    const val = snap.val() || {};
-    cachedProjects = Object.entries(val).map(([id, data]) => ({
-      id,
-      title:         data.title || '',
-      status:        data.status || 'Concept Phase',
-      priority:      data.priority || 'Medium',
-      due:           data.due || '',
-      order:         data.order ?? 0,
-      notes:         data.notes || '',
-      createdAt:     data.createdAt || 0,
-      tasks:         data.tasks
-        ? Object.entries(data.tasks).map(([tid, t]) => ({ id: tid, title: t.title, done: t.done || false }))
-        : [],
-      collaborators: data.collaborators
-        ? Object.entries(data.collaborators).map(([cid, name]) => ({ id: cid, name }))
-        : [],
-    })).sort((a, b) => a.order - b.order);
-    renderProjects();
-    renderOverview();
-    renderArchive();
-    if (openProjId) refreshDetailData();
-  };
-  projListenerRef.on('value', projListenerFn);
-}
-function stopProjectsListener() {
-  if (projListenerRef && projListenerFn) {
-    projListenerRef.off('value', projListenerFn);
-    projListenerRef = null; projListenerFn = null;
-  }
-}
-
-// ── PROFILE
 function updateAvatar(prof) {
   const btn = document.getElementById('avatarBtn');
   btn.style.background = prof.color || AVATAR_COLORS[0];
   btn.textContent = (prof.name || 'G')[0].toUpperCase();
 }
+
+// ── PROFILE
 function openProfile() {
   const prof = currentProfile || {};
-  document.getElementById('profileName').value = prof.name || '';
-  document.getElementById('profileUsername').value = prof.username || '';
-  document.getElementById('profileEmail').value = prof.email || '';
-  document.getElementById('profileBio').value = prof.bio || '';
-  document.getElementById('profileApiKey').value = prof.apiKey || '';
+  profileEditMode = false;
+
+  document.getElementById('profileName').value        = prof.name || '';
+  document.getElementById('profileUsername').value    = prof.username || '';
+  document.getElementById('profileEmail').value       = prof.email || '';
+  document.getElementById('profileBio').value         = prof.bio || '';
+  document.getElementById('profileApiKey').value      = prof.apiKey || '';
+  document.getElementById('profileOutlet').value      = prof.outlet || '';
+  document.getElementById('profileOfficialNames').value = prof.officialNames || '';
+  document.getElementById('profileBrand').value       = prof.brand || '';
+  document.getElementById('profileBranchTarget').value = prof.branchTarget || '';
   document.getElementById('profileMemberSince').value = prof.createdAt
     ? new Date(prof.createdAt).toLocaleDateString('en-GB', { year:'numeric', month:'long', day:'numeric' }) : '—';
+
+  setProfileReadOnly(true);
+
+  const btn = document.getElementById('profileEditBtn');
+  btn.textContent = '✎ Edit'; btn.classList.remove('active');
+  document.getElementById('profileSaveBtn').style.display = 'none';
+
   const cp = document.getElementById('colorPicker');
   cp.innerHTML = AVATAR_COLORS.map(c =>
     `<div class="color-swatch${c===(prof.color||AVATAR_COLORS[0])?' selected':''}" style="background:${c}" onclick="pickColor('${c}',this)"></div>`
   ).join('');
+  const cpSection = document.getElementById('colorPickerSection');
+  cpSection.style.opacity = '.35'; cpSection.style.pointerEvents = 'none';
+
   const av = document.getElementById('profileAvatarLarge');
   av.style.background = prof.color || AVATAR_COLORS[0];
   av.textContent = (prof.name || 'G')[0].toUpperCase();
+
   applyOverlayTheme(document.getElementById('profileOverlay'));
   document.getElementById('profileOverlay').classList.add('open');
 }
-function closeProfile() { document.getElementById('profileOverlay').classList.remove('open'); }
+
+function setProfileReadOnly(readonly) {
+  // username, email, memberSince are ALWAYS readonly
+  const editableIds = ['profileName','profileBio','profileApiKey','profileOutlet','profileOfficialNames','profileBrand','profileBranchTarget'];
+  editableIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.readOnly = readonly;
+    el.style.opacity = readonly ? '.42' : '1';
+    el.style.cursor  = readonly ? 'default' : '';
+  });
+}
+
+function toggleProfileEdit() {
+  if (profileEditMode) {
+    // Cancel — restore original values
+    profileEditMode = false;
+    const prof = currentProfile || {};
+    document.getElementById('profileName').value        = prof.name || '';
+    document.getElementById('profileBio').value         = prof.bio || '';
+    document.getElementById('profileApiKey').value      = prof.apiKey || '';
+    document.getElementById('profileOutlet').value      = prof.outlet || '';
+    document.getElementById('profileOfficialNames').value = prof.officialNames || '';
+    document.getElementById('profileBrand').value       = prof.brand || '';
+    document.getElementById('profileBranchTarget').value = prof.branchTarget || '';
+    // Reset color picker
+    document.getElementById('colorPicker').innerHTML = AVATAR_COLORS.map(c =>
+      `<div class="color-swatch${c===(prof.color||AVATAR_COLORS[0])?' selected':''}" style="background:${c}" onclick="pickColor('${c}',this)"></div>`
+    ).join('');
+    setProfileReadOnly(true);
+    const btn = document.getElementById('profileEditBtn');
+    btn.textContent = '✎ Edit'; btn.classList.remove('active');
+    document.getElementById('profileSaveBtn').style.display = 'none';
+    const cpSection = document.getElementById('colorPickerSection');
+    cpSection.style.opacity = '.35'; cpSection.style.pointerEvents = 'none';
+  } else {
+    profileEditMode = true;
+    setProfileReadOnly(false);
+    const btn = document.getElementById('profileEditBtn');
+    btn.textContent = '✕ Cancel'; btn.classList.add('active');
+    document.getElementById('profileSaveBtn').style.display = 'block';
+    const cpSection = document.getElementById('colorPickerSection');
+    cpSection.style.opacity = '1'; cpSection.style.pointerEvents = '';
+  }
+}
+
+function closeProfile() {
+  document.getElementById('profileOverlay').classList.remove('open');
+  // If edit mode was open, close cleanly
+  if (profileEditMode) {
+    profileEditMode = false;
+    setProfileReadOnly(true);
+    document.getElementById('profileEditBtn').textContent = '✎ Edit';
+    document.getElementById('profileEditBtn').classList.remove('active');
+    document.getElementById('profileSaveBtn').style.display = 'none';
+  }
+}
+
 function pickColor(c, el) {
   document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
   el.classList.add('selected');
   document.getElementById('profileAvatarLarge').style.background = c;
 }
+
 async function saveProfile() {
-  const sel   = document.querySelector('.color-swatch.selected');
+  const sel = document.querySelector('.color-swatch.selected');
   const color = sel ? sel.style.background : (currentProfile.color || AVATAR_COLORS[0]);
   const updates = {
-    name:   document.getElementById('profileName').value.trim() || currentProfile.name,
-    bio:    document.getElementById('profileBio').value.trim(),
+    name: document.getElementById('profileName').value.trim() || currentProfile.name,
+    bio: document.getElementById('profileBio').value.trim(),
     apiKey: document.getElementById('profileApiKey').value.trim(),
-    color
+    color,
+    outlet: document.getElementById('profileOutlet').value.trim(),
+    officialNames: document.getElementById('profileOfficialNames').value.trim(),
+    brand: document.getElementById('profileBrand').value.trim(),
+    branchTarget: document.getElementById('profileBranchTarget').value.trim(),
   };
   try {
     await db.ref('users/' + CU + '/profile').update(updates);
@@ -698,239 +745,132 @@ async function saveProfile() {
     document.getElementById('greeting').innerText = 'Welcome, ' + currentProfile.name;
     updateAvatar(currentProfile);
     showToast('Profile saved ✓');
-    closeProfile();
+    // Exit edit mode smoothly
+    profileEditMode = true; // trick toggleProfileEdit into thinking we're in edit mode so it cancels
+    toggleProfileEdit();
   } catch(e) { showToast('Save failed.'); }
 }
+
 function confirmDeleteAccount() {
-  showConfirm('Delete Account',
-    'This permanently deletes your account and all your data. Cannot be undone.',
-    async () => {
-      try {
-        await db.ref('users/' + CU).remove();
-        if (currentProfile.username) await db.ref('usernames/' + currentProfile.username).remove();
-        await auth.currentUser.delete();
-        showToast('Account deleted.');
-      } catch(e) {
-        if (e.code === 'auth/requires-recent-login') showToast('Please sign out and back in, then try again.');
-        else showToast('Could not delete fully. Check connection.');
-      }
-    }, 'Delete');
-}
-
-// ── RENDER PROJECTS
-function renderProjects() {
-  const q  = (document.getElementById('searchInput').value || '').toLowerCase();
-  const fp = document.getElementById('filterPriority').value;
-  const fs = document.getElementById('filterStatus').value;
-  let list = cachedProjects.filter(p => p.status !== 'Completed');
-  if (q)  list = list.filter(p => p.title.toLowerCase().includes(q));
-  if (fp) list = list.filter(p => p.priority === fp);
-  if (fs) list = list.filter(p => p.status === fs);
-  const el = document.getElementById('projectsList');
-  if (!list.length) {
-    el.innerHTML = `<div class="empty-state"><div style="font-size:30px">✦</div><p>No projects found.<br>Press <b>N</b> or tap + to add one.</p></div>`;
-    return;
-  }
-  el.innerHTML = list.map((p, i) => `
-    <div class="project-bar-item" draggable="true"
-      ondragstart="dStart(event,${i})" ondragover="dOver(event,${i})"
-      ondrop="dDrop(event,${i})" ondragend="dEnd()">
-      <span class="drag-handle">⠿</span>
-      <div class="project-info" onclick="openDetail('${p.id}')">
-        <span class="project-title">${esc(p.title)}</span>
-        <div class="project-meta">
-          <span class="project-tag">${esc(p.status)}</span>
-          <span class="priority-badge ${PC[p.priority]||'p-medium'}">${p.priority||'Medium'}</span>
-          ${p.due ? `<span class="due-label${isDue(p.due)?' overdue':''}">${fmtDue(p.due)}</span>` : ''}
-        </div>
-      </div>
-      <div class="project-actions">
-        <button class="proj-btn" onclick="openEditModal('${p.id}')">✎</button>
-        <button class="proj-btn del" onclick="promptDelete('${p.id}')">✕</button>
-      </div>
-    </div>`).join('');
-}
-function renderArchive() {
-  const done = cachedProjects.filter(p => p.status === 'Completed');
-  const el = document.getElementById('archiveList');
-  if (!done.length) { el.innerHTML = `<div class="empty-state"><div style="font-size:30px">⧉</div><p>No completed projects yet.</p></div>`; return; }
-  el.innerHTML = done.map(p => `
-    <div class="project-bar-item">
-      <div class="project-info" onclick="openDetail('${p.id}')">
-        <span class="project-title">${esc(p.title)}</span>
-        <div class="project-meta">
-          <span class="project-tag">Completed</span>
-          <span class="priority-badge ${PC[p.priority]||'p-medium'}">${p.priority||'Medium'}</span>
-        </div>
-      </div>
-      <div class="project-actions">
-        <button class="proj-btn del" onclick="promptDelete('${p.id}')">✕</button>
-      </div>
-    </div>`).join('');
-}
-function renderOverview() {
-  document.getElementById('statTotal').textContent  = cachedProjects.length;
-  document.getElementById('statActive').textContent = cachedProjects.filter(p => p.status === 'Active Development').length;
-  const recent = [...cachedProjects].sort((a,b) => b.createdAt - a.createdAt).slice(0, 3);
-  const el = document.getElementById('recentList');
-  if (!recent.length) { el.innerHTML = `<div style="opacity:.3;font-size:12px">No activity yet.</div>`; return; }
-  el.innerHTML = recent.map(p => `<div class="recent-item"><span>${esc(p.title)}</span><span class="recent-tag">${esc(p.status)}</span></div>`).join('');
-}
-
-// ── PROJECT CRUD
-function openAddModal() {
-  editingId = null;
-  document.getElementById('modalTitle').textContent = 'New Project';
-  document.getElementById('modalName').value = '';
-  document.getElementById('modalStatus').value = 'Concept Phase';
-  document.getElementById('modalPriority').value = 'Medium';
-  document.getElementById('modalDue').value = '';
-  document.getElementById('modalConfirmBtn').textContent = 'Create';
-  document.getElementById('projectModal').classList.add('open');
-  setTimeout(() => document.getElementById('modalName').focus(), 100);
-}
-function openEditModal(id) {
-  const p = cachedProjects.find(p => p.id === id); if (!p) return;
-  editingId = id;
-  document.getElementById('modalTitle').textContent = 'Edit Project';
-  document.getElementById('modalName').value = p.title;
-  document.getElementById('modalStatus').value = p.status;
-  document.getElementById('modalPriority').value = p.priority || 'Medium';
-  document.getElementById('modalDue').value = p.due || '';
-  document.getElementById('modalConfirmBtn').textContent = 'Save';
-  document.getElementById('projectModal').classList.add('open');
-  setTimeout(() => document.getElementById('modalName').focus(), 100);
-}
-async function saveProject() {
-  const title    = document.getElementById('modalName').value.trim();
-  if (!title) { document.getElementById('modalName').focus(); return; }
-  const status   = document.getElementById('modalStatus').value;
-  const priority = document.getElementById('modalPriority').value;
-  const due      = document.getElementById('modalDue').value;
-  try {
-    if (editingId) {
-      await db.ref('users/' + CU + '/projects/' + editingId).update({ title, status, priority, due });
-      showToast('Project updated ✓');
-    } else {
-      const order = cachedProjects.filter(p => p.status !== 'Completed').length;
-      await db.ref('users/' + CU + '/projects').push({ title, status, priority, due, order, notes: '', createdAt: Date.now() });
-      showToast('Project created ✓');
-    }
-    closeModal('projectModal');
-  } catch(e) { showToast('Save failed — check connection.'); }
-}
-function promptDelete(id) {
-  const p = cachedProjects.find(p => p.id === id); if (!p) return;
-  showConfirm('Delete Project', `"${p.title}" will be permanently deleted.`, async () => {
+  showConfirm('Delete Account', 'This permanently deletes your account and all your data. Cannot be undone.', async () => {
     try {
-      await db.ref('users/' + CU + '/projects/' + id).remove();
-      if (openProjId === id) closeDetail();
-      showToast('Project deleted.');
-    } catch(e) { showToast('Delete failed.'); }
+      await db.ref('users/' + CU).remove();
+      if (currentProfile && currentProfile.username) await db.ref('usernames/' + currentProfile.username).remove();
+      await auth.currentUser.delete();
+      showToast('Account deleted.');
+    } catch(e) {
+      if (e.code === 'auth/requires-recent-login') showToast('Please sign out and back in, then try again.');
+      else showToast('Could not delete fully. Check connection.');
+    }
   }, 'Delete');
 }
 
-// ── PROJECT DETAIL
-function openDetail(id) {
-  const p = cachedProjects.find(p => p.id === id); if (!p) return;
-  openProjId = id;
-  populateDetailView(p);
-  applyOverlayTheme(document.getElementById('projectDetailOverlay'));
-  document.getElementById('projectDetailOverlay').classList.add('open');
-}
-function populateDetailView(p) {
-  document.getElementById('detailTitle').textContent = p.title;
-  document.getElementById('detailMeta').innerHTML = `
-    <span class="priority-badge ${PC[p.priority]||'p-medium'}">${p.priority||'Medium'}</span>
-    <span class="project-tag">${esc(p.status)}</span>
-    ${p.due ? `<span class="due-label${isDue(p.due)?' overdue':''}">${fmtDue(p.due)}</span>` : ''}`;
-  renderTasks(p.tasks || []);
-  renderCollabs(p.collaborators || []);
-  document.getElementById('notesArea').value = p.notes || '';
-}
-function refreshDetailData() {
-  const p = cachedProjects.find(p => p.id === openProjId);
-  if (p) populateDetailView(p);
-}
-function closeDetail() { document.getElementById('projectDetailOverlay').classList.remove('open'); openProjId = null; }
-
 // ── TASKS
-function renderTasks(tasks) {
-  const el = document.getElementById('taskList');
-  if (!tasks.length) { el.innerHTML = `<p style="opacity:.3;font-size:12px;margin-bottom:9px">No tasks yet.</p>`; return; }
-  el.innerHTML = tasks.map(t => `
-    <div class="task-item${t.done?' done':''}">
-      <div class="task-check" onclick="toggleTask('${t.id}')">${t.done?'✓':''}</div>
-      <span class="task-text">${esc(t.title)}</span>
-      <button class="task-del" onclick="deleteTask('${t.id}')">✕</button>
-    </div>`).join('');
-}
-async function addTask() {
-  const inp = document.getElementById('taskInput');
-  const title = inp.value.trim(); if (!title) return;
-  inp.value = '';
-  await db.ref('users/' + CU + '/projects/' + openProjId + '/tasks').push({ title, done: false });
-}
-async function toggleTask(tid) {
-  const p = cachedProjects.find(p => p.id === openProjId); if (!p) return;
-  const task = p.tasks.find(t => t.id === tid); if (!task) return;
-  await db.ref('users/' + CU + '/projects/' + openProjId + '/tasks/' + tid).update({ done: !task.done });
-}
-async function deleteTask(tid) {
-  await db.ref('users/' + CU + '/projects/' + openProjId + '/tasks/' + tid).remove();
+function startTasksListener() {
+  stopTasksListener();
+  tasksListenerRef = db.ref('users/' + CU + '/tasks');
+  tasksListenerFn = (snap) => {
+    const val = snap.val() || {};
+    cachedTasks = Object.entries(val)
+      .map(([id, d]) => ({ id, title: d.title || '', done: d.done || false, createdAt: d.createdAt || 0 }))
+      .sort((a, b) => a.createdAt - b.createdAt);
+    renderTasksSlide();
+    renderOverviewTasks();
+  };
+  tasksListenerRef.on('value', tasksListenerFn);
 }
 
-// ── COLLABORATORS
-function renderCollabs(collabs) {
-  document.getElementById('collabTags').innerHTML = collabs.map(c =>
-    `<span class="collab-tag">${esc(c.name)}<button class="collab-remove" onclick="removeCollab('${c.id}')">✕</button></span>`
+function stopTasksListener() {
+  if (tasksListenerRef && tasksListenerFn) {
+    tasksListenerRef.off('value', tasksListenerFn);
+    tasksListenerRef = null; tasksListenerFn = null;
+  }
+}
+
+function setTaskFilter(f) {
+  taskFilter = f;
+  document.querySelectorAll('.task-filter-pill').forEach(p => p.classList.remove('active'));
+  document.getElementById('pill-' + f).classList.add('active');
+  renderTasksSlide();
+}
+
+function renderTasksSlide() {
+  let list = [...cachedTasks];
+  if (taskFilter === 'pending') list = list.filter(t => !t.done);
+  if (taskFilter === 'done')    list = list.filter(t =>  t.done);
+
+  const el = document.getElementById('tasksList2');
+  if (!el) return;
+
+  if (!list.length) {
+    const msgs = { all:'No tasks yet. Add one above ↑', pending:'All caught up! ✓', done:'No completed tasks yet.' };
+    el.innerHTML = `<div style="text-align:center;opacity:.28;padding:30px 0;"><div style="font-size:30px;margin-bottom:9px;">${taskFilter==='done'?'○':'✓'}</div><p style="font-size:12px;line-height:1.6;">${msgs[taskFilter]}</p></div>`;
+  } else {
+    el.innerHTML = list.map(t => `
+      <div class="task2-item${t.done?' done2':''}">
+        <div class="task2-check" onclick="toggleTask2('${t.id}')">${t.done?'✓':''}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="task2-text">${esc(t.title)}</div>
+        </div>
+        <button class="task2-del" onclick="deleteTask2('${t.id}')">✕</button>
+      </div>`).join('');
+  }
+
+  const total   = cachedTasks.length;
+  const pending = cachedTasks.filter(t => !t.done).length;
+  const done    = cachedTasks.filter(t => t.done).length;
+  const countEl = document.getElementById('tasksFooterCount');
+  if (countEl) countEl.textContent = `${pending} pending · ${done} done`;
+}
+
+function renderOverviewTasks() {
+  const total   = cachedTasks.length;
+  const pending = cachedTasks.filter(t => !t.done).length;
+  const totalEl = document.getElementById('statTotal');
+  const pendEl  = document.getElementById('statActive');
+  if (totalEl) totalEl.textContent = total;
+  if (pendEl)  pendEl.textContent  = pending;
+
+  // Recent tasks in overview
+  const recent = [...cachedTasks].filter(t => !t.done).slice(-3).reverse();
+  const el = document.getElementById('recentList');
+  if (!el) return;
+  if (!recent.length) {
+    el.innerHTML = `<div style="opacity:.3;font-size:12px">No pending tasks.</div>`;
+    return;
+  }
+  el.innerHTML = recent.map(t =>
+    `<div class="recent-item"><span>${esc(t.title)}</span><span class="recent-tag">Pending</span></div>`
   ).join('');
 }
-async function addCollab() {
-  const inp = document.getElementById('collabInput');
-  const val = inp.value.trim(); if (!val) return;
+
+async function addQuickTask() {
+  const inp = document.getElementById('quickTaskInput');
+  const title = inp.value.trim(); if (!title) return;
   inp.value = '';
-  await db.ref('users/' + CU + '/projects/' + openProjId + '/collaborators').push(val);
-}
-async function removeCollab(cid) {
-  await db.ref('users/' + CU + '/projects/' + openProjId + '/collaborators/' + cid).remove();
-}
-
-// ── NOTES (debounced)
-let notesTimer;
-function debouncedSaveNotes() {
-  clearTimeout(notesTimer);
-  notesTimer = setTimeout(async () => {
-    if (!openProjId) return;
-    const notes = document.getElementById('notesArea').value;
-    await db.ref('users/' + CU + '/projects/' + openProjId).update({ notes });
-  }, 900);
+  try {
+    await db.ref('users/' + CU + '/tasks').push({ title, done: false, createdAt: Date.now() });
+  } catch(e) { showToast('Could not save task.'); }
 }
 
-// ── DRAG & DROP
-function dStart(e, i) { dragSrc = i; e.currentTarget.classList.add('dragging'); }
-function dOver(e, i) {
-  e.preventDefault();
-  document.querySelectorAll('.project-bar-item').forEach((el, j) => el.classList.toggle('drag-over', j === i && i !== dragSrc));
+async function toggleTask2(id) {
+  const t = cachedTasks.find(t => t.id === id); if (!t) return;
+  await db.ref('users/' + CU + '/tasks/' + id).update({ done: !t.done });
 }
-async function dDrop(e, i) {
-  e.preventDefault();
-  if (dragSrc === null || dragSrc === i) return;
-  const active   = cachedProjects.filter(p => p.status !== 'Completed');
-  const archived = cachedProjects.filter(p => p.status === 'Completed');
-  const [moved]  = active.splice(dragSrc, 1);
-  active.splice(i, 0, moved);
-  cachedProjects = [...active, ...archived];
-  renderProjects();
-  // Atomic multi-path update — RTDB's superpower
-  const updates = {};
-  active.forEach((p, idx) => { updates['users/' + CU + '/projects/' + p.id + '/order'] = idx; });
-  try { await db.ref().update(updates); showToast('Reordered ✓'); }
-  catch(e) { showToast('Reorder failed.'); }
+
+async function deleteTask2(id) {
+  await db.ref('users/' + CU + '/tasks/' + id).remove();
 }
-function dEnd() {
-  dragSrc = null;
-  document.querySelectorAll('.project-bar-item').forEach(el => el.classList.remove('dragging','drag-over'));
+
+async function clearDoneTasks() {
+  const done = cachedTasks.filter(t => t.done);
+  if (!done.length) { showToast('No completed tasks to clear.'); return; }
+  showConfirm('Clear Completed', `Remove ${done.length} completed task${done.length>1?'s':''}?`, async () => {
+    const updates = {};
+    done.forEach(t => { updates['users/' + CU + '/tasks/' + t.id] = null; });
+    try { await db.ref().update(updates); showToast('Cleared ✓'); }
+    catch(e) { showToast('Clear failed.'); }
+  }, 'Clear');
 }
 
 // ── AI ASSISTANT
@@ -939,12 +879,17 @@ async function sendAI() {
   const prompt = inp.value.trim(); if (!prompt) return;
   const btn = document.getElementById('aiSendBtn'), resp = document.getElementById('aiResponse');
   btn.disabled = true; btn.textContent = '…'; resp.textContent = 'Thinking…';
-  const ctx = `${cachedProjects.length} project(s): ${cachedProjects.map(p=>`"${p.title}" (${p.status}, ${p.priority}${p.due?', due '+p.due:''})`).join('; ')||'none'}.`;
+
+  const pending = cachedTasks.filter(t => !t.done).length;
+  const done    = cachedTasks.filter(t =>  t.done).length;
+  const taskCtx = `Tasks: ${cachedTasks.length} total, ${pending} pending, ${done} done. Pending: ${cachedTasks.filter(t=>!t.done).map(t=>'"'+t.title+'"').join(', ')||'none'}.`;
+  const salesCtx = `Today's sales: ${cachedSales.length} transactions, Ksh ${cachedSales.reduce((s,e)=>s+(e.price*e.qty),0).toLocaleString()}.`;
+  const profCtx = currentProfile ? `Outlet: ${currentProfile.outlet||'—'}. Brand: ${currentProfile.brand||'—'}. Target: Ksh ${currentProfile.branchTarget||'0'}.` : '';
+
   const apiKey = (currentProfile||{}).apiKey||'';
   if (!apiKey) {
     resp.textContent = 'Add your Gemini API key in My Profile to enable the AI assistant.';
-    btn.disabled = false; btn.textContent = '→'; inp.value = '';
-    return;
+    btn.disabled = false; btn.textContent = '→'; inp.value = ''; return;
   }
   try {
     const res = await fetch(
@@ -953,7 +898,7 @@ async function sendAI() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          system_instruction: { parts: [{ text: 'You are a concise workspace assistant. Context: '+ctx }] },
+          system_instruction: { parts: [{ text: `You are a concise workspace assistant. ${taskCtx} ${salesCtx} ${profCtx}` }] },
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
           generationConfig: { maxOutputTokens: 1000 }
         })
@@ -964,41 +909,38 @@ async function sendAI() {
     resp.textContent = data.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('')||'No response.';
   } catch(e) {
     resp.textContent = e.message.includes('API_KEY')||e.message.includes('403')||e.message.includes('401')
-      ? 'Invalid API key. Check the key entered in My Profile.'
+      ? 'Invalid API key. Check the key in My Profile.'
       : 'Could not reach the AI. Check your connection.';
   }
   btn.disabled = false; btn.textContent = '→'; inp.value = '';
 }
 
 // ── SALES LOG
-const todayKey = () => new Date().toISOString().slice(0,10); // "YYYY-MM-DD"
-let cachedSales = [];
-let salesListener = null;
-
 function initSalesListener() {
   if (!CU) return;
+  if (salesUnsubscribe) salesUnsubscribe();
   const key = todayKey();
-  if (salesListener) salesListener();
   const ref = db.ref('users/' + CU + '/sales/' + key);
   ref.on('value', snap => {
     const data = snap.val() || {};
-    cachedSales = Object.entries(data).map(([id, v]) => ({id, ...v}))
-      .sort((a,b) => a.order - b.order);
-    if (currentSlide === 3) renderSalesLog();
+    cachedSales = Object.entries(data)
+      .map(([id, v]) => ({id, ...v}))
+      .sort((a, b) => a.order - b.order);
+    renderSalesLog();
+    renderOverviewSales();
   });
-  salesListener = () => ref.off();
+  salesUnsubscribe = () => ref.off();
 }
 
 function renderSalesLog() {
-  const list = document.getElementById('salesList');
-  const dateEl = document.getElementById('salesDateLabel');
+  const list    = document.getElementById('salesList');
+  const dateEl  = document.getElementById('salesDateLabel');
   const totalEl = document.getElementById('salesTotalDisplay');
   const countEl = document.getElementById('salesCount');
   if (!list) return;
-  const now = new Date();
-  dateEl.textContent = now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  dateEl.textContent = new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
   if (!cachedSales.length) {
-    list.innerHTML = '<div class="empty-state" style="margin:auto;"><div style="font-size:28px;opacity:.2;">₭</div><p>No sales logged today.</p></div>';
+    list.innerHTML = '<div style="text-align:center;opacity:.28;margin:auto;padding:18px 0;"><div style="font-size:28px;margin-bottom:8px;">₭</div><p style="font-size:12px;">No sales logged today.</p></div>';
     totalEl.textContent = 'Ksh 0'; countEl.textContent = '0 transactions'; return;
   }
   list.innerHTML = cachedSales.map((s,i) => `
@@ -1018,6 +960,15 @@ function renderSalesLog() {
   countEl.textContent = cachedSales.length + ' transaction' + (cachedSales.length !== 1 ? 's' : '');
 }
 
+function renderOverviewSales() {
+  const total = cachedSales.reduce((s,e) => s + (e.price * e.qty), 0);
+  const count = cachedSales.length;
+  const totalEl = document.getElementById('overviewSalesTotal');
+  const countEl = document.getElementById('overviewSalesCount');
+  if (totalEl) totalEl.textContent = 'Ksh ' + total.toLocaleString();
+  if (countEl) countEl.textContent = count + ' transaction' + (count !== 1 ? 's' : '');
+}
+
 async function addSale() {
   const item   = document.getElementById('saleItem').value.trim();
   const model  = document.getElementById('saleModel').value.trim();
@@ -1025,50 +976,142 @@ async function addSale() {
   const price  = parseFloat(document.getElementById('salePrice').value);
   const qty    = parseInt(document.getElementById('saleQty').value) || 1;
   if (!item || isNaN(price) || price <= 0) { showToast('Item name and price are required.'); return; }
-  const key = todayKey();
+  const key   = todayKey();
+  const label = new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
   try {
     await db.ref('users/' + CU + '/sales/' + key).push({
       item, model, serial, price, qty, order: Date.now(), createdAt: Date.now()
     });
-    // Archive snapshot for historical reference
-    await db.ref('users/' + CU + '/salesArchiveMeta/' + key).set({
-      date: key,
-      label: new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'})
-    });
-    document.getElementById('saleItem').value = '';
-    document.getElementById('saleModel').value = '';
-    document.getElementById('saleSerial').value = '';
-    document.getElementById('salePrice').value = '';
-    document.getElementById('saleQty').value = '';
+    await db.ref('users/' + CU + '/salesArchiveMeta/' + key).set({ date: key, label });
+    ['saleItem','saleModel','saleSerial','salePrice','saleQty'].forEach(id => { document.getElementById(id).value = ''; });
     showToast('Sale logged ✓');
   } catch(e) { showToast('Failed to save sale.'); }
 }
 
 async function deleteSale(id) {
-  const key = todayKey();
   try {
-    await db.ref('users/' + CU + '/sales/' + key + '/' + id).remove();
+    await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + id).remove();
     showToast('Sale removed.');
   } catch(e) { showToast('Delete failed.'); }
 }
 
-// ── ARCHIVE SALES (historical days)
+// ── SALES REPORT
+function generateSalesReport() {
+  const prof   = currentProfile || {};
+  const date   = new Date().toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  const total  = cachedSales.reduce((s, e) => s + (e.price * e.qty), 0);
+  const target = parseFloat(prof.branchTarget) || 0;
+  const pct    = target > 0 ? ((total / target) * 100).toFixed(1) : null;
+  const line   = '─'.repeat(38);
+
+  // Header block
+  let r = '';
+  r += `DAILY SALES REPORT\n`;
+  r += `${line}\n`;
+  r += `Date     : ${date}\n`;
+  r += `Outlet   : ${prof.outlet || '(not set)'}\n`;
+  r += `Officer  : ${prof.officialNames || '(not set)'}\n`;
+  r += `Brand    : ${prof.brand || '(not set)'}\n`;
+  if (target > 0) r += `Target   : Ksh ${target.toLocaleString()}\n`;
+  r += `${line}\n\n`;
+
+  // Transactions
+  if (!cachedSales.length) {
+    r += `No transactions recorded today.\n\n`;
+  } else {
+    r += `TRANSACTIONS (${cachedSales.length})\n\n`;
+    cachedSales.forEach((s, i) => {
+      r += `${i+1}. ${s.item}\n`;
+      r += `   Model : ${s.model || '—'}\n`;
+      r += `   S/N   : ${s.serial || '—'}\n`;
+      r += `   Qty   : ${s.qty}  ×  Ksh ${Number(s.price).toLocaleString()}\n`;
+      r += `   Total : Ksh ${(s.price * s.qty).toLocaleString()}\n`;
+      if (i < cachedSales.length - 1) r += '\n';
+    });
+    r += '\n';
+  }
+
+  // Summary
+  r += `${line}\n`;
+  r += `DAILY TOTAL  : Ksh ${total.toLocaleString()}\n`;
+  r += `TRANSACTIONS : ${cachedSales.length}\n`;
+  if (target > 0) {
+    r += `TARGET       : Ksh ${target.toLocaleString()}\n`;
+    r += `ACHIEVEMENT  : ${pct}%\n`;
+  }
+  r += `${line}\n`;
+  r += `Royal Horizon Workspace`;
+
+  currentReportText = r;
+
+  // Check for missing work details
+  const missing = [];
+  if (!prof.outlet)        missing.push('Outlet');
+  if (!prof.officialNames) missing.push('Official Names');
+  if (!prof.brand)         missing.push('Brand');
+  if (missing.length) showToast(`Tip: fill in ${missing.join(', ')} in Profile.`);
+
+  const el = document.getElementById('reportText');
+  if (el) el.textContent = r;
+
+  applyOverlayTheme(document.getElementById('reportOverlay'));
+  document.getElementById('reportOverlay').classList.add('open');
+}
+
+function closeReportOverlay() { document.getElementById('reportOverlay').classList.remove('open'); }
+
+function copyReport() {
+  if (!currentReportText) return;
+  navigator.clipboard.writeText(currentReportText)
+    .then(() => showToast('Copied to clipboard ✓'))
+    .catch(() => {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = currentReportText;
+      document.body.appendChild(ta);
+      ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Copied ✓');
+    });
+}
+
+async function shareReport() {
+  if (!currentReportText) return;
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'Daily Sales Report',
+        text: currentReportText
+      });
+    } catch(e) { /* user cancelled */ }
+  } else {
+    copyReport();
+    showToast('Copied — paste to share.');
+  }
+}
+
+// ── ARCHIVE
 async function renderArchiveSales() {
   const scroll = document.getElementById('archSalesScroll');
-  const detail = document.getElementById('archSalesDetail');
   if (!scroll || !CU) return;
+  scroll.innerHTML = '<span style="font-size:12px;opacity:.3;">Loading…</span>';
   try {
     const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
     const meta = metaSnap.val() || {};
-    const days = Object.values(meta).sort((a,b) => b.date.localeCompare(a.date));
-    if (!days.length) { scroll.innerHTML = '<span style="font-size:12px;opacity:.3;">No past sales yet.</span>'; return; }
+    const today = todayKey();
+    const days = Object.values(meta)
+      .filter(d => d.date !== today)
+      .sort((a,b) => b.date.localeCompare(a.date));
+    if (!days.length) {
+      scroll.innerHTML = '<span style="font-size:12px;opacity:.3;">No past sales yet.</span>';
+      return;
+    }
     scroll.innerHTML = days.map(d => `
-      <div class="arch-day-card" onclick="toggleArchSalesDay('${d.date}','${esc(d.label)}',this)">
+      <div class="arch-day-card" onclick="openDayDetail('${d.date}','${esc(d.label)}')">
         <div class="arch-day-date">${esc(d.label)}</div>
         <div class="arch-day-meta">Tap to expand</div>
         <div class="arch-day-total" id="archDayTotal-${d.date}">Loading…</div>
       </div>`).join('');
-    // Load totals for each day
     days.forEach(async d => {
       const snap = await db.ref('users/' + CU + '/sales/' + d.date).once('value');
       const entries = Object.values(snap.val() || {});
@@ -1076,35 +1119,47 @@ async function renderArchiveSales() {
       const el = document.getElementById('archDayTotal-' + d.date);
       if (el) el.textContent = `Ksh ${total.toLocaleString()} · ${entries.length} sale${entries.length!==1?'s':''}`;
     });
-  } catch(e) { scroll.innerHTML = '<span style="font-size:12px;opacity:.3;">Could not load history.</span>'; }
+  } catch(e) {
+    scroll.innerHTML = '<span style="font-size:12px;opacity:.3;">Could not load history.</span>';
+  }
 }
 
-let openArchDay = null;
-async function toggleArchSalesDay(dateKey, label, cardEl) {
-  const detail = document.getElementById('archSalesDetail');
-  if (openArchDay === dateKey) { detail.classList.remove('open'); openArchDay = null; return; }
-  openArchDay = dateKey;
-  detail.classList.add('open');
-  detail.innerHTML = '<div style="font-size:12px;opacity:.4;">Loading…</div>';
+async function openDayDetail(dateKey, label) {
+  const overlay = document.getElementById('dayDetailOverlay');
+  const body    = document.getElementById('dayDetailBody');
+  document.getElementById('dayDetailTitle').textContent = label;
+  document.getElementById('dayDetailSubtitle').textContent = 'Sales breakdown';
+  body.innerHTML = '<div style="padding:20px 0;opacity:.4;font-size:13px;">Loading…</div>';
+  applyOverlayTheme(overlay);
+  overlay.classList.add('open');
   try {
     const snap = await db.ref('users/' + CU + '/sales/' + dateKey).once('value');
-    const entries = Object.entries(snap.val() || {}).map(([id,v])=>({id,...v})).sort((a,b)=>a.order-b.order);
-    if (!entries.length) { detail.innerHTML = '<div style="font-size:12px;opacity:.4;">No entries for this day.</div>'; return; }
+    const entries = Object.entries(snap.val() || {})
+      .map(([id,v]) => ({id,...v}))
+      .sort((a,b) => a.order - b.order);
+    if (!entries.length) {
+      body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">No entries for this day.</div>';
+      return;
+    }
     const total = entries.reduce((s,e) => s + (e.price * e.qty), 0);
-    detail.innerHTML = `
-      <div style="font-size:11px;font-weight:600;opacity:.5;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">${label}</div>
-      ${entries.map((e,i) => `
-        <div class="arch-sale-row">
-          <span style="opacity:.35;font-size:10px;margin-right:6px;">${i+1}</span>
-          <span style="flex:1;">${esc(e.item)} <span style="opacity:.4;font-size:10px;">×${e.qty}</span></span>
-          <span style="font-weight:600;">Ksh ${(e.price*e.qty).toLocaleString()}</span>
-        </div>`).join('')}
-      <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:1px solid rgba(128,128,128,.15);">
-        <span style="font-size:11px;opacity:.5;">Total</span>
-        <span style="font-family:'Playfair Display';font-size:15px;font-weight:700;">Ksh ${total.toLocaleString()}</span>
+    body.innerHTML = entries.map((e,i) => `
+      <div style="background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;">
+        <div style="font-family:'Playfair Display';font-size:16px;font-weight:700;opacity:.3;min-width:20px;">${i+1}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:'Playfair Display';font-size:14px;font-weight:600;">${esc(e.item)}</div>
+          <div style="font-size:10px;opacity:.45;margin-top:2px;">Model: ${esc(e.model||'—')} · S/N: ${esc(e.serial||'—')} · Qty: ${e.qty}</div>
+        </div>
+        <div style="font-size:13px;font-weight:600;white-space:nowrap;">Ksh ${(e.price * e.qty).toLocaleString()}</div>
+      </div>`).join('') +
+      `<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0 0;border-top:1px solid rgba(128,128,128,.15);margin-top:4px;">
+        <span style="font-size:12px;opacity:.4;text-transform:uppercase;letter-spacing:1.5px;">Total</span>
+        <span style="font-family:'Playfair Display';font-size:22px;font-weight:700;">Ksh ${total.toLocaleString()}</span>
       </div>`;
-  } catch(e) { detail.innerHTML = '<div style="font-size:12px;opacity:.4;">Failed to load.</div>'; }
+  } catch(e) {
+    body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">Failed to load.</div>';
+  }
 }
+function closeDayDetail() { document.getElementById('dayDetailOverlay').classList.remove('open'); }
 
 // ── CAROUSEL
 function moveTrack(idx) {
@@ -1112,20 +1167,24 @@ function moveTrack(idx) {
   document.querySelectorAll('.workspace-card').forEach((c,i) => c.classList.toggle('active', i===idx));
   document.querySelectorAll('.dock-item').forEach((d,i) => d.classList.toggle('active', i===idx));
   currentSlide = idx;
-  if (idx === 2) { renderArchive(); renderArchiveSales(); }
-  if (idx === 3) renderSalesLog();
+  if (idx === 2) renderSalesLog();
+  if (idx === 3) renderArchiveSales();
 }
+
 let tX = 0;
 document.getElementById('workspaceTrack').addEventListener('touchstart', e => { tX = e.touches[0].clientX; }, { passive:true });
 document.getElementById('workspaceTrack').addEventListener('touchend', e => {
   const d = tX - e.changedTouches[0].clientX;
-  if (Math.abs(d) > 50) { if (d>0&&currentSlide<3) moveTrack(currentSlide+1); else if (d<0&&currentSlide>0) moveTrack(currentSlide-1); }
+  if (Math.abs(d) > 50) {
+    if (d > 0 && currentSlide < 3) moveTrack(currentSlide + 1);
+    else if (d < 0 && currentSlide > 0) moveTrack(currentSlide - 1);
+  }
 }, { passive:true });
 
-// ── MODALS
+// ── MODALS & CONFIRM
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-document.getElementById('projectModal').addEventListener('click', function(e) { if(e.target===this) closeModal('projectModal'); });
 document.getElementById('confirmModal').addEventListener('click', function(e) { if(e.target===this) closeModal('confirmModal'); });
+
 function showConfirm(title, msg, onOk, btnLabel='Confirm') {
   document.getElementById('confirmTitle').textContent = title;
   document.getElementById('confirmMsg').textContent = msg;
@@ -1135,48 +1194,45 @@ function showConfirm(title, msg, onOk, btnLabel='Confirm') {
   document.getElementById('confirmModal').classList.add('open');
 }
 
-// ── KEYBOARD SHORTCUTS
+// ── KEYBOARD
 document.addEventListener('keydown', e => {
   if (!CU) return;
   const typing = ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName);
-  if (e.key === 'Escape') { closeModal('projectModal'); closeModal('confirmModal'); closeDetail(); closeProfile(); }
-  if (e.key === 'n' && !typing && currentSlide === 1) { e.preventDefault(); openAddModal(); }
+  if (e.key === 'Escape') {
+    closeModal('confirmModal');
+    closeProfile();
+    closeReportOverlay();
+    closeDayDetail();
+  }
+  if (e.key === 'n' && !typing && currentSlide === 1) {
+    e.preventDefault();
+    document.getElementById('quickTaskInput').focus();
+  }
 });
 
 // ── THEME
 function toggleDashboardTheme() {
   document.body.className = document.body.className === 'theme-login' ? 'theme-signup' : 'theme-login';
-  document.querySelectorAll('.overlay-screen.open').forEach(el => applyOverlayTheme(el));
+  document.querySelectorAll('.overlay-screen.open,.day-detail-overlay.open').forEach(el => applyOverlayTheme(el));
 }
 function applyOverlayTheme(el) {
   const light = document.body.className === 'theme-signup';
   el.style.background = light ? '#f0f0f0' : '#111111';
-  el.style.color = light ? '#1a1a1a' : '#e0e0e0';
-}
-
-// ── TOAST
-let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+  el.style.color       = light ? '#1a1a1a' : '#e0e0e0';
 }
 
 // ── UTILS
-function esc(s='') { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function isDue(d)  { return d && new Date(d) < new Date(); }
-function fmtDue(d) {
-  if (!d) return '';
-  const dt=new Date(d), diff=Math.round((dt-new Date())/86400000);
-  if (diff<0)  return Math.abs(diff)+'d overdue';
-  if (diff===0) return 'Due today';
-  if (diff<=7)  return 'Due in '+diff+'d';
-  return 'Due '+dt.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+function esc(s='') {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
 <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js');
-}
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 </script>
 </body>
 </html>
