@@ -114,13 +114,26 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .summary-total{font-family:'Playfair Display';font-size:22px;font-weight:700;}
 .summary-count{font-size:10px;opacity:.4;margin-top:1px;}
 /* ARCHIVE */
-.arch-sales-scroll{display:flex;gap:11px;overflow-x:auto;padding-bottom:6px;}
-.arch-sales-scroll::-webkit-scrollbar{height:2px;}
-.arch-day-card{min-width:150px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.12);border-radius:16px;padding:13px;cursor:pointer;transition:.2s;flex-shrink:0;}
-.arch-day-card:hover{background:rgba(128,128,128,.18);}
+.arch-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;}
+.arch-day-card{width:100%;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.12);border-radius:16px;padding:12px 14px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:10px;}
+.arch-day-card:hover{background:rgba(128,128,128,.16);}
+.arch-day-card.arch-selected{border-color:rgba(128,128,128,.45);background:rgba(128,128,128,.18);}
+.arch-checkbox{width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(128,128,128,.4);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;transition:.2s;}
+.arch-day-card.arch-selected .arch-checkbox{background:rgba(128,128,128,.4);border-color:transparent;}
+.arch-day-info{flex:1;min-width:0;}
 .arch-day-date{font-family:'Playfair Display';font-size:13px;font-weight:600;}
-.arch-day-meta{font-size:10px;opacity:.4;margin-top:3px;}
-.arch-day-total{font-size:12px;font-weight:600;margin-top:6px;opacity:.7;}
+.arch-day-meta{font-size:10px;opacity:.4;margin-top:1px;}
+.arch-day-total{font-size:11px;font-weight:600;opacity:.7;margin-top:2px;}
+.arch-card-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.arch-del-btn{opacity:.25;cursor:pointer;font-size:12px;background:none;border:none;color:inherit;transition:.2s;padding:4px;}
+.arch-del-btn:hover{opacity:.85;color:#e05252;}
+.arch-select-bar{display:none;gap:8px;margin-bottom:10px;flex-shrink:0;}
+.arch-select-bar.visible{display:flex;}
+.arch-action-btn{flex:1;padding:8px 12px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:600;transition:.2s;border:1px solid;}
+.arch-delete-sel-btn{background:rgba(220,80,80,.08);border-color:rgba(220,80,80,.2);color:#e05252;}
+.arch-delete-sel-btn:hover{background:rgba(220,80,80,.18);}
+.arch-cancel-sel-btn{background:rgba(128,128,128,.08);border-color:rgba(128,128,128,.15);color:inherit;}
+.arch-cancel-sel-btn:hover{background:rgba(128,128,128,.16);}
 /* DOCK */
 .floating-dock{position:absolute;bottom:40px;height:70px;padding:0 20px;background:rgba(128,128,128,.1);backdrop-filter:blur(25px);border-radius:24px;border:1px solid rgba(128,128,128,.2);display:flex;align-items:center;gap:16px;box-shadow:0 20px 40px rgba(0,0,0,.15);}
 .dock-item{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.3;transition:.3s;font-size:19px;}
@@ -322,10 +335,19 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 
       <!-- SLIDE 3: ARCHIVE -->
       <div class="workspace-card">
-        <h2>Archive</h2>
-        <p style="opacity:.4;font-size:12px;margin-top:7px;">Past days' sales records.</p>
-        <div class="section-lbl" style="margin-top:16px;">Sales History</div>
-        <div class="arch-sales-scroll" id="archSalesScroll" style="flex:1;align-content:flex-start;"></div>
+        <div class="card-header" style="margin-bottom:8px;">
+          <h2>Archive</h2>
+          <div style="display:flex;gap:7px;align-items:center;">
+            <button class="add-btn" id="archSelectBtn" onclick="toggleArchiveSelect()" title="Select days" style="font-size:13px;">☑</button>
+            <button class="add-btn" id="archClearBtn" onclick="confirmClearArchive()" title="Clear all" style="font-size:14px;">🗑</button>
+          </div>
+        </div>
+        <p style="opacity:.4;font-size:12px;margin-bottom:10px;flex-shrink:0;">Past days' sales records.</p>
+        <div class="arch-select-bar" id="archSelectBar">
+          <button class="arch-action-btn arch-delete-sel-btn" onclick="deleteSelectedArchive()">Delete Selected</button>
+          <button class="arch-action-btn arch-cancel-sel-btn" onclick="cancelArchiveSelect()">Cancel</button>
+        </div>
+        <div class="arch-list" id="archSalesScroll"></div>
       </div>
 
     </div>
@@ -439,9 +461,13 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
   <div style="display:flex;flex-direction:column;height:100%;">
     <div style="display:flex;align-items:center;gap:13px;padding:50px 28px 18px;flex-shrink:0;">
       <button class="back-btn" onclick="closeDayDetail()">←</button>
-      <div>
+      <div style="flex:1;min-width:0;">
         <div style="font-family:'Playfair Display';font-size:20px;font-weight:700;" id="dayDetailTitle"></div>
         <div style="font-size:11px;opacity:.4;margin-top:3px;" id="dayDetailSubtitle"></div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="shareArchiveDayReport()" style="padding:7px 13px;background:rgba(90,160,120,.12);border:1px solid rgba(90,160,120,.28);border-radius:20px;cursor:pointer;font-size:12px;font-weight:600;color:inherit;transition:.2s;white-space:nowrap;">Share ↗</button>
+        <button onclick="confirmDeleteArchiveDay()" style="padding:7px 13px;background:rgba(220,80,80,.08);border:1px solid rgba(220,80,80,.2);border-radius:20px;cursor:pointer;font-size:12px;font-weight:600;color:#e05252;transition:.2s;white-space:nowrap;">Delete</button>
       </div>
     </div>
     <div style="flex:1;overflow-y:auto;padding:0 28px 40px;" id="dayDetailBody"></div>
@@ -1091,43 +1117,141 @@ async function shareReport() {
 }
 
 // ── ARCHIVE
+let archiveSelectMode = false;
+let selectedArchiveDays = new Set();
+let currentDayDetailKey = null;
+let currentDayDetailLabel = null;
+
+function toggleArchiveSelect() {
+  archiveSelectMode = !archiveSelectMode;
+  selectedArchiveDays.clear();
+  document.getElementById('archSelectBar').classList.toggle('visible', archiveSelectMode);
+  document.getElementById('archSelectBtn').style.opacity = archiveSelectMode ? '1' : '.7';
+  renderArchiveSales();
+}
+
+function cancelArchiveSelect() {
+  archiveSelectMode = false;
+  selectedArchiveDays.clear();
+  document.getElementById('archSelectBar').classList.remove('visible');
+  document.getElementById('archSelectBtn').style.opacity = '.7';
+  renderArchiveSales();
+}
+
+function toggleArchiveDaySelect(dateKey) {
+  if (selectedArchiveDays.has(dateKey)) selectedArchiveDays.delete(dateKey);
+  else selectedArchiveDays.add(dateKey);
+  // Update card UI without full re-render
+  document.querySelectorAll('.arch-day-card').forEach(card => {
+    if (card.dataset.key === dateKey) {
+      const sel = selectedArchiveDays.has(dateKey);
+      card.classList.toggle('arch-selected', sel);
+      const cb = card.querySelector('.arch-checkbox');
+      if (cb) cb.textContent = sel ? '✓' : '';
+    }
+  });
+}
+
+async function deleteSelectedArchive() {
+  if (!selectedArchiveDays.size) { showToast('Select at least one day.'); return; }
+  const n = selectedArchiveDays.size;
+  showConfirm('Delete Selected', `Permanently delete ${n} day${n>1?'s':''} from archive?`, async () => {
+    const updates = {};
+    selectedArchiveDays.forEach(key => {
+      updates['users/' + CU + '/sales/' + key] = null;
+      updates['users/' + CU + '/salesArchiveMeta/' + key] = null;
+    });
+    try {
+      await db.ref().update(updates);
+      cancelArchiveSelect();
+      showToast('Deleted ✓');
+    } catch(e) { showToast('Delete failed.'); }
+  }, 'Delete');
+}
+
+async function deleteSingleArchiveDay(dateKey, e) {
+  e.stopPropagation();
+  showConfirm('Delete Day', "Remove this day's sales from archive?", async () => {
+    try {
+      await Promise.all([
+        db.ref('users/' + CU + '/sales/' + dateKey).remove(),
+        db.ref('users/' + CU + '/salesArchiveMeta/' + dateKey).remove()
+      ]);
+      renderArchiveSales();
+      showToast('Removed ✓');
+    } catch(e) { showToast('Delete failed.'); }
+  }, 'Delete');
+}
+
+async function confirmClearArchive() {
+  showConfirm('Clear All Archive', "Delete all past sales history? Today's log is not affected.", async () => {
+    try {
+      const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
+      const meta = metaSnap.val() || {};
+      const today = todayKey();
+      const updates = {};
+      Object.keys(meta).filter(k => k !== today).forEach(key => {
+        updates['users/' + CU + '/sales/' + key] = null;
+        updates['users/' + CU + '/salesArchiveMeta/' + key] = null;
+      });
+      if (!Object.keys(updates).length) { showToast('Nothing to clear.'); return; }
+      await db.ref().update(updates);
+      renderArchiveSales();
+      showToast('Archive cleared ✓');
+    } catch(e) { showToast('Clear failed.'); }
+  }, 'Clear All');
+}
+
 async function renderArchiveSales() {
   const scroll = document.getElementById('archSalesScroll');
   if (!scroll || !CU) return;
-  scroll.innerHTML = '<span style="font-size:12px;opacity:.3;">Loading…</span>';
+  scroll.innerHTML = '<div style="opacity:.3;font-size:12px;padding:10px 0;">Loading…</div>';
   try {
     const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
     const meta = metaSnap.val() || {};
     const today = todayKey();
     const days = Object.values(meta)
       .filter(d => d.date !== today)
-      .sort((a,b) => b.date.localeCompare(a.date));
+      .sort((a, b) => b.date.localeCompare(a.date));
     if (!days.length) {
-      scroll.innerHTML = '<span style="font-size:12px;opacity:.3;">No past sales yet.</span>';
+      scroll.innerHTML = '<div style="text-align:center;opacity:.28;padding:30px 0;"><div style="font-size:26px;margin-bottom:8px;">⧉</div><p style="font-size:12px;">No past sales yet.</p></div>';
       return;
     }
-    scroll.innerHTML = days.map(d => `
-      <div class="arch-day-card" onclick="openDayDetail('${d.date}','${esc(d.label)}')">
-        <div class="arch-day-date">${esc(d.label)}</div>
-        <div class="arch-day-meta">Tap to expand</div>
-        <div class="arch-day-total" id="archDayTotal-${d.date}">Loading…</div>
-      </div>`).join('');
+    // Render cards immediately, load totals async
+    scroll.innerHTML = days.map(d => {
+      const isSel = selectedArchiveDays.has(d.date);
+      return `<div class="arch-day-card${isSel?' arch-selected':''}" data-key="${d.date}"
+          onclick="${archiveSelectMode ? `toggleArchiveDaySelect('${d.date}')` : `openDayDetail('${d.date}','${esc(d.label)}')`}">
+        ${archiveSelectMode ? `<div class="arch-checkbox">${isSel?'✓':''}</div>` : ''}
+        <div class="arch-day-info">
+          <div class="arch-day-date">${esc(d.label)}</div>
+          <div class="arch-day-total" id="archDayTotal-${d.date}">Loading…</div>
+        </div>
+        <div class="arch-card-right">
+          ${!archiveSelectMode ? `<button class="arch-del-btn" onclick="deleteSingleArchiveDay('${d.date}',event)" title="Delete">✕</button>` : ''}
+          ${!archiveSelectMode ? `<span style="opacity:.3;font-size:14px;">›</span>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+    // Load totals async
     days.forEach(async d => {
       const snap = await db.ref('users/' + CU + '/sales/' + d.date).once('value');
       const entries = Object.values(snap.val() || {});
-      const total = entries.reduce((s,e) => s + (e.price * e.qty), 0);
+      const total = entries.reduce((s, e) => s + (e.price * e.qty), 0);
       const el = document.getElementById('archDayTotal-' + d.date);
       if (el) el.textContent = `Ksh ${total.toLocaleString()} · ${entries.length} sale${entries.length!==1?'s':''}`;
     });
   } catch(e) {
-    scroll.innerHTML = '<span style="font-size:12px;opacity:.3;">Could not load history.</span>';
+    scroll.innerHTML = '<div style="opacity:.3;font-size:12px;padding:10px 0;">Could not load history.</div>';
   }
 }
 
 async function openDayDetail(dateKey, label) {
+  currentDayDetailKey   = dateKey;
+  currentDayDetailLabel = label;
   const overlay = document.getElementById('dayDetailOverlay');
   const body    = document.getElementById('dayDetailBody');
-  document.getElementById('dayDetailTitle').textContent = label;
+  document.getElementById('dayDetailTitle').textContent    = label;
   document.getElementById('dayDetailSubtitle').textContent = 'Sales breakdown';
   body.innerHTML = '<div style="padding:20px 0;opacity:.4;font-size:13px;">Loading…</div>';
   applyOverlayTheme(overlay);
@@ -1135,14 +1259,14 @@ async function openDayDetail(dateKey, label) {
   try {
     const snap = await db.ref('users/' + CU + '/sales/' + dateKey).once('value');
     const entries = Object.entries(snap.val() || {})
-      .map(([id,v]) => ({id,...v}))
-      .sort((a,b) => a.order - b.order);
+      .map(([id, v]) => ({id, ...v}))
+      .sort((a, b) => a.order - b.order);
     if (!entries.length) {
       body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">No entries for this day.</div>';
       return;
     }
-    const total = entries.reduce((s,e) => s + (e.price * e.qty), 0);
-    body.innerHTML = entries.map((e,i) => `
+    const total = entries.reduce((s, e) => s + (e.price * e.qty), 0);
+    body.innerHTML = entries.map((e, i) => `
       <div style="background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;">
         <div style="font-family:'Playfair Display';font-size:16px;font-weight:700;opacity:.3;min-width:20px;">${i+1}</div>
         <div style="flex:1;min-width:0;">
@@ -1159,7 +1283,68 @@ async function openDayDetail(dateKey, label) {
     body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">Failed to load.</div>';
   }
 }
-function closeDayDetail() { document.getElementById('dayDetailOverlay').classList.remove('open'); }
+
+function closeDayDetail() {
+  document.getElementById('dayDetailOverlay').classList.remove('open');
+  currentDayDetailKey = null; currentDayDetailLabel = null;
+}
+
+function confirmDeleteArchiveDay() {
+  if (!currentDayDetailKey) return;
+  showConfirm('Delete Day', `Remove "${currentDayDetailLabel}" from archive?`, async () => {
+    try {
+      await Promise.all([
+        db.ref('users/' + CU + '/sales/' + currentDayDetailKey).remove(),
+        db.ref('users/' + CU + '/salesArchiveMeta/' + currentDayDetailKey).remove()
+      ]);
+      closeDayDetail();
+      renderArchiveSales();
+      showToast('Day deleted ✓');
+    } catch(e) { showToast('Delete failed.'); }
+  }, 'Delete');
+}
+
+async function shareArchiveDayReport() {
+  if (!currentDayDetailKey) return;
+  const prof = currentProfile || {};
+  try {
+    const snap = await db.ref('users/' + CU + '/sales/' + currentDayDetailKey).once('value');
+    const entries = Object.entries(snap.val() || {})
+      .map(([id, v]) => ({id, ...v}))
+      .sort((a, b) => a.order - b.order);
+    const total  = entries.reduce((s, e) => s + (e.price * e.qty), 0);
+    const target = parseFloat(prof.branchTarget) || 0;
+    const pct    = target > 0 ? ((total / target) * 100).toFixed(1) : null;
+    const line   = '─'.repeat(38);
+    let r = `SALES REPORT — ${currentDayDetailLabel}\n${line}\n`;
+    r += `Outlet  : ${prof.outlet || '(not set)'}\n`;
+    r += `Officer : ${prof.officialNames || '(not set)'}\n`;
+    r += `Brand   : ${prof.brand || '(not set)'}\n`;
+    if (target > 0) r += `Target  : Ksh ${target.toLocaleString()}\n`;
+    r += `${line}\n\n`;
+    if (!entries.length) {
+      r += 'No transactions recorded.\n\n';
+    } else {
+      r += `TRANSACTIONS (${entries.length})\n\n`;
+      entries.forEach((e, i) => {
+        r += `${i+1}. ${e.item}\n`;
+        r += `   Model : ${e.model||'—'} | S/N: ${e.serial||'—'}\n`;
+        r += `   Qty : ${e.qty} × Ksh ${Number(e.price).toLocaleString()} = Ksh ${(e.price*e.qty).toLocaleString()}\n\n`;
+      });
+    }
+    r += `${line}\nTOTAL : Ksh ${total.toLocaleString()}\n`;
+    if (pct) r += `ACHIEVEMENT : ${pct}%\n`;
+    r += `${line}\nRoyal Horizon Workspace`;
+    if (navigator.share) {
+      try { await navigator.share({ title: `Sales Report – ${currentDayDetailLabel}`, text: r }); }
+      catch(e) { /* cancelled */ }
+    } else {
+      navigator.clipboard.writeText(r)
+        .then(() => showToast('Report copied ✓'))
+        .catch(() => showToast('Could not copy.'));
+    }
+  } catch(e) { showToast('Could not generate report.'); }
+}
 
 // ── CAROUSEL
 function moveTrack(idx) {
