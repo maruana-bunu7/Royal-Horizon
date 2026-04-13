@@ -602,8 +602,13 @@ auth.onAuthStateChanged(async (user) => {
     stopTasksListener();
     if (salesUnsubscribe) salesUnsubscribe();
     showPortal();
+    document.getElementById('loadingOverlay').style.display = 'none';
   }
-  document.getElementById('loadingOverlay').classList.add('hidden');
+
+  startTasksListener();
+  initSalesListener();
+  initOfflineSupport();
+  requestNotificationPermission();
 });
 
 function showPortal() {
