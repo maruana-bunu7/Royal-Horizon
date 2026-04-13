@@ -1,10 +1,18 @@
-const CACHE_NAME = 'rh-cache-v5';
+const CACHE_NAME = 'rh-cache-v6';
+
 const ASSETS = [
   '/',
   '/index.html',
   '/manifest.json'
 ];
 
+const APP_SHELL = [
+  '/',
+  '/index.html',
+  '/manifest.json'
+];
+
+// ---- INSTALL ----
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
@@ -12,6 +20,7 @@ self.addEventListener('install', e => {
   self.skipWaiting();
 });
 
+// ---- ACTIVATE ----
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
@@ -21,28 +30,24 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
-self.addEventListener('fetch', e => {
-  e.respondWith(
-    fetch(e.request)
-      .then(res => {
-        const clone = res.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
-        return res;
-      })
-      .catch(() => caches.match(e.request))
-  );
-});  const url = event.request.url;
+// ---- FETCH ----
+self.addEventListener('fetch', event => {
+  const url = event.request.url;
 
-  // 🚫 NEVER cache APIs
+  // 🚫 NEVER cache Firebase or API calls
   if (
     url.includes('anthropic.com') ||
     url.includes('googleapis.com') ||
-    url.includes('firebaseio.com')
+    url.includes('firebaseio.com') ||
+    url.includes('firebaseapp.com') ||
+    url.includes('identitytoolkit') ||
+    url.includes('securetoken')
   ) {
+    event.respondWith(fetch(event.request));
     return;
   }
 
-  // 🎨 Fonts & external assets → stale while revalidate
+  // 🎨 Fonts → stale while revalidate
   if (
     url.includes('gstatic.com') ||
     url.includes('fonts.googleapis.com') ||
@@ -62,7 +67,7 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // 🧱 APP SHELL → cache first
+  // 🧱 App shell → cache first
   if (APP_SHELL.some(path => url.endsWith(path))) {
     event.respondWith(
       caches.match(event.request).then(cached => {
@@ -72,16 +77,6 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // 🌐 Default → network only (NO caching)
+  // 🌐 Everything else → network only
   event.respondWith(fetch(event.request));
-});  event.respondWith(
-    fetch(event.request)
-      .then(res => {
-        if (res && res.status === 200) {
-          caches.open(CACHE_NAME).then(c => c.put(event.request, res.clone()));
-        }
-        return res;
-      })
-      .catch(() => caches.match(event.request))
-  );
 });
