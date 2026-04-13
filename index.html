@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#f4f4f4" media="(prefers-color-scheme: light)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Royal Horizon Workspace</title>
+<title>Horizon Workspace</title>
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,7 +32,7 @@ h1,h2,h3,.btn-main,.btn-submit,.modal-btn,.proj-detail-title{font-family:'Playfa
 .btn-login{background:#121212;color:#fff;}.btn-signup{background:#f4f4f4;color:#1a1a1a;}
 .form-wrapper{position:absolute;top:50%;left:50%;transform:translate(-50%,-45%);width:90%;opacity:0;visibility:hidden;transition:.4s var(--ui-curve);}
 .form-wrapper.active{opacity:1;visibility:visible;transform:translate(-50%,-50%);}
-.glass-card{background:rgba(128,128,128,.05);backdrop-filter:blur(25px);padding:36px;border-radius:30px;border:1px solid rgba(128,128,128,.2);}
+.glass-card{background:rgba(128,128,128,.1);padding:36px;border-radius:30px;border:1px solid rgba(128,128,128,.2);}
 label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;opacity:.5;margin-bottom:5px;text-align:left;}
 input,textarea,select{width:100%;background:transparent;border:none;color:inherit;font-family:'Inter',sans-serif;}
 .portal-input{padding:10px 0;border-bottom:1px solid rgba(128,128,128,.4);margin-bottom:18px;font-size:14px;}
@@ -45,11 +45,13 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .dashboard-wrapper{position:fixed;top:0;left:0;width:100vw;height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:100;opacity:0;transition:.8s var(--slide-curve);}
 .header-row{position:absolute;top:40px;width:85%;display:flex;justify-content:space-between;align-items:center;}
 .header-right{display:flex;gap:14px;align-items:center;}
-.avatar-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;border:none;font-family:'Playfair Display',serif;flex-shrink:0;color:#fff;}
+/* AVATAR — photo or initial, no color picker */
+.avatar-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;border:none;font-family:'Playfair Display',serif;flex-shrink:0;color:#fff;background:#6B8E7F;overflow:hidden;}
+.avatar-btn img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 .theme-toggle{cursor:pointer;font-size:22px;opacity:.5;transition:.2s;}.theme-toggle:hover{opacity:1;}
 .carousel-container{width:100%;height:75vh;display:flex;align-items:center;overflow:visible;padding:0 10%;}
 .workspace-track{display:flex;gap:30px;transition:transform var(--slide-speed) var(--slide-curve);will-change:transform;}
-.workspace-card{min-width:80vw;height:65vh;background:rgba(128,128,128,.08);backdrop-filter:blur(15px);border:1px solid rgba(128,128,128,.15);border-radius:40px;padding:35px;opacity:.15;transform:scale(.92);transition:opacity var(--slide-speed) var(--slide-curve),transform var(--slide-speed) var(--slide-curve);display:flex;flex-direction:column;}
+.workspace-card{min-width:80vw;height:65vh;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.15);border-radius:40px;padding:35px;opacity:.15;transform:scale(.92);transition:opacity var(--slide-speed) var(--slide-curve),transform var(--slide-speed) var(--slide-curve);display:flex;flex-direction:column;}
 .workspace-card.active{opacity:1;transform:scale(1);background:rgba(128,128,128,.12);}
 .overview-stats{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:16px;}
 .stat-box{background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.12);border-radius:18px;padding:16px;}
@@ -68,7 +70,7 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
 .add-btn{width:32px;height:32px;border-radius:50%;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:19px;opacity:.7;transition:.2s;color:inherit;}
 .add-btn:hover{opacity:1;}
-/* TASKS SLIDE */
+/* TASKS */
 .task-quick-add{display:flex;gap:8px;margin-bottom:11px;}
 .task-quick-input{flex:1;font-size:13px;padding:9px 13px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.14);border-radius:12px;color:inherit;}
 .task-quick-input::placeholder{opacity:.4;}
@@ -84,7 +86,6 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .task2-item.done2 .task2-check{background:rgba(128,128,128,.35);border-color:transparent;}
 .task2-text{flex:1;min-width:0;font-size:14px;line-height:1.4;}
 .task2-item.done2 .task2-text{text-decoration:line-through;}
-.task2-note{font-size:11px;opacity:.42;margin-top:3px;}
 .task2-del{opacity:.22;cursor:pointer;font-size:12px;background:none;border:none;color:inherit;transition:.2s;padding:2px;flex-shrink:0;margin-top:1px;}
 .task2-del:hover{opacity:.85;color:#e05252;}
 .tasks-footer{padding-top:10px;border-top:1px solid rgba(128,128,128,.1);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
@@ -146,8 +147,14 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .back-btn{width:34px;height:34px;border-radius:50%;background:rgba(128,128,128,.1);border:1px solid rgba(128,128,128,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;transition:.2s;flex-shrink:0;color:inherit;}
 .back-btn:hover{background:rgba(128,128,128,.2);}
 .overlay-body{flex:1;overflow-y:auto;padding:0 28px 40px;}
-/* PROFILE */
-.profile-avatar-large{width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;font-family:'Playfair Display';margin:0 auto 22px;border:2px solid rgba(128,128,128,.3);color:#fff;}
+/* PROFILE AVATAR — photo upload */
+.profile-avatar-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:22px;}
+.profile-avatar-large{width:82px;height:82px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;font-family:'Playfair Display';border:2px solid rgba(128,128,128,.3);color:#fff;background:#6B8E7F;overflow:hidden;position:relative;cursor:pointer;}
+.profile-avatar-large img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.profile-avatar-large:hover .avatar-edit-hint{opacity:1;}
+.avatar-edit-hint{position:absolute;inset:0;background:rgba(0,0,0,.45);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;opacity:0;transition:.2s;font-family:'Inter',sans-serif;}
+.avatar-photo-label{font-size:11px;opacity:.4;margin-top:8px;letter-spacing:.5px;text-transform:uppercase;}
+/* PROFILE fields */
 .profile-section-divider{border:none;border-top:1px solid rgba(128,128,128,.15);margin:20px 0;}
 .profile-section-label{font-size:10px;text-transform:uppercase;letter-spacing:1.8px;opacity:.35;margin-bottom:14px;font-weight:600;}
 .profile-field{margin-bottom:16px;}
@@ -156,10 +163,6 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .profile-input:focus:not([readonly]){border-color:rgba(128,128,128,.4);}
 .profile-input[readonly]{opacity:.42;cursor:default;}
 .profile-textarea{resize:none;min-height:75px;line-height:1.6;}
-.color-picker{display:flex;gap:9px;flex-wrap:wrap;}
-.color-swatch{width:32px;height:32px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:.2s;}
-.color-swatch.selected{border-color:rgba(255,255,255,.85);transform:scale(1.12);}
-body.theme-signup .color-swatch.selected{border-color:rgba(0,0,0,.5);}
 .profile-edit-btn{padding:9px 20px;background:rgba(128,128,128,.12);border:1px solid rgba(128,128,128,.2);border-radius:20px;cursor:pointer;font-size:13px;font-weight:600;color:inherit;transition:.2s;margin-left:auto;white-space:nowrap;}
 .profile-edit-btn:hover{background:rgba(128,128,128,.22);}
 .profile-edit-btn.active{background:rgba(220,100,80,.1);border-color:rgba(220,100,80,.25);color:#e05252;}
@@ -199,11 +202,15 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 .day-detail-overlay.open{transform:translateY(0);opacity:1;pointer-events:all;}
 /* OVERVIEW */
 .overview-sales-box{background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.12);border-radius:16px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;}
+/* Hidden file input */
+#avatarFileInput{display:none;}
 </style>
 </head>
 <body>
 
 <div class="loading-overlay" id="loadingOverlay"><div class="loading-spinner">✦</div></div>
+<!-- Hidden file input for avatar photo -->
+<input type="file" id="avatarFileInput" accept="image/*" onchange="handleAvatarUpload(event)">
 
 <!-- PORTAL -->
 <div class="container" id="portalContainer" style="display:none;">
@@ -284,7 +291,7 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
       <div class="workspace-card">
         <div class="card-header">
           <h2>Tasks</h2>
-          <button class="add-btn" id="clearDoneBtnHeader" onclick="clearDoneTasks()" title="Clear completed">✓</button>
+          <button class="add-btn" onclick="clearDoneTasks()" title="Clear completed">✓</button>
         </div>
         <div class="task-quick-add">
           <input class="task-quick-input" id="quickTaskInput" placeholder="Add a task or note…" onkeydown="if(event.key==='Enter')addQuickTask()">
@@ -369,12 +376,13 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
       <button class="profile-edit-btn" id="profileEditBtn" onclick="toggleProfileEdit()">✎ Edit</button>
     </div>
     <div class="overlay-body">
-      <div class="profile-avatar-large" id="profileAvatarLarge"></div>
 
-      <!-- Avatar colour — only interactive in edit mode -->
-      <div class="profile-field" id="colorPickerSection" style="opacity:.35;pointer-events:none;transition:.3s;">
-        <label class="profile-label">Avatar Colour</label>
-        <div class="color-picker" id="colorPicker"></div>
+      <!-- AVATAR: photo or initial, tap to change -->
+      <div class="profile-avatar-wrap">
+        <div class="profile-avatar-large" id="profileAvatarLarge" onclick="triggerAvatarUpload()">
+          <div class="avatar-edit-hint">📷</div>
+        </div>
+        <span class="avatar-photo-label">Tap to change photo</span>
       </div>
 
       <!-- PERSONAL INFO -->
@@ -467,7 +475,7 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
       </div>
       <div style="display:flex;gap:8px;">
         <button onclick="shareArchiveDayReport()" style="padding:7px 13px;background:rgba(90,160,120,.12);border:1px solid rgba(90,160,120,.28);border-radius:20px;cursor:pointer;font-size:12px;font-weight:600;color:inherit;transition:.2s;white-space:nowrap;">Share ↗</button>
-        <button onclick="confirmDeleteArchiveDay()" style="padding:7px 13px;background:rgba(220,80,80,.08);border:1px solid rgba(220,80,80,.2);border-radius:20px;cursor:pointer;font-size:12px;font-weight:600;color:#e05252;transition:.2s;white-space:nowrap;">Delete</button>
+        <button onclick="confirmDeleteArchiveDay()" style="padding:7px 13px;background:rgba(220,80,80,.08);border:1px solid rgba(220,80,80,.2);border-radius:20px;cursor:pointer;font-size:12px;font-weight:600;color:#e05252;transition:.2s;white-space:nowrap;">Delete Day</button>
       </div>
     </div>
     <div style="flex:1;overflow-y:auto;padding:0 28px 40px;" id="dayDetailBody"></div>
@@ -506,8 +514,6 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db   = firebase.database();
 
-const AVATAR_COLORS = ['#8B7355','#6B8E7F','#7B6B8E','#8E7B6B','#5E8E8E','#8E6B7B','#6B7B8E','#7B8E6B'];
-
 let CU = null, currentProfile = null;
 let cachedTasks = [], tasksListenerRef = null, tasksListenerFn = null;
 let currentSlide = 0;
@@ -515,8 +521,9 @@ let cachedSales = [], salesUnsubscribe = null;
 let taskFilter = 'all';
 let profileEditMode = false;
 let currentReportText = '';
+let avatarDataURL = null; // holds the chosen photo as base64
 
-// ── LOCAL date key
+// LOCAL date key
 function todayKey() {
   const d = new Date();
   return d.getFullYear() + '-' +
@@ -524,18 +531,29 @@ function todayKey() {
     String(d.getDate()).padStart(2,'0');
 }
 
+// ── FIX: Restore dashboard visibility when app returns from background
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && CU) {
+    const dash = document.getElementById('dashboard');
+    if (dash && dash.style.display === 'flex') {
+      dash.style.opacity = '1';
+    }
+  }
+});
+
 // ── AUTH
 auth.onAuthStateChanged(async (user) => {
   if (user) {
     CU = user.uid;
     const snap = await db.ref('users/' + CU + '/profile').once('value');
-    currentProfile = snap.val() || { name: 'Guest', color: AVATAR_COLORS[0] };
+    currentProfile = snap.val() || { name: 'Guest' };
     loadDashboard(true);
     startTasksListener();
     initSalesListener();
   } else {
     CU = null; currentProfile = null;
     stopTasksListener();
+    if (salesUnsubscribe) { salesUnsubscribe(); salesUnsubscribe = null; }
     showPortal();
   }
   document.getElementById('loadingOverlay').classList.add('hidden');
@@ -594,7 +612,7 @@ async function handleSignup() {
     const cred = await auth.createUserWithEmailAndPassword(email, password);
     const uid = cred.user.uid;
     const now = Date.now();
-    const profile = { name, username, email, bio: '', color: AVATAR_COLORS[0], apiKey: '',
+    const profile = { name, username, email, bio: '', apiKey: '',
       outlet: '', officialNames: '', brand: '', branchTarget: '', createdAt: now };
     await Promise.all([
       db.ref('usernames/' + username).set({ uid, email }),
@@ -615,7 +633,8 @@ async function handleLogout() {
     stopTasksListener();
     if (salesUnsubscribe) salesUnsubscribe();
     await auth.signOut();
-    cachedTasks = []; cachedSales = [];
+    cachedTasks = []; cachedSales = []; avatarDataURL = null;
+    try { if (CU) localStorage.removeItem('rh_avatar_' + CU); } catch(e) {}
     ['loginUser','loginPass','signupName','signupUser','signupEmail','signupPass'].forEach(id => {
       const el = document.getElementById(id); if (el) el.value = '';
     });
@@ -645,27 +664,63 @@ function loadDashboard(instant) {
   else setTimeout(() => { dash.style.opacity = '1'; }, 50);
 }
 
+// ── AVATAR — shows photo if saved, otherwise initial letter
 function updateAvatar(prof) {
   const btn = document.getElementById('avatarBtn');
-  btn.style.background = prof.color || AVATAR_COLORS[0];
-  btn.textContent = (prof.name || 'G')[0].toUpperCase();
+  // Try localStorage first (fast, avoids large DB reads)
+  let photo = null;
+  if (CU) { try { photo = localStorage.getItem('rh_avatar_' + CU); } catch(e) {} }
+  if (!photo) photo = prof && prof.avatarPhoto; // fallback to DB field (legacy)
+  if (photo) {
+    btn.innerHTML = `<img src="${photo}" alt="avatar">`;
+  } else {
+    btn.innerHTML = '';
+    btn.style.background = '#6B8E7F';
+    btn.textContent = (prof && prof.name ? prof.name[0].toUpperCase() : 'G');
+  }
+}
+
+// ── AVATAR UPLOAD
+function triggerAvatarUpload() {
+  if (!profileEditMode) return; // only in edit mode
+  document.getElementById('avatarFileInput').click();
+}
+
+function handleAvatarUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { showToast('Image too large. Max 2 MB.'); return; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    avatarDataURL = e.target.result;
+    // Preview in profile overlay
+    const av = document.getElementById('profileAvatarLarge');
+    av.innerHTML = `<img src="${avatarDataURL}" alt="avatar"><div class="avatar-edit-hint">📷</div>`;
+    // Also update header button preview
+    const btn = document.getElementById('avatarBtn');
+    btn.innerHTML = `<img src="${avatarDataURL}" alt="avatar">`;
+    showToast('Photo selected — save to confirm.');
+  };
+  reader.readAsDataURL(file);
+  event.target.value = ''; // reset so same file can be re-selected
 }
 
 // ── PROFILE
 function openProfile() {
   const prof = currentProfile || {};
   profileEditMode = false;
+  avatarDataURL = null;
 
-  document.getElementById('profileName').value        = prof.name || '';
-  document.getElementById('profileUsername').value    = prof.username || '';
-  document.getElementById('profileEmail').value       = prof.email || '';
-  document.getElementById('profileBio').value         = prof.bio || '';
-  document.getElementById('profileApiKey').value      = prof.apiKey || '';
-  document.getElementById('profileOutlet').value      = prof.outlet || '';
+  document.getElementById('profileName').value          = prof.name || '';
+  document.getElementById('profileUsername').value      = prof.username || '';
+  document.getElementById('profileEmail').value         = prof.email || '';
+  document.getElementById('profileBio').value           = prof.bio || '';
+  document.getElementById('profileApiKey').value        = prof.apiKey || '';
+  document.getElementById('profileOutlet').value        = prof.outlet || '';
   document.getElementById('profileOfficialNames').value = prof.officialNames || '';
-  document.getElementById('profileBrand').value       = prof.brand || '';
-  document.getElementById('profileBranchTarget').value = prof.branchTarget || '';
-  document.getElementById('profileMemberSince').value = prof.createdAt
+  document.getElementById('profileBrand').value         = prof.brand || '';
+  document.getElementById('profileBranchTarget').value  = prof.branchTarget || '';
+  document.getElementById('profileMemberSince').value   = prof.createdAt
     ? new Date(prof.createdAt).toLocaleDateString('en-GB', { year:'numeric', month:'long', day:'numeric' }) : '—';
 
   setProfileReadOnly(true);
@@ -674,23 +729,24 @@ function openProfile() {
   btn.textContent = '✎ Edit'; btn.classList.remove('active');
   document.getElementById('profileSaveBtn').style.display = 'none';
 
-  const cp = document.getElementById('colorPicker');
-  cp.innerHTML = AVATAR_COLORS.map(c =>
-    `<div class="color-swatch${c===(prof.color||AVATAR_COLORS[0])?' selected':''}" style="background:${c}" onclick="pickColor('${c}',this)"></div>`
-  ).join('');
-  const cpSection = document.getElementById('colorPickerSection');
-  cpSection.style.opacity = '.35'; cpSection.style.pointerEvents = 'none';
-
+  // Avatar display — read from localStorage (fast)
   const av = document.getElementById('profileAvatarLarge');
-  av.style.background = prof.color || AVATAR_COLORS[0];
-  av.textContent = (prof.name || 'G')[0].toUpperCase();
+  let storedPhoto = null;
+  if (CU) { try { storedPhoto = localStorage.getItem('rh_avatar_' + CU); } catch(e) {} }
+  const displayPhoto = storedPhoto || prof.avatarPhoto;
+  if (displayPhoto) {
+    av.innerHTML = `<img src="${displayPhoto}" alt="avatar"><div class="avatar-edit-hint">📷</div>`;
+  } else {
+    av.innerHTML = `<span>${(prof.name || 'G')[0].toUpperCase()}</span><div class="avatar-edit-hint">📷</div>`;
+    av.style.background = '#6B8E7F';
+  }
+  av.style.cursor = 'default';
 
   applyOverlayTheme(document.getElementById('profileOverlay'));
   document.getElementById('profileOverlay').classList.add('open');
 }
 
 function setProfileReadOnly(readonly) {
-  // username, email, memberSince are ALWAYS readonly
   const editableIds = ['profileName','profileBio','profileApiKey','profileOutlet','profileOfficialNames','profileBrand','profileBranchTarget'];
   editableIds.forEach(id => {
     const el = document.getElementById(id);
@@ -703,89 +759,91 @@ function setProfileReadOnly(readonly) {
 
 function toggleProfileEdit() {
   if (profileEditMode) {
-    // Cancel — restore original values
+    // Cancel edit — restore
     profileEditMode = false;
+    avatarDataURL = null;
     const prof = currentProfile || {};
-    document.getElementById('profileName').value        = prof.name || '';
-    document.getElementById('profileBio').value         = prof.bio || '';
-    document.getElementById('profileApiKey').value      = prof.apiKey || '';
-    document.getElementById('profileOutlet').value      = prof.outlet || '';
+    document.getElementById('profileName').value          = prof.name || '';
+    document.getElementById('profileBio').value           = prof.bio || '';
+    document.getElementById('profileApiKey').value        = prof.apiKey || '';
+    document.getElementById('profileOutlet').value        = prof.outlet || '';
     document.getElementById('profileOfficialNames').value = prof.officialNames || '';
-    document.getElementById('profileBrand').value       = prof.brand || '';
-    document.getElementById('profileBranchTarget').value = prof.branchTarget || '';
-    // Reset color picker
-    document.getElementById('colorPicker').innerHTML = AVATAR_COLORS.map(c =>
-      `<div class="color-swatch${c===(prof.color||AVATAR_COLORS[0])?' selected':''}" style="background:${c}" onclick="pickColor('${c}',this)"></div>`
-    ).join('');
+    document.getElementById('profileBrand').value         = prof.brand || '';
+    document.getElementById('profileBranchTarget').value  = prof.branchTarget || '';
+    // Reset avatar to saved state
+    const av = document.getElementById('profileAvatarLarge');
+    let cancelPhoto = null;
+    if (CU) { try { cancelPhoto = localStorage.getItem('rh_avatar_' + CU); } catch(e) {} }
+    const cancelDisplayPhoto = cancelPhoto || prof.avatarPhoto;
+    if (cancelDisplayPhoto) {
+      av.innerHTML = `<img src="${cancelDisplayPhoto}" alt="avatar"><div class="avatar-edit-hint">📷</div>`;
+    } else {
+      av.innerHTML = `<span>${(prof.name||'G')[0].toUpperCase()}</span><div class="avatar-edit-hint">📷</div>`;
+    }
+    av.style.cursor = 'default';
     setProfileReadOnly(true);
     const btn = document.getElementById('profileEditBtn');
     btn.textContent = '✎ Edit'; btn.classList.remove('active');
     document.getElementById('profileSaveBtn').style.display = 'none';
-    const cpSection = document.getElementById('colorPickerSection');
-    cpSection.style.opacity = '.35'; cpSection.style.pointerEvents = 'none';
+    // Header avatar back to saved state
+    updateAvatar(currentProfile);
   } else {
     profileEditMode = true;
     setProfileReadOnly(false);
+    const av = document.getElementById('profileAvatarLarge');
+    av.style.cursor = 'pointer';
     const btn = document.getElementById('profileEditBtn');
     btn.textContent = '✕ Cancel'; btn.classList.add('active');
     document.getElementById('profileSaveBtn').style.display = 'block';
-    const cpSection = document.getElementById('colorPickerSection');
-    cpSection.style.opacity = '1'; cpSection.style.pointerEvents = '';
   }
 }
 
 function closeProfile() {
   document.getElementById('profileOverlay').classList.remove('open');
-  // If edit mode was open, close cleanly
   if (profileEditMode) {
     profileEditMode = false;
+    avatarDataURL = null;
     setProfileReadOnly(true);
     document.getElementById('profileEditBtn').textContent = '✎ Edit';
     document.getElementById('profileEditBtn').classList.remove('active');
     document.getElementById('profileSaveBtn').style.display = 'none';
+    updateAvatar(currentProfile);
   }
 }
 
-function pickColor(c, el) {
-  document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
-  el.classList.add('selected');
-  document.getElementById('profileAvatarLarge').style.background = c;
-}
-
 async function saveProfile() {
-  const sel = document.querySelector('.color-swatch.selected');
-  const color = sel ? sel.style.background : (currentProfile.color || AVATAR_COLORS[0]);
   const updates = {
-    name: document.getElementById('profileName').value.trim() || currentProfile.name,
-    bio: document.getElementById('profileBio').value.trim(),
-    apiKey: document.getElementById('profileApiKey').value.trim(),
-    color,
-    outlet: document.getElementById('profileOutlet').value.trim(),
+    name:          document.getElementById('profileName').value.trim() || currentProfile.name,
+    bio:           document.getElementById('profileBio').value.trim(),
+    apiKey:        document.getElementById('profileApiKey').value.trim(),
+    outlet:        document.getElementById('profileOutlet').value.trim(),
     officialNames: document.getElementById('profileOfficialNames').value.trim(),
-    brand: document.getElementById('profileBrand').value.trim(),
-    branchTarget: document.getElementById('profileBranchTarget').value.trim(),
+    brand:         document.getElementById('profileBrand').value.trim(),
+    branchTarget:  document.getElementById('profileBranchTarget').value.trim(),
   };
+  // Avatar photo stored in localStorage only (avoids bloating Firebase DB)
+  if (avatarDataURL) {
+    try { localStorage.setItem('rh_avatar_' + CU, avatarDataURL); } catch(e) {}
+  }
   try {
     await db.ref('users/' + CU + '/profile').update(updates);
     currentProfile = { ...currentProfile, ...updates };
     document.getElementById('greeting').innerText = 'Welcome, ' + currentProfile.name;
     updateAvatar(currentProfile);
     showToast('Profile saved ✓');
-    // Exit edit mode smoothly
-    profileEditMode = true; // trick toggleProfileEdit into thinking we're in edit mode so it cancels
-    toggleProfileEdit();
+    profileEditMode = true; toggleProfileEdit(); // exit edit mode
   } catch(e) { showToast('Save failed.'); }
 }
 
 function confirmDeleteAccount() {
-  showConfirm('Delete Account', 'This permanently deletes your account and all your data. Cannot be undone.', async () => {
+  showConfirm('Delete Account', 'This permanently deletes your account and all data. Cannot be undone.', async () => {
     try {
       await db.ref('users/' + CU).remove();
       if (currentProfile && currentProfile.username) await db.ref('usernames/' + currentProfile.username).remove();
       await auth.currentUser.delete();
       showToast('Account deleted.');
     } catch(e) {
-      if (e.code === 'auth/requires-recent-login') showToast('Please sign out and back in, then try again.');
+      if (e.code === 'auth/requires-recent-login') showToast('Sign out and back in, then try again.');
       else showToast('Could not delete fully. Check connection.');
     }
   }, 'Delete');
@@ -805,7 +863,6 @@ function startTasksListener() {
   };
   tasksListenerRef.on('value', tasksListenerFn);
 }
-
 function stopTasksListener() {
   if (tasksListenerRef && tasksListenerFn) {
     tasksListenerRef.off('value', tasksListenerFn);
@@ -824,10 +881,8 @@ function renderTasksSlide() {
   let list = [...cachedTasks];
   if (taskFilter === 'pending') list = list.filter(t => !t.done);
   if (taskFilter === 'done')    list = list.filter(t =>  t.done);
-
   const el = document.getElementById('tasksList2');
   if (!el) return;
-
   if (!list.length) {
     const msgs = { all:'No tasks yet. Add one above ↑', pending:'All caught up! ✓', done:'No completed tasks yet.' };
     el.innerHTML = `<div style="text-align:center;opacity:.28;padding:30px 0;"><div style="font-size:30px;margin-bottom:9px;">${taskFilter==='done'?'○':'✓'}</div><p style="font-size:12px;line-height:1.6;">${msgs[taskFilter]}</p></div>`;
@@ -835,16 +890,12 @@ function renderTasksSlide() {
     el.innerHTML = list.map(t => `
       <div class="task2-item${t.done?' done2':''}">
         <div class="task2-check" onclick="toggleTask2('${t.id}')">${t.done?'✓':''}</div>
-        <div style="flex:1;min-width:0;">
-          <div class="task2-text">${esc(t.title)}</div>
-        </div>
-        <button class="task2-del" onclick="deleteTask2('${t.id}')">✕</button>
+        <div style="flex:1;min-width:0;"><div class="task2-text">${esc(t.title)}</div></div>
+        <button class="task2-del" onclick="confirmDeleteTask('${t.id}','${esc(t.title)}')">✕</button>
       </div>`).join('');
   }
-
-  const total   = cachedTasks.length;
   const pending = cachedTasks.filter(t => !t.done).length;
-  const done    = cachedTasks.filter(t => t.done).length;
+  const done    = cachedTasks.filter(t =>  t.done).length;
   const countEl = document.getElementById('tasksFooterCount');
   if (countEl) countEl.textContent = `${pending} pending · ${done} done`;
 }
@@ -852,19 +903,12 @@ function renderTasksSlide() {
 function renderOverviewTasks() {
   const total   = cachedTasks.length;
   const pending = cachedTasks.filter(t => !t.done).length;
-  const totalEl = document.getElementById('statTotal');
-  const pendEl  = document.getElementById('statActive');
-  if (totalEl) totalEl.textContent = total;
-  if (pendEl)  pendEl.textContent  = pending;
-
-  // Recent tasks in overview
+  if (document.getElementById('statTotal'))  document.getElementById('statTotal').textContent  = total;
+  if (document.getElementById('statActive')) document.getElementById('statActive').textContent = pending;
   const recent = [...cachedTasks].filter(t => !t.done).slice(-3).reverse();
   const el = document.getElementById('recentList');
   if (!el) return;
-  if (!recent.length) {
-    el.innerHTML = `<div style="opacity:.3;font-size:12px">No pending tasks.</div>`;
-    return;
-  }
+  if (!recent.length) { el.innerHTML = `<div style="opacity:.3;font-size:12px">No pending tasks.</div>`; return; }
   el.innerHTML = recent.map(t =>
     `<div class="recent-item"><span>${esc(t.title)}</span><span class="recent-tag">Pending</span></div>`
   ).join('');
@@ -874,20 +918,18 @@ async function addQuickTask() {
   const inp = document.getElementById('quickTaskInput');
   const title = inp.value.trim(); if (!title) return;
   inp.value = '';
-  try {
-    await db.ref('users/' + CU + '/tasks').push({ title, done: false, createdAt: Date.now() });
-  } catch(e) { showToast('Could not save task.'); }
+  try { await db.ref('users/' + CU + '/tasks').push({ title, done: false, createdAt: Date.now() }); }
+  catch(e) { showToast('Could not save task.'); }
 }
-
 async function toggleTask2(id) {
   const t = cachedTasks.find(t => t.id === id); if (!t) return;
   await db.ref('users/' + CU + '/tasks/' + id).update({ done: !t.done });
 }
-
-async function deleteTask2(id) {
-  await db.ref('users/' + CU + '/tasks/' + id).remove();
+function confirmDeleteTask(id, title) {
+  showConfirm('Delete Task', `Remove "${title}"?`, async () => {
+    await db.ref('users/' + CU + '/tasks/' + id).remove();
+  }, 'Delete');
 }
-
 async function clearDoneTasks() {
   const done = cachedTasks.filter(t => t.done);
   if (!done.length) { showToast('No completed tasks to clear.'); return; }
@@ -899,20 +941,18 @@ async function clearDoneTasks() {
   }, 'Clear');
 }
 
-// ── AI ASSISTANT
+// ── AI
 async function sendAI() {
   const inp = document.getElementById('aiInput');
   const prompt = inp.value.trim(); if (!prompt) return;
   const btn = document.getElementById('aiSendBtn'), resp = document.getElementById('aiResponse');
   btn.disabled = true; btn.textContent = '…'; resp.textContent = 'Thinking…';
-
   const pending = cachedTasks.filter(t => !t.done).length;
   const done    = cachedTasks.filter(t =>  t.done).length;
-  const taskCtx = `Tasks: ${cachedTasks.length} total, ${pending} pending, ${done} done. Pending: ${cachedTasks.filter(t=>!t.done).map(t=>'"'+t.title+'"').join(', ')||'none'}.`;
+  const taskCtx  = `Tasks: ${cachedTasks.length} total, ${pending} pending, ${done} done. Pending: ${cachedTasks.filter(t=>!t.done).map(t=>'"'+t.title+'"').join(', ')||'none'}.`;
   const salesCtx = `Today's sales: ${cachedSales.length} transactions, Ksh ${cachedSales.reduce((s,e)=>s+(e.price*e.qty),0).toLocaleString()}.`;
-  const profCtx = currentProfile ? `Outlet: ${currentProfile.outlet||'—'}. Brand: ${currentProfile.brand||'—'}. Target: Ksh ${currentProfile.branchTarget||'0'}.` : '';
-
-  const apiKey = (currentProfile||{}).apiKey||'';
+  const profCtx  = currentProfile ? `Outlet: ${currentProfile.outlet||'—'}. Brand: ${currentProfile.brand||'—'}. Target: Ksh ${currentProfile.branchTarget||'0'}.` : '';
+  const apiKey = (currentProfile||{}).apiKey || '';
   if (!apiKey) {
     resp.textContent = 'Add your Gemini API key in My Profile to enable the AI assistant.';
     btn.disabled = false; btn.textContent = '→'; inp.value = ''; return;
@@ -920,13 +960,11 @@ async function sendAI() {
   try {
     const res = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      { method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
-          system_instruction: { parts: [{ text: `You are a concise workspace assistant. ${taskCtx} ${salesCtx} ${profCtx}` }] },
-          contents: [{ role: 'user', parts: [{ text: prompt }] }],
-          generationConfig: { maxOutputTokens: 1000 }
+          system_instruction:{ parts:[{ text:`You are a concise workspace assistant. ${taskCtx} ${salesCtx} ${profCtx}` }] },
+          contents:[{ role:'user', parts:[{ text:prompt }] }],
+          generationConfig:{ maxOutputTokens:1000 }
         })
       }
     );
@@ -949,9 +987,7 @@ function initSalesListener() {
   const ref = db.ref('users/' + CU + '/sales/' + key);
   ref.on('value', snap => {
     const data = snap.val() || {};
-    cachedSales = Object.entries(data)
-      .map(([id, v]) => ({id, ...v}))
-      .sort((a, b) => a.order - b.order);
+    cachedSales = Object.entries(data).map(([id,v])=>({id,...v})).sort((a,b)=>a.order-b.order);
     renderSalesLog();
     renderOverviewSales();
   });
@@ -959,15 +995,13 @@ function initSalesListener() {
 }
 
 function renderSalesLog() {
-  const list    = document.getElementById('salesList');
-  const dateEl  = document.getElementById('salesDateLabel');
-  const totalEl = document.getElementById('salesTotalDisplay');
-  const countEl = document.getElementById('salesCount');
+  const list=document.getElementById('salesList'),dateEl=document.getElementById('salesDateLabel'),
+        totalEl=document.getElementById('salesTotalDisplay'),countEl=document.getElementById('salesCount');
   if (!list) return;
   dateEl.textContent = new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
   if (!cachedSales.length) {
-    list.innerHTML = '<div style="text-align:center;opacity:.28;margin:auto;padding:18px 0;"><div style="font-size:28px;margin-bottom:8px;">₭</div><p style="font-size:12px;">No sales logged today.</p></div>';
-    totalEl.textContent = 'Ksh 0'; countEl.textContent = '0 transactions'; return;
+    list.innerHTML='<div style="text-align:center;opacity:.28;margin:auto;padding:18px 0;"><div style="font-size:28px;margin-bottom:8px;">₭</div><p style="font-size:12px;">No sales logged today.</p></div>';
+    totalEl.textContent='Ksh 0'; countEl.textContent='0 transactions'; return;
   }
   list.innerHTML = cachedSales.map((s,i) => `
     <div class="sale-item">
@@ -977,22 +1011,20 @@ function renderSalesLog() {
         <div class="sale-meta">Model: ${esc(s.model||'—')} &nbsp;·&nbsp; S/N: ${esc(s.serial||'—')} &nbsp;·&nbsp; Qty: ${s.qty}</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
-        <div class="sale-total">Ksh ${(s.price * s.qty).toLocaleString()}</div>
-        <button class="sale-del" onclick="deleteSale('${s.id}')">✕</button>
+        <div class="sale-total">Ksh ${(s.price*s.qty).toLocaleString()}</div>
+        <button class="sale-del" onclick="confirmDeleteSale('${s.id}','${esc(s.item)}')">✕</button>
       </div>
     </div>`).join('');
-  const total = cachedSales.reduce((sum,s) => sum + (s.price * s.qty), 0);
+  const total = cachedSales.reduce((sum,s)=>sum+(s.price*s.qty),0);
   totalEl.textContent = 'Ksh ' + total.toLocaleString();
-  countEl.textContent = cachedSales.length + ' transaction' + (cachedSales.length !== 1 ? 's' : '');
+  countEl.textContent = cachedSales.length + ' transaction' + (cachedSales.length!==1?'s':'');
 }
 
 function renderOverviewSales() {
-  const total = cachedSales.reduce((s,e) => s + (e.price * e.qty), 0);
-  const count = cachedSales.length;
-  const totalEl = document.getElementById('overviewSalesTotal');
-  const countEl = document.getElementById('overviewSalesCount');
-  if (totalEl) totalEl.textContent = 'Ksh ' + total.toLocaleString();
-  if (countEl) countEl.textContent = count + ' transaction' + (count !== 1 ? 's' : '');
+  const total=cachedSales.reduce((s,e)=>s+(e.price*e.qty),0), count=cachedSales.length;
+  const totalEl=document.getElementById('overviewSalesTotal'),countEl=document.getElementById('overviewSalesCount');
+  if (totalEl) totalEl.textContent='Ksh '+total.toLocaleString();
+  if (countEl) countEl.textContent=count+' transaction'+(count!==1?'s':'');
 }
 
 async function addSale() {
@@ -1005,419 +1037,376 @@ async function addSale() {
   const key   = todayKey();
   const label = new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
   try {
-    await db.ref('users/' + CU + '/sales/' + key).push({
-      item, model, serial, price, qty, order: Date.now(), createdAt: Date.now()
-    });
+    await db.ref('users/' + CU + '/sales/' + key).push({ item, model, serial, price, qty, order: Date.now(), createdAt: Date.now() });
     await db.ref('users/' + CU + '/salesArchiveMeta/' + key).set({ date: key, label });
+    // ── Clear all fields after successful save
     ['saleItem','saleModel','saleSerial','salePrice','saleQty'].forEach(id => { document.getElementById(id).value = ''; });
+    document.getElementById('saleItem').focus();
     showToast('Sale logged ✓');
   } catch(e) { showToast('Failed to save sale.'); }
 }
 
-async function deleteSale(id) {
-  try {
-    await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + id).remove();
-    showToast('Sale removed.');
-  } catch(e) { showToast('Delete failed.'); }
+// Confirm before deleting a sale from today's log
+function confirmDeleteSale(id, itemName) {
+  showConfirm('Delete Sale', `Remove "${itemName}" from today's log?`, async () => {
+    try {
+      await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + id).remove();
+      showToast('Sale removed.');
+    } catch(e) { showToast('Delete failed.'); }
+  }, 'Delete');
 }
 
 // ── SALES REPORT
 function generateSalesReport() {
-  const prof   = currentProfile || {};
-  const date   = new Date().toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-  const total  = cachedSales.reduce((s, e) => s + (e.price * e.qty), 0);
-  const target = parseFloat(prof.branchTarget) || 0;
-  const pct    = target > 0 ? ((total / target) * 100).toFixed(1) : null;
-  const line   = '─'.repeat(38);
+  const prof=currentProfile||{}, date=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const total=cachedSales.reduce((s,e)=>s+(e.price*e.qty),0);
+  const target=parseFloat(prof.branchTarget)||0;
+  const pct=target>0?((total/target)*100).toFixed(1):null;
+  const line='─'.repeat(38);
+  let r=`DAILY SALES REPORT
+${line}
+Date     : ${date}
+Outlet   : ${prof.outlet||'(not set)'}
+Officer  : ${prof.officialNames||'(not set)'}
+Brand    : ${prof.brand||'(not set)'}
+`;
+  if (target>0) r+=`Target   : Ksh ${target.toLocaleString()}
+`;
+  r+=`${line}
 
-  // Header block
-  let r = '';
-  r += `DAILY SALES REPORT\n`;
-  r += `${line}\n`;
-  r += `Date     : ${date}\n`;
-  r += `Outlet   : ${prof.outlet || '(not set)'}\n`;
-  r += `Officer  : ${prof.officialNames || '(not set)'}\n`;
-  r += `Brand    : ${prof.brand || '(not set)'}\n`;
-  if (target > 0) r += `Target   : Ksh ${target.toLocaleString()}\n`;
-  r += `${line}\n\n`;
+`;
+  if (!cachedSales.length) { r+='No transactions recorded today.
 
-  // Transactions
-  if (!cachedSales.length) {
-    r += `No transactions recorded today.\n\n`;
-  } else {
-    r += `TRANSACTIONS (${cachedSales.length})\n\n`;
-    cachedSales.forEach((s, i) => {
-      r += `${i+1}. ${s.item}\n`;
-      r += `   Model : ${s.model || '—'}\n`;
-      r += `   S/N   : ${s.serial || '—'}\n`;
-      r += `   Qty   : ${s.qty}  ×  Ksh ${Number(s.price).toLocaleString()}\n`;
-      r += `   Total : Ksh ${(s.price * s.qty).toLocaleString()}\n`;
-      if (i < cachedSales.length - 1) r += '\n';
+'; }
+  else {
+    r+=`TRANSACTIONS (${cachedSales.length})
+
+`;
+    cachedSales.forEach((s,i)=>{
+      r+=`${i+1}. ${s.item}
+   Model : ${s.model||'—'}
+   S/N   : ${s.serial||'—'}
+   Qty   : ${s.qty}  ×  Ksh ${Number(s.price).toLocaleString()}
+   Total : Ksh ${(s.price*s.qty).toLocaleString()}
+
+`;
     });
-    r += '\n';
   }
-
-  // Summary
-  r += `${line}\n`;
-  r += `DAILY TOTAL  : Ksh ${total.toLocaleString()}\n`;
-  r += `TRANSACTIONS : ${cachedSales.length}\n`;
-  if (target > 0) {
-    r += `TARGET       : Ksh ${target.toLocaleString()}\n`;
-    r += `ACHIEVEMENT  : ${pct}%\n`;
-  }
-  r += `${line}\n`;
-  r += `Royal Horizon Workspace`;
-
-  currentReportText = r;
-
-  // Check for missing work details
-  const missing = [];
-  if (!prof.outlet)        missing.push('Outlet');
+  r+=`${line}
+DAILY TOTAL  : Ksh ${total.toLocaleString()}
+TRANSACTIONS : ${cachedSales.length}
+`;
+  if (target>0){ r+=`TARGET       : Ksh ${target.toLocaleString()}
+ACHIEVEMENT  : ${pct}%
+`; }
+  r+=`${line}
+Royal Horizon Workspace`;
+  currentReportText=r;
+  const missing=[];
+  if (!prof.outlet) missing.push('Outlet');
   if (!prof.officialNames) missing.push('Official Names');
-  if (!prof.brand)         missing.push('Brand');
+  if (!prof.brand) missing.push('Brand');
   if (missing.length) showToast(`Tip: fill in ${missing.join(', ')} in Profile.`);
-
-  const el = document.getElementById('reportText');
-  if (el) el.textContent = r;
-
+  document.getElementById('reportText').textContent=r;
   applyOverlayTheme(document.getElementById('reportOverlay'));
   document.getElementById('reportOverlay').classList.add('open');
 }
-
-function closeReportOverlay() { document.getElementById('reportOverlay').classList.remove('open'); }
-
-function copyReport() {
-  if (!currentReportText) return;
-  navigator.clipboard.writeText(currentReportText)
-    .then(() => showToast('Copied to clipboard ✓'))
-    .catch(() => {
-      // Fallback
-      const ta = document.createElement('textarea');
-      ta.value = currentReportText;
-      document.body.appendChild(ta);
-      ta.select(); document.execCommand('copy');
-      document.body.removeChild(ta);
-      showToast('Copied ✓');
-    });
+function closeReportOverlay(){ document.getElementById('reportOverlay').classList.remove('open'); }
+function copyReport(){
+  if(!currentReportText) return;
+  navigator.clipboard.writeText(currentReportText).then(()=>showToast('Copied ✓')).catch(()=>{
+    const ta=document.createElement('textarea'); ta.value=currentReportText;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('Copied ✓');
+  });
 }
-
-async function shareReport() {
-  if (!currentReportText) return;
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title: 'Daily Sales Report',
-        text: currentReportText
-      });
-    } catch(e) { /* user cancelled */ }
-  } else {
-    copyReport();
-    showToast('Copied — paste to share.');
-  }
+async function shareReport(){
+  if(!currentReportText) return;
+  if(navigator.share){ try{ await navigator.share({title:'Daily Sales Report',text:currentReportText}); }catch(e){} }
+  else { copyReport(); showToast('Copied — paste to share.'); }
 }
 
 // ── ARCHIVE
-let archiveSelectMode = false;
-let selectedArchiveDays = new Set();
-let currentDayDetailKey = null;
-let currentDayDetailLabel = null;
+let archiveSelectMode=false, selectedArchiveDays=new Set();
+let currentDayDetailKey=null, currentDayDetailLabel=null;
+// Tracks entries loaded in the current day detail (for individual delete)
+let currentDayDetailEntries = [];
 
-function toggleArchiveSelect() {
-  archiveSelectMode = !archiveSelectMode;
-  selectedArchiveDays.clear();
-  document.getElementById('archSelectBar').classList.toggle('visible', archiveSelectMode);
-  document.getElementById('archSelectBtn').style.opacity = archiveSelectMode ? '1' : '.7';
+function toggleArchiveSelect(){
+  archiveSelectMode=!archiveSelectMode; selectedArchiveDays.clear();
+  document.getElementById('archSelectBar').classList.toggle('visible',archiveSelectMode);
+  document.getElementById('archSelectBtn').style.opacity=archiveSelectMode?'1':'.7';
   renderArchiveSales();
 }
-
-function cancelArchiveSelect() {
-  archiveSelectMode = false;
-  selectedArchiveDays.clear();
+function cancelArchiveSelect(){
+  archiveSelectMode=false; selectedArchiveDays.clear();
   document.getElementById('archSelectBar').classList.remove('visible');
-  document.getElementById('archSelectBtn').style.opacity = '.7';
+  document.getElementById('archSelectBtn').style.opacity='.7';
   renderArchiveSales();
 }
-
-function toggleArchiveDaySelect(dateKey) {
-  if (selectedArchiveDays.has(dateKey)) selectedArchiveDays.delete(dateKey);
+function toggleArchiveDaySelect(dateKey){
+  if(selectedArchiveDays.has(dateKey)) selectedArchiveDays.delete(dateKey);
   else selectedArchiveDays.add(dateKey);
-  // Update card UI without full re-render
-  document.querySelectorAll('.arch-day-card').forEach(card => {
-    if (card.dataset.key === dateKey) {
-      const sel = selectedArchiveDays.has(dateKey);
-      card.classList.toggle('arch-selected', sel);
-      const cb = card.querySelector('.arch-checkbox');
-      if (cb) cb.textContent = sel ? '✓' : '';
+  document.querySelectorAll('.arch-day-card').forEach(card=>{
+    if(card.dataset.key===dateKey){
+      const sel=selectedArchiveDays.has(dateKey);
+      card.classList.toggle('arch-selected',sel);
+      const cb=card.querySelector('.arch-checkbox'); if(cb) cb.textContent=sel?'✓':'';
     }
   });
 }
-
-async function deleteSelectedArchive() {
-  if (!selectedArchiveDays.size) { showToast('Select at least one day.'); return; }
-  const n = selectedArchiveDays.size;
-  showConfirm('Delete Selected', `Permanently delete ${n} day${n>1?'s':''} from archive?`, async () => {
-    const updates = {};
-    selectedArchiveDays.forEach(key => {
-      updates['users/' + CU + '/sales/' + key] = null;
-      updates['users/' + CU + '/salesArchiveMeta/' + key] = null;
+async function deleteSelectedArchive(){
+  if(!selectedArchiveDays.size){ showToast('Select at least one day.'); return; }
+  const n=selectedArchiveDays.size;
+  showConfirm('Delete Selected',`Permanently delete ${n} day${n>1?'s':''} from archive?`, async ()=>{
+    const updates={};
+    selectedArchiveDays.forEach(key=>{
+      updates['users/'+CU+'/sales/'+key]=null;
+      updates['users/'+CU+'/salesArchiveMeta/'+key]=null;
     });
-    try {
-      await db.ref().update(updates);
-      cancelArchiveSelect();
-      showToast('Deleted ✓');
-    } catch(e) { showToast('Delete failed.'); }
-  }, 'Delete');
+    try{ await db.ref().update(updates); cancelArchiveSelect(); showToast('Deleted ✓'); }
+    catch(e){ showToast('Delete failed.'); }
+  },'Delete');
 }
-
-async function deleteSingleArchiveDay(dateKey, e) {
+async function deleteSingleArchiveDay(dateKey,e){
   e.stopPropagation();
-  showConfirm('Delete Day', "Remove this day's sales from archive?", async () => {
-    try {
+  showConfirm('Delete Day',"Remove this day's sales from archive?", async ()=>{
+    try{
       await Promise.all([
-        db.ref('users/' + CU + '/sales/' + dateKey).remove(),
-        db.ref('users/' + CU + '/salesArchiveMeta/' + dateKey).remove()
+        db.ref('users/'+CU+'/sales/'+dateKey).remove(),
+        db.ref('users/'+CU+'/salesArchiveMeta/'+dateKey).remove()
       ]);
-      renderArchiveSales();
-      showToast('Removed ✓');
-    } catch(e) { showToast('Delete failed.'); }
-  }, 'Delete');
+      renderArchiveSales(); showToast('Removed ✓');
+    }catch(e){ showToast('Delete failed.'); }
+  },'Delete');
 }
-
-async function confirmClearArchive() {
-  showConfirm('Clear All Archive', "Delete all past sales history? Today's log is not affected.", async () => {
-    try {
-      const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
-      const meta = metaSnap.val() || {};
-      const today = todayKey();
-      const updates = {};
-      Object.keys(meta).filter(k => k !== today).forEach(key => {
-        updates['users/' + CU + '/sales/' + key] = null;
-        updates['users/' + CU + '/salesArchiveMeta/' + key] = null;
+async function confirmClearArchive(){
+  showConfirm('Clear All Archive',"Delete all past sales history? Today's log is not affected.", async ()=>{
+    try{
+      const metaSnap=await db.ref('users/'+CU+'/salesArchiveMeta').once('value');
+      const meta=metaSnap.val()||{}, today=todayKey(), updates={};
+      Object.keys(meta).filter(k=>k!==today).forEach(key=>{
+        updates['users/'+CU+'/sales/'+key]=null;
+        updates['users/'+CU+'/salesArchiveMeta/'+key]=null;
       });
-      if (!Object.keys(updates).length) { showToast('Nothing to clear.'); return; }
-      await db.ref().update(updates);
-      renderArchiveSales();
-      showToast('Archive cleared ✓');
-    } catch(e) { showToast('Clear failed.'); }
-  }, 'Clear All');
+      if(!Object.keys(updates).length){ showToast('Nothing to clear.'); return; }
+      await db.ref().update(updates); renderArchiveSales(); showToast('Archive cleared ✓');
+    }catch(e){ showToast('Clear failed.'); }
+  },'Clear All');
 }
 
-async function renderArchiveSales() {
-  const scroll = document.getElementById('archSalesScroll');
-  if (!scroll || !CU) return;
-  scroll.innerHTML = '<div style="opacity:.3;font-size:12px;padding:10px 0;">Loading…</div>';
-  try {
-    const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
-    const meta = metaSnap.val() || {};
-    const today = todayKey();
-    const days = Object.values(meta)
-      .filter(d => d.date !== today)
-      .sort((a, b) => b.date.localeCompare(a.date));
-    if (!days.length) {
-      scroll.innerHTML = '<div style="text-align:center;opacity:.28;padding:30px 0;"><div style="font-size:26px;margin-bottom:8px;">⧉</div><p style="font-size:12px;">No past sales yet.</p></div>';
+async function renderArchiveSales(){
+  const scroll=document.getElementById('archSalesScroll');
+  if(!scroll||!CU) return;
+  scroll.innerHTML='<div style="opacity:.3;font-size:12px;padding:10px 0;">Loading…</div>';
+  try{
+    const metaSnap=await db.ref('users/'+CU+'/salesArchiveMeta').once('value');
+    const meta=metaSnap.val()||{}, today=todayKey();
+    const days=Object.values(meta).filter(d=>d.date!==today).sort((a,b)=>b.date.localeCompare(a.date));
+    if(!days.length){
+      scroll.innerHTML='<div style="text-align:center;opacity:.28;padding:30px 0;"><div style="font-size:26px;margin-bottom:8px;">⧉</div><p style="font-size:12px;">No past sales yet.</p></div>';
       return;
     }
-    // Render cards immediately, load totals async
-    scroll.innerHTML = days.map(d => {
-      const isSel = selectedArchiveDays.has(d.date);
+    scroll.innerHTML=days.map(d=>{
+      const isSel=selectedArchiveDays.has(d.date);
       return `<div class="arch-day-card${isSel?' arch-selected':''}" data-key="${d.date}"
-          onclick="${archiveSelectMode ? `toggleArchiveDaySelect('${d.date}')` : `openDayDetail('${d.date}','${esc(d.label)}')`}">
-        ${archiveSelectMode ? `<div class="arch-checkbox">${isSel?'✓':''}</div>` : ''}
+        onclick="${archiveSelectMode?`toggleArchiveDaySelect('${d.date}')`:`openDayDetail('${d.date}','${esc(d.label)}')`}">
+        ${archiveSelectMode?`<div class="arch-checkbox">${isSel?'✓':''}</div>`:''}
         <div class="arch-day-info">
           <div class="arch-day-date">${esc(d.label)}</div>
           <div class="arch-day-total" id="archDayTotal-${d.date}">Loading…</div>
         </div>
         <div class="arch-card-right">
-          ${!archiveSelectMode ? `<button class="arch-del-btn" onclick="deleteSingleArchiveDay('${d.date}',event)" title="Delete">✕</button>` : ''}
-          ${!archiveSelectMode ? `<span style="opacity:.3;font-size:14px;">›</span>` : ''}
+          ${!archiveSelectMode?`<button class="arch-del-btn" onclick="deleteSingleArchiveDay('${d.date}',event)" title="Delete">✕</button>`:''}
+          ${!archiveSelectMode?`<span style="opacity:.3;font-size:14px;">›</span>`:''}
         </div>
       </div>`;
     }).join('');
-    // Load totals async
-    days.forEach(async d => {
-      const snap = await db.ref('users/' + CU + '/sales/' + d.date).once('value');
-      const entries = Object.values(snap.val() || {});
-      const total = entries.reduce((s, e) => s + (e.price * e.qty), 0);
-      const el = document.getElementById('archDayTotal-' + d.date);
-      if (el) el.textContent = `Ksh ${total.toLocaleString()} · ${entries.length} sale${entries.length!==1?'s':''}`;
+    days.forEach(async d=>{
+      const snap=await db.ref('users/'+CU+'/sales/'+d.date).once('value');
+      const entries=Object.values(snap.val()||{});
+      const total=entries.reduce((s,e)=>s+(e.price*e.qty),0);
+      const el=document.getElementById('archDayTotal-'+d.date);
+      if(el) el.textContent=`Ksh ${total.toLocaleString()} · ${entries.length} sale${entries.length!==1?'s':''}`;
     });
-  } catch(e) {
-    scroll.innerHTML = '<div style="opacity:.3;font-size:12px;padding:10px 0;">Could not load history.</div>';
+  }catch(e){
+    scroll.innerHTML='<div style="opacity:.3;font-size:12px;padding:10px 0;">Could not load history.</div>';
   }
 }
 
-async function openDayDetail(dateKey, label) {
-  currentDayDetailKey   = dateKey;
-  currentDayDetailLabel = label;
-  const overlay = document.getElementById('dayDetailOverlay');
-  const body    = document.getElementById('dayDetailBody');
-  document.getElementById('dayDetailTitle').textContent    = label;
-  document.getElementById('dayDetailSubtitle').textContent = 'Sales breakdown';
-  body.innerHTML = '<div style="padding:20px 0;opacity:.4;font-size:13px;">Loading…</div>';
+// ── DAY DETAIL with per-item delete
+async function openDayDetail(dateKey,label){
+  currentDayDetailKey=dateKey; currentDayDetailLabel=label;
+  currentDayDetailEntries=[];
+  const overlay=document.getElementById('dayDetailOverlay'),body=document.getElementById('dayDetailBody');
+  document.getElementById('dayDetailTitle').textContent=label;
+  document.getElementById('dayDetailSubtitle').textContent='Sales breakdown';
+  body.innerHTML='<div style="padding:20px 0;opacity:.4;font-size:13px;">Loading…</div>';
   applyOverlayTheme(overlay);
   overlay.classList.add('open');
-  try {
-    const snap = await db.ref('users/' + CU + '/sales/' + dateKey).once('value');
-    const entries = Object.entries(snap.val() || {})
-      .map(([id, v]) => ({id, ...v}))
-      .sort((a, b) => a.order - b.order);
-    if (!entries.length) {
-      body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">No entries for this day.</div>';
-      return;
-    }
-    const total = entries.reduce((s, e) => s + (e.price * e.qty), 0);
-    body.innerHTML = entries.map((e, i) => `
+  await loadDayDetailBody(dateKey);
+}
+
+async function loadDayDetailBody(dateKey){
+  const body=document.getElementById('dayDetailBody');
+  try{
+    const snap=await db.ref('users/'+CU+'/sales/'+dateKey).once('value');
+    const entries=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v})).sort((a,b)=>a.order-b.order);
+    currentDayDetailEntries=entries;
+    if(!entries.length){ body.innerHTML='<div style="opacity:.3;font-size:13px;padding-top:20px;">No entries for this day.</div>'; return; }
+    const total=entries.reduce((s,e)=>s+(e.price*e.qty),0);
+    body.innerHTML=entries.map((e,i)=>`
       <div style="background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;">
         <div style="font-family:'Playfair Display';font-size:16px;font-weight:700;opacity:.3;min-width:20px;">${i+1}</div>
         <div style="flex:1;min-width:0;">
           <div style="font-family:'Playfair Display';font-size:14px;font-weight:600;">${esc(e.item)}</div>
           <div style="font-size:10px;opacity:.45;margin-top:2px;">Model: ${esc(e.model||'—')} · S/N: ${esc(e.serial||'—')} · Qty: ${e.qty}</div>
         </div>
-        <div style="font-size:13px;font-weight:600;white-space:nowrap;">Ksh ${(e.price * e.qty).toLocaleString()}</div>
-      </div>`).join('') +
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;">
+          <div style="font-size:13px;font-weight:600;white-space:nowrap;">Ksh ${(e.price*e.qty).toLocaleString()}</div>
+          <button onclick="confirmDeleteArchiveSaleEntry('${e.id}','${esc(e.item)}')" style="opacity:.25;cursor:pointer;font-size:11px;background:none;border:none;color:inherit;padding:2px;transition:.2s;" onmouseover="this.style.opacity='1';this.style.color='#e05252'" onmouseout="this.style.opacity='.25';this.style.color='inherit'">✕ remove</button>
+        </div>
+      </div>`).join('')+
       `<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0 0;border-top:1px solid rgba(128,128,128,.15);margin-top:4px;">
         <span style="font-size:12px;opacity:.4;text-transform:uppercase;letter-spacing:1.5px;">Total</span>
         <span style="font-family:'Playfair Display';font-size:22px;font-weight:700;">Ksh ${total.toLocaleString()}</span>
       </div>`;
-  } catch(e) {
-    body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">Failed to load.</div>';
-  }
+  }catch(e){ body.innerHTML='<div style="opacity:.3;font-size:13px;padding-top:20px;">Failed to load.</div>'; }
 }
 
-function closeDayDetail() {
-  document.getElementById('dayDetailOverlay').classList.remove('open');
-  currentDayDetailKey = null; currentDayDetailLabel = null;
-}
-
-function confirmDeleteArchiveDay() {
-  if (!currentDayDetailKey) return;
-  showConfirm('Delete Day', `Remove "${currentDayDetailLabel}" from archive?`, async () => {
+// Confirm + delete a single sale entry from a past day
+function confirmDeleteArchiveSaleEntry(entryId, itemName){
+  showConfirm('Remove Sale', `Remove "${itemName}" from this day's record?`, async () => {
     try {
-      await Promise.all([
-        db.ref('users/' + CU + '/sales/' + currentDayDetailKey).remove(),
-        db.ref('users/' + CU + '/salesArchiveMeta/' + currentDayDetailKey).remove()
-      ]);
-      closeDayDetail();
+      await db.ref('users/'+CU+'/sales/'+currentDayDetailKey+'/'+entryId).remove();
+      // Reload the day's entries
+      await loadDayDetailBody(currentDayDetailKey);
+      // Also refresh archive totals
       renderArchiveSales();
-      showToast('Day deleted ✓');
-    } catch(e) { showToast('Delete failed.'); }
-  }, 'Delete');
+      showToast('Sale removed ✓');
+    } catch(e) { showToast('Remove failed.'); }
+  }, 'Remove');
 }
 
-async function shareArchiveDayReport() {
-  if (!currentDayDetailKey) return;
-  const prof = currentProfile || {};
-  try {
-    const snap = await db.ref('users/' + CU + '/sales/' + currentDayDetailKey).once('value');
-    const entries = Object.entries(snap.val() || {})
-      .map(([id, v]) => ({id, ...v}))
-      .sort((a, b) => a.order - b.order);
-    const total  = entries.reduce((s, e) => s + (e.price * e.qty), 0);
-    const target = parseFloat(prof.branchTarget) || 0;
-    const pct    = target > 0 ? ((total / target) * 100).toFixed(1) : null;
-    const line   = '─'.repeat(38);
-    let r = `SALES REPORT — ${currentDayDetailLabel}\n${line}\n`;
-    r += `Outlet  : ${prof.outlet || '(not set)'}\n`;
-    r += `Officer : ${prof.officialNames || '(not set)'}\n`;
-    r += `Brand   : ${prof.brand || '(not set)'}\n`;
-    if (target > 0) r += `Target  : Ksh ${target.toLocaleString()}\n`;
-    r += `${line}\n\n`;
-    if (!entries.length) {
-      r += 'No transactions recorded.\n\n';
-    } else {
-      r += `TRANSACTIONS (${entries.length})\n\n`;
-      entries.forEach((e, i) => {
-        r += `${i+1}. ${e.item}\n`;
-        r += `   Model : ${e.model||'—'} | S/N: ${e.serial||'—'}\n`;
-        r += `   Qty : ${e.qty} × Ksh ${Number(e.price).toLocaleString()} = Ksh ${(e.price*e.qty).toLocaleString()}\n\n`;
-      });
-    }
-    r += `${line}\nTOTAL : Ksh ${total.toLocaleString()}\n`;
-    if (pct) r += `ACHIEVEMENT : ${pct}%\n`;
-    r += `${line}\nRoyal Horizon Workspace`;
-    if (navigator.share) {
-      try { await navigator.share({ title: `Sales Report – ${currentDayDetailLabel}`, text: r }); }
-      catch(e) { /* cancelled */ }
-    } else {
-      navigator.clipboard.writeText(r)
-        .then(() => showToast('Report copied ✓'))
-        .catch(() => showToast('Could not copy.'));
-    }
-  } catch(e) { showToast('Could not generate report.'); }
+function closeDayDetail(){
+  document.getElementById('dayDetailOverlay').classList.remove('open');
+  currentDayDetailKey=null; currentDayDetailLabel=null; currentDayDetailEntries=[];
+}
+
+function confirmDeleteArchiveDay(){
+  if(!currentDayDetailKey) return;
+  showConfirm('Delete Day',`Remove "${currentDayDetailLabel}" from archive?`, async ()=>{
+    try{
+      await Promise.all([
+        db.ref('users/'+CU+'/sales/'+currentDayDetailKey).remove(),
+        db.ref('users/'+CU+'/salesArchiveMeta/'+currentDayDetailKey).remove()
+      ]);
+      closeDayDetail(); renderArchiveSales(); showToast('Day deleted ✓');
+    }catch(e){ showToast('Delete failed.'); }
+  },'Delete');
+}
+
+async function shareArchiveDayReport(){
+  if(!currentDayDetailKey) return;
+  const prof=currentProfile||{};
+  try{
+    const snap=await db.ref('users/'+CU+'/sales/'+currentDayDetailKey).once('value');
+    const entries=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v})).sort((a,b)=>a.order-b.order);
+    const total=entries.reduce((s,e)=>s+(e.price*e.qty),0);
+    const target=parseFloat(prof.branchTarget)||0, pct=target>0?((total/target)*100).toFixed(1):null;
+    const line='─'.repeat(38);
+    let r=`SALES REPORT — ${currentDayDetailLabel}
+${line}
+Outlet  : ${prof.outlet||'(not set)'}
+Officer : ${prof.officialNames||'(not set)'}
+Brand   : ${prof.brand||'(not set)'}
+`;
+    if(target>0) r+=`Target  : Ksh ${target.toLocaleString()}
+`;
+    r+=`${line}
+
+`;
+    if(!entries.length){ r+='No transactions recorded.
+
+'; }
+    else{ r+=`TRANSACTIONS (${entries.length})
+
+`; entries.forEach((e,i)=>{ r+=`${i+1}. ${e.item}
+   Model : ${e.model||'—'} | S/N: ${e.serial||'—'}
+   Qty : ${e.qty} × Ksh ${Number(e.price).toLocaleString()} = Ksh ${(e.price*e.qty).toLocaleString()}
+
+`; }); }
+    r+=`${line}
+TOTAL : Ksh ${total.toLocaleString()}
+`;
+    if(pct) r+=`ACHIEVEMENT : ${pct}%
+`;
+    r+=`${line}
+Royal Horizon Workspace`;
+    if(navigator.share){ try{ await navigator.share({title:`Sales – ${currentDayDetailLabel}`,text:r}); }catch(e){} }
+    else{ navigator.clipboard.writeText(r).then(()=>showToast('Report copied ✓')).catch(()=>showToast('Could not copy.')); }
+  }catch(e){ showToast('Could not generate report.'); }
 }
 
 // ── CAROUSEL
-function moveTrack(idx) {
-  document.getElementById('workspaceTrack').style.transform = `translateX(calc(-${idx*80}vw - ${idx*30}px))`;
-  document.querySelectorAll('.workspace-card').forEach((c,i) => c.classList.toggle('active', i===idx));
-  document.querySelectorAll('.dock-item').forEach((d,i) => d.classList.toggle('active', i===idx));
-  currentSlide = idx;
-  if (idx === 2) renderSalesLog();
-  if (idx === 3) renderArchiveSales();
+function moveTrack(idx){
+  document.getElementById('workspaceTrack').style.transform=`translateX(calc(-${idx*80}vw - ${idx*30}px))`;
+  document.querySelectorAll('.workspace-card').forEach((c,i)=>c.classList.toggle('active',i===idx));
+  document.querySelectorAll('.dock-item').forEach((d,i)=>d.classList.toggle('active',i===idx));
+  currentSlide=idx;
+  if(idx===2) renderSalesLog();
+  if(idx===3) renderArchiveSales();
 }
+let tX=0;
+document.getElementById('workspaceTrack').addEventListener('touchstart',e=>{tX=e.touches[0].clientX;},{passive:true});
+document.getElementById('workspaceTrack').addEventListener('touchend',e=>{
+  const d=tX-e.changedTouches[0].clientX;
+  if(Math.abs(d)>50){ if(d>0&&currentSlide<3) moveTrack(currentSlide+1); else if(d<0&&currentSlide>0) moveTrack(currentSlide-1); }
+},{passive:true});
 
-let tX = 0;
-document.getElementById('workspaceTrack').addEventListener('touchstart', e => { tX = e.touches[0].clientX; }, { passive:true });
-document.getElementById('workspaceTrack').addEventListener('touchend', e => {
-  const d = tX - e.changedTouches[0].clientX;
-  if (Math.abs(d) > 50) {
-    if (d > 0 && currentSlide < 3) moveTrack(currentSlide + 1);
-    else if (d < 0 && currentSlide > 0) moveTrack(currentSlide - 1);
-  }
-}, { passive:true });
-
-// ── MODALS & CONFIRM
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-document.getElementById('confirmModal').addEventListener('click', function(e) { if(e.target===this) closeModal('confirmModal'); });
-
-function showConfirm(title, msg, onOk, btnLabel='Confirm') {
-  document.getElementById('confirmTitle').textContent = title;
-  document.getElementById('confirmMsg').textContent = msg;
-  const btn = document.getElementById('confirmOkBtn');
-  btn.textContent = btnLabel;
-  btn.onclick = () => { closeModal('confirmModal'); onOk(); };
+// ── MODALS
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.getElementById('confirmModal').addEventListener('click',function(e){ if(e.target===this) closeModal('confirmModal'); });
+function showConfirm(title,msg,onOk,btnLabel='Confirm'){
+  document.getElementById('confirmTitle').textContent=title;
+  document.getElementById('confirmMsg').textContent=msg;
+  const btn=document.getElementById('confirmOkBtn');
+  btn.textContent=btnLabel;
+  btn.onclick=()=>{ closeModal('confirmModal'); onOk(); };
   document.getElementById('confirmModal').classList.add('open');
 }
 
 // ── KEYBOARD
-document.addEventListener('keydown', e => {
-  if (!CU) return;
-  const typing = ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName);
-  if (e.key === 'Escape') {
-    closeModal('confirmModal');
-    closeProfile();
-    closeReportOverlay();
-    closeDayDetail();
-  }
-  if (e.key === 'n' && !typing && currentSlide === 1) {
-    e.preventDefault();
-    document.getElementById('quickTaskInput').focus();
-  }
+document.addEventListener('keydown',e=>{
+  if(!CU) return;
+  const typing=['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName);
+  if(e.key==='Escape'){ closeModal('confirmModal'); closeProfile(); closeReportOverlay(); closeDayDetail(); }
+  if(e.key==='n'&&!typing&&currentSlide===1){ e.preventDefault(); document.getElementById('quickTaskInput').focus(); }
 });
 
 // ── THEME
-function toggleDashboardTheme() {
-  document.body.className = document.body.className === 'theme-login' ? 'theme-signup' : 'theme-login';
-  document.querySelectorAll('.overlay-screen.open,.day-detail-overlay.open').forEach(el => applyOverlayTheme(el));
+function toggleDashboardTheme(){
+  document.body.className=document.body.className==='theme-login'?'theme-signup':'theme-login';
+  document.querySelectorAll('.overlay-screen.open,.day-detail-overlay.open').forEach(el=>applyOverlayTheme(el));
 }
-function applyOverlayTheme(el) {
-  const light = document.body.className === 'theme-signup';
-  el.style.background = light ? '#f0f0f0' : '#111111';
-  el.style.color       = light ? '#1a1a1a' : '#e0e0e0';
+function applyOverlayTheme(el){
+  const light=document.body.className==='theme-signup';
+  el.style.background=light?'#f0f0f0':'#111111';
+  el.style.color=light?'#1a1a1a':'#e0e0e0';
 }
 
 // ── UTILS
 let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+function showToast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2600);
 }
-function esc(s='') {
+function esc(s=''){
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
 <script>
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 </script>
 </body>
-</html>
+    </html>
