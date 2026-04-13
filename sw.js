@@ -1,40 +1,83 @@
-const CACHE_NAME = 'royal-horizon-v2';
-const PRECACHE = [
+const CACHE_NAME = 'royal-horizon-v3';
+
+const APP_SHELL = [
   './',
   './index.html',
   './manifest.json',
-  'https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js',
-  'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js',
-  'https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js',
 ];
 
+// INSTALL
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(PRECACHE)));
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL))
+  );
   self.skipWaiting();
 });
 
+// ACTIVATE (clean old caches)
 self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys =>
-    Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-  ));
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.map(key => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      )
+    )
+  );
   self.clients.claim();
 });
 
+// FETCH
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
+
   const url = event.request.url;
-  if (url.includes('anthropic.com') || url.includes('googleapis.com/v1beta') || url.includes('firebaseio.com')) return;
-  if (url.includes('gstatic.com') || url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com')) {
+
+  // 🚫 NEVER cache APIs
+  if (
+    url.includes('anthropic.com') ||
+    url.includes('googleapis.com') ||
+    url.includes('firebaseio.com')
+  ) {
+    return;
+  }
+
+  // 🎨 Fonts & external assets → stale while revalidate
+  if (
+    url.includes('gstatic.com') ||
+    url.includes('fonts.googleapis.com') ||
+    url.includes('fonts.gstatic.com')
+  ) {
     event.respondWith(
-      caches.match(event.request).then(cached => cached || fetch(event.request).then(res => {
-        const clone = res.clone();
-        caches.open(CACHE_NAME).then(c => c.put(event.request, clone));
-        return res;
-      }))
+      caches.match(event.request).then(cached => {
+        const fetchPromise = fetch(event.request).then(networkRes => {
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, networkRes.clone());
+          });
+          return networkRes;
+        });
+        return cached || fetchPromise;
+      })
     );
     return;
   }
-  event.respondWith(
+
+  // 🧱 APP SHELL → cache first
+  if (APP_SHELL.some(path => url.endsWith(path))) {
+    event.respondWith(
+      caches.match(event.request).then(cached => {
+        return cached || fetch(event.request);
+      })
+    );
+    return;
+  }
+
+  // 🌐 Default → network only (NO caching)
+  event.respondWith(fetch(event.request));
+});  event.respondWith(
     fetch(event.request)
       .then(res => {
         if (res && res.status === 200) {
