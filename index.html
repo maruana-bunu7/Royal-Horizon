@@ -571,14 +571,22 @@ function todayKey() {
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
 
-// ── AUTH
+// ---- AUTH
+let authResolved = false;
+
 const authTimeout = setTimeout(() => {
-  document.getElementById('loadingOverlay').classList.add('hidden');
-  showPortal();
-}, 8000); // 5 seconds max wait
+  if (!authResolved) {
+    authResolved = true;
+    document.getElementById('loadingOverlay').classList.add('hidden');
+    showPortal();
+  }
+}, 5000);
 
 auth.onAuthStateChanged(async (user) => {
-  clearTimeout(authTimeout); // Firebase responded, cancel timeout
+  if (authResolved) return; // timeout already fired, ignore
+  authResolved = true;
+  clearTimeout(authTimeout);
+  
   if (user) {
     CU = user.uid;
     const snap = await db.ref('users/' + CU + '/profi');
