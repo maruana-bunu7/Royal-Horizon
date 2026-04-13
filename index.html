@@ -491,6 +491,7 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check-compat.js"></script>
 
 <script>
 const firebaseConfig = {
@@ -503,6 +504,8 @@ const firebaseConfig = {
   appId: "1:536841749759:web:70715758286b8b269b38ca"
 };
 firebase.initializeApp(firebaseConfig);
+const appCheck = firebase.appCheck();
+appCheck.activate('6LdvTrUsAAAAAEcYkppU5JHvawph42rlHHzfNadO', true);
 const auth = firebase.auth();
 const db   = firebase.database();
 
