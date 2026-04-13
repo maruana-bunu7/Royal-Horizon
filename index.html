@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#f4f4f4" media="(prefers-color-scheme: light)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Horizon Workspace</title>
+<title>Royal Horizon Workspace</title>
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,8 +46,7 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .header-row{position:absolute;top:40px;width:85%;display:flex;justify-content:space-between;align-items:center;}
 .header-right{display:flex;gap:14px;align-items:center;}
 /* AVATAR — photo or initial, no color picker */
-.avatar-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;border:none;font-family:'Playfair Display',serif;flex-shrink:0;color:#fff;background:#6B8E7F;overflow:hidden;}
-.avatar-btn img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.avatar-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;border:none;font-family:'Playfair Display',serif;flex-shrink:0;color:#fff;}
 .theme-toggle{cursor:pointer;font-size:22px;opacity:.5;transition:.2s;}.theme-toggle:hover{opacity:1;}
 .carousel-container{width:100%;height:75vh;display:flex;align-items:center;overflow:visible;padding:0 10%;}
 .workspace-track{display:flex;gap:30px;transition:transform var(--slide-speed) var(--slide-curve);will-change:transform;}
@@ -147,13 +146,7 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .back-btn{width:34px;height:34px;border-radius:50%;background:rgba(128,128,128,.1);border:1px solid rgba(128,128,128,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;transition:.2s;flex-shrink:0;color:inherit;}
 .back-btn:hover{background:rgba(128,128,128,.2);}
 .overlay-body{flex:1;overflow-y:auto;padding:0 28px 40px;}
-/* PROFILE AVATAR — photo upload */
-.profile-avatar-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:22px;}
-.profile-avatar-large{width:82px;height:82px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;font-family:'Playfair Display';border:2px solid rgba(128,128,128,.3);color:#fff;background:#6B8E7F;overflow:hidden;position:relative;cursor:pointer;}
-.profile-avatar-large img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
-.profile-avatar-large:hover .avatar-edit-hint{opacity:1;}
-.avatar-edit-hint{position:absolute;inset:0;background:rgba(0,0,0,.45);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;opacity:0;transition:.2s;font-family:'Inter',sans-serif;}
-.avatar-photo-label{font-size:11px;opacity:.4;margin-top:8px;letter-spacing:.5px;text-transform:uppercase;}
+.profile-avatar-large{width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;font-family:'Playfair Display';margin:0 auto 22px;border:2px solid rgba(128,128,128,.3);color:#fff;}
 /* PROFILE fields */
 .profile-section-divider{border:none;border-top:1px solid rgba(128,128,128,.15);margin:20px 0;}
 .profile-section-label{font-size:10px;text-transform:uppercase;letter-spacing:1.8px;opacity:.35;margin-bottom:14px;font-weight:600;}
@@ -209,9 +202,6 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 <body>
 
 <div class="loading-overlay" id="loadingOverlay"><div class="loading-spinner">✦</div></div>
-<!-- Hidden file input for avatar photo -->
-<input type="file" id="avatarFileInput" accept="image/*" onchange="handleAvatarUpload(event)">
-
 <!-- PORTAL -->
 <div class="container" id="portalContainer" style="display:none;">
   <div id="selectionScreen" class="selection-screen">
@@ -377,12 +367,11 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
     </div>
     <div class="overlay-body">
 
-      <!-- AVATAR: photo or initial, tap to change -->
-      <div class="profile-avatar-wrap">
-        <div class="profile-avatar-large" id="profileAvatarLarge" onclick="triggerAvatarUpload()">
-          <div class="avatar-edit-hint">📷</div>
-        </div>
-        <span class="avatar-photo-label">Tap to change photo</span>
+      <div class="profile-avatar-large" id="profileAvatarLarge"></div>
+
+      <div class="profile-field" id="colorPickerSection" style="opacity:.35;pointer-events:none;transition:.3s;">
+        <label class="profile-label">Avatar Colour</label>
+        <div class="color-picker" id="colorPicker"></div>
       </div>
 
       <!-- PERSONAL INFO -->
@@ -521,7 +510,6 @@ let cachedSales = [], salesUnsubscribe = null;
 let taskFilter = 'all';
 let profileEditMode = false;
 let currentReportText = '';
-let avatarDataURL = null; // holds the chosen photo as base64
 
 // LOCAL date key
 function todayKey() {
@@ -538,6 +526,14 @@ document.addEventListener('visibilitychange', () => {
     if (dash && dash.style.display === 'flex') {
       dash.style.opacity = '1';
     }
+  }
+});
+
+// ── FIX: Restore app visibility when returning from background
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && CU) {
+    const dash = document.getElementById('dashboard');
+    if (dash && dash.style.display === 'flex') dash.style.opacity = '1';
   }
 });
 
@@ -633,8 +629,7 @@ async function handleLogout() {
     stopTasksListener();
     if (salesUnsubscribe) salesUnsubscribe();
     await auth.signOut();
-    cachedTasks = []; cachedSales = []; avatarDataURL = null;
-    try { if (CU) localStorage.removeItem('rh_avatar_' + CU); } catch(e) {}
+    cachedTasks = []; cachedSales = [];
     ['loginUser','loginPass','signupName','signupUser','signupEmail','signupPass'].forEach(id => {
       const el = document.getElementById(id); if (el) el.value = '';
     });
@@ -667,50 +662,15 @@ function loadDashboard(instant) {
 // ── AVATAR — shows photo if saved, otherwise initial letter
 function updateAvatar(prof) {
   const btn = document.getElementById('avatarBtn');
-  // Try localStorage first (fast, avoids large DB reads)
-  let photo = null;
-  if (CU) { try { photo = localStorage.getItem('rh_avatar_' + CU); } catch(e) {} }
-  if (!photo) photo = prof && prof.avatarPhoto; // fallback to DB field (legacy)
-  if (photo) {
-    btn.innerHTML = `<img src="${photo}" alt="avatar">`;
-  } else {
-    btn.innerHTML = '';
-    btn.style.background = '#6B8E7F';
-    btn.textContent = (prof && prof.name ? prof.name[0].toUpperCase() : 'G');
-  }
+  btn.style.background = prof && prof.color ? prof.color : '#6B8E7F';
+  btn.textContent = (prof && prof.name ? prof.name[0].toUpperCase() : 'G');
 }
 
-// ── AVATAR UPLOAD
-function triggerAvatarUpload() {
-  if (!profileEditMode) return; // only in edit mode
-  document.getElementById('avatarFileInput').click();
-}
-
-function handleAvatarUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  if (file.size > 2 * 1024 * 1024) { showToast('Image too large. Max 2 MB.'); return; }
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    avatarDataURL = e.target.result;
-    // Preview in profile overlay
-    const av = document.getElementById('profileAvatarLarge');
-    av.innerHTML = `<img src="${avatarDataURL}" alt="avatar"><div class="avatar-edit-hint">📷</div>`;
-    // Also update header button preview
-    const btn = document.getElementById('avatarBtn');
-    btn.innerHTML = `<img src="${avatarDataURL}" alt="avatar">`;
-    showToast('Photo selected — save to confirm.');
-  };
-  reader.readAsDataURL(file);
-  event.target.value = ''; // reset so same file can be re-selected
-}
 
 // ── PROFILE
 function openProfile() {
   const prof = currentProfile || {};
   profileEditMode = false;
-  avatarDataURL = null;
-
   document.getElementById('profileName').value          = prof.name || '';
   document.getElementById('profileUsername').value      = prof.username || '';
   document.getElementById('profileEmail').value         = prof.email || '';
@@ -729,18 +689,16 @@ function openProfile() {
   btn.textContent = '✎ Edit'; btn.classList.remove('active');
   document.getElementById('profileSaveBtn').style.display = 'none';
 
-  // Avatar display — read from localStorage (fast)
   const av = document.getElementById('profileAvatarLarge');
-  let storedPhoto = null;
-  if (CU) { try { storedPhoto = localStorage.getItem('rh_avatar_' + CU); } catch(e) {} }
-  const displayPhoto = storedPhoto || prof.avatarPhoto;
-  if (displayPhoto) {
-    av.innerHTML = `<img src="${displayPhoto}" alt="avatar"><div class="avatar-edit-hint">📷</div>`;
-  } else {
-    av.innerHTML = `<span>${(prof.name || 'G')[0].toUpperCase()}</span><div class="avatar-edit-hint">📷</div>`;
-    av.style.background = '#6B8E7F';
-  }
-  av.style.cursor = 'default';
+  av.style.background = prof.color || '#6B8E7F';
+  av.textContent = (prof.name || 'G')[0].toUpperCase();
+
+  const cp = document.getElementById('colorPicker');
+  if (cp) cp.innerHTML = AVATAR_COLORS.map(c =>
+    `<div class="color-swatch${c===(prof.color||'#6B8E7F')?' selected':''}" style="background:${c}" onclick="pickColor('${c}',this)"></div>`
+  ).join('');
+  const cpSection = document.getElementById('colorPickerSection');
+  if (cpSection) { cpSection.style.opacity = '.35'; cpSection.style.pointerEvents = 'none'; }
 
   applyOverlayTheme(document.getElementById('profileOverlay'));
   document.getElementById('profileOverlay').classList.add('open');
@@ -761,7 +719,6 @@ function toggleProfileEdit() {
   if (profileEditMode) {
     // Cancel edit — restore
     profileEditMode = false;
-    avatarDataURL = null;
     const prof = currentProfile || {};
     document.getElementById('profileName').value          = prof.name || '';
     document.getElementById('profileBio').value           = prof.bio || '';
@@ -770,31 +727,28 @@ function toggleProfileEdit() {
     document.getElementById('profileOfficialNames').value = prof.officialNames || '';
     document.getElementById('profileBrand').value         = prof.brand || '';
     document.getElementById('profileBranchTarget').value  = prof.branchTarget || '';
-    // Reset avatar to saved state
     const av = document.getElementById('profileAvatarLarge');
-    let cancelPhoto = null;
-    if (CU) { try { cancelPhoto = localStorage.getItem('rh_avatar_' + CU); } catch(e) {} }
-    const cancelDisplayPhoto = cancelPhoto || prof.avatarPhoto;
-    if (cancelDisplayPhoto) {
-      av.innerHTML = `<img src="${cancelDisplayPhoto}" alt="avatar"><div class="avatar-edit-hint">📷</div>`;
-    } else {
-      av.innerHTML = `<span>${(prof.name||'G')[0].toUpperCase()}</span><div class="avatar-edit-hint">📷</div>`;
-    }
-    av.style.cursor = 'default';
+    av.style.background = prof.color || '#6B8E7F';
+    av.textContent = (prof.name || 'G')[0].toUpperCase();
+    document.getElementById('colorPicker').innerHTML = AVATAR_COLORS.map(c =>
+      `<div class="color-swatch${c===(prof.color||'#6B8E7F')?' selected':''}" style="background:${c}" onclick="pickColor('${c}',this)"></div>`
+    ).join('');
     setProfileReadOnly(true);
     const btn = document.getElementById('profileEditBtn');
     btn.textContent = '✎ Edit'; btn.classList.remove('active');
     document.getElementById('profileSaveBtn').style.display = 'none';
+    const cpSec = document.getElementById('colorPickerSection');
+    if (cpSec) { cpSec.style.opacity = '.35'; cpSec.style.pointerEvents = 'none'; }
     // Header avatar back to saved state
     updateAvatar(currentProfile);
   } else {
     profileEditMode = true;
     setProfileReadOnly(false);
-    const av = document.getElementById('profileAvatarLarge');
-    av.style.cursor = 'pointer';
     const btn = document.getElementById('profileEditBtn');
     btn.textContent = '✕ Cancel'; btn.classList.add('active');
     document.getElementById('profileSaveBtn').style.display = 'block';
+    const cpSection = document.getElementById('colorPickerSection');
+    if (cpSection) { cpSection.style.opacity = '1'; cpSection.style.pointerEvents = ''; }
   }
 }
 
@@ -802,7 +756,6 @@ function closeProfile() {
   document.getElementById('profileOverlay').classList.remove('open');
   if (profileEditMode) {
     profileEditMode = false;
-    avatarDataURL = null;
     setProfileReadOnly(true);
     document.getElementById('profileEditBtn').textContent = '✎ Edit';
     document.getElementById('profileEditBtn').classList.remove('active');
@@ -812,19 +765,19 @@ function closeProfile() {
 }
 
 async function saveProfile() {
+  const sel = document.querySelector('.color-swatch.selected');
+  const color = sel ? sel.style.background : (currentProfile.color || '#6B8E7F');
   const updates = {
     name:          document.getElementById('profileName').value.trim() || currentProfile.name,
     bio:           document.getElementById('profileBio').value.trim(),
     apiKey:        document.getElementById('profileApiKey').value.trim(),
+    color,
     outlet:        document.getElementById('profileOutlet').value.trim(),
     officialNames: document.getElementById('profileOfficialNames').value.trim(),
     brand:         document.getElementById('profileBrand').value.trim(),
     branchTarget:  document.getElementById('profileBranchTarget').value.trim(),
   };
-  // Avatar photo stored in localStorage only (avoids bloating Firebase DB)
-  if (avatarDataURL) {
-    try { localStorage.setItem('rh_avatar_' + CU, avatarDataURL); } catch(e) {}
-  }
+
   try {
     await db.ref('users/' + CU + '/profile').update(updates);
     currentProfile = { ...currentProfile, ...updates };
@@ -1290,7 +1243,22 @@ function confirmDeleteArchiveSaleEntry(entryId, itemName){
 
 function closeDayDetail(){
   document.getElementById('dayDetailOverlay').classList.remove('open');
-  currentDayDetailKey=null; currentDayDetailLabel=null; currentDayDetailEntries=[];
+  currentDayDetailKey=null; currentDayDetailLabel=null;
+  if(typeof currentDayDetailEntries !== 'undefined') currentDayDetailEntries=[];
+}
+
+function confirmDeleteArchiveSaleEntry(entryId, itemName) {
+  if (!currentDayDetailKey) return;
+  const dateKey = currentDayDetailKey;
+  const label = document.getElementById('dayDetailTitle').textContent;
+  showConfirm('Remove Sale', `Remove "${itemName}" from this day?`, async () => {
+    try {
+      await db.ref('users/' + CU + '/sales/' + dateKey + '/' + entryId).remove();
+      openDayDetail(dateKey, label);
+      renderArchiveSales();
+      showToast('Removed ✓');
+    } catch(e) { showToast('Remove failed.'); }
+  }, 'Remove');
 }
 
 function confirmDeleteArchiveDay(){
@@ -1409,4 +1377,4 @@ function esc(s=''){
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 </script>
 </body>
-    </html>
+</html>
