@@ -592,6 +592,7 @@ auth.onAuthStateChanged(async (user) => {
     const snap = await db.ref('users/' + CU + '/profile').once('value');
     currentProfile = snap.val() || { name: 'Guest' };
     loadDashboard(true);
+    document.getElementById('loadingOverlay').classList.a
     startTasksListener();
     initSalesListener();
     initOfflineSupport();
