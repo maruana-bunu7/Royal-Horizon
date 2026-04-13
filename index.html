@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f4f4f4" media="(prefers-color-scheme: light)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Horizon Workspace</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
+<style>
+:root{--bg-grey:#808080;--soft-white:#f4f4f4;--soft-black:#121212;--ui-speed:0.4s;--slide-speed:0.8s;--ui-curve:cubic-bezier(0.2,0.8,0.2,1);--slide-curve:cubic-bezier(0.4,0,0.2,1);}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:none;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg-grey);height:100vh;display:flex;justify-content:center;align-items:center;transition:background var(--ui-speed) var(--ui-curve);overflow:hidden;color:#222;}
+body.theme-login{background:var(--soft-black);color:#e0e0e0;}
+body.theme-signup{background:var(--soft-white);color:#1a1a1a;}
+h1,h2,h3,.btn-main,.btn-submit,.modal-btn,.proj-detail-title{font-family:'Playfair Display',Georgia,serif;letter-spacing:.5px;}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:rgba(128,128,128,.3);border-radius:3px;}
+/* OFFLINE BANNER */
+.offline-banner{position:fixed;top:0;left:0;right:0;z-index:1500;background:rgba(200,160,60,.96);color:#1a1100;text-align:center;font-size:12px;font-weight:600;padding:9px 16px;transform:translateY(-100%);transition:.35s var(--ui-curve);letter-spacing:.3px;pointer-events:none;}
+.offline-banner.visible{transform:translateY(0);}
+/* LOADING */
+.loading-overlay{position:fixed;inset:0;background:#111;z-index:2000;display:flex;align-items:center;justify-content:center;}
+.loading-spinner{font-size:38px;animation:pulse 1.6s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.2);opacity:1}}
+/* PORTAL */
+.container{width:100%;max-width:420px;text-align:center;position:relative;z-index:10;}
+.selection-screen{display:flex;gap:20px;justify-content:center;transition:.3s ease,transform var(--ui-speed) var(--ui-curve);}
+.selection-screen.fade-out{opacity:0;transform:scale(.97);pointer-events:none;}
+.btn-main{padding:16px 40px;border:none;border-radius:50px;font-size:16px;font-weight:600;cursor:pointer;transition:.2s;box-shadow:0 10px 20px rgba(0,0,0,.1);}
+.btn-login{background:#121212;color:#fff;}.btn-signup{background:#f4f4f4;color:#1a1a1a;}
+.form-wrapper{position:absolute;top:50%;left:50%;transform:translate(-50%,-45%);width:90%;opacity:0;visibility:hidden;transition:.4s var(--ui-curve);}
+.form-wrapper.active{opacity:1;visibility:visible;transform:translate(-50%,-50%);}
+.glass-card{background:rgba(128,128,128,.05);backdrop-filter:blur(25px);padding:36px;border-radius:30px;border:1px solid rgba(128,128,128,.2);}
+label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;opacity:.5;margin-bottom:5px;text-align:left;}
+input,textarea,select{width:100%;background:transparent;border:none;color:inherit;font-family:'Inter',sans-serif;}
+.portal-input{padding:10px 0;border-bottom:1px solid rgba(128,128,128,.4);margin-bottom:18px;font-size:14px;}
+.portal-input:focus{border-bottom-color:rgba(128,128,128,.9);}
+.portal-input::placeholder{opacity:.3;}
+.btn-submit{width:100%;padding:14px;border-radius:12px;border:none;font-weight:600;cursor:pointer;font-size:16px;transition:.2s;}
+.btn-submit:active{transform:scale(.98);}
+.theme-login .btn-submit{background:#f4f4f4;color:#121212;}.theme-signup .btn-submit{background:#121212;color:#f4f4f4;}
+.error-msg{color:#e05252;font-size:12px;margin-bottom:12px;min-height:14px;text-align:left;}
+/* DASHBOARD */
+.dashboard-wrapper{position:fixed;top:0;left:0;width:100vw;height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:100;opacity:0;transition:.8s var(--slide-curve);}
+.header-row{position:absolute;top:40px;width:85%;display:flex;justify-content:space-between;align-items:center;}
+.header-right{display:flex;gap:14px;align-items:center;}
+.avatar-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;border:none;font-family:'Playfair Display',serif;flex-shrink:0;color:#fff;}
+.theme-toggle{cursor:pointer;font-size:22px;opacity:.5;transition:.2s;}.theme-toggle:hover{opacity:1;}
+/* CAROUSEL */
+.carousel-container{width:100%;height:75vh;display:flex;align-items:center;overflow:visible;padding:0 10%;}
+.workspace-track{display:flex;gap:30px;transition:transform var(--slide-speed) var(--slide-curve);will-change:transform;}
+.workspace-card{min-width:80vw;height:65vh;background:rgba(128,128,128,.08);backdrop-filter:blur(15px);border:1px solid rgba(128,128,128,.15);border-radius:40px;padding:35px;opacity:.15;transform:scale(.92);transition:opacity var(--slide-speed) var(--slide-curve),transform var(--slide-speed) var(--slide-curve);display:flex;flex-direction:column;}
+.workspace-card.active{opacity:1;transform:scale(1);background:rgba(128,128,128,.12);}
+/* OVERVIEW */
+.overview-stats{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:16px;}
+.stat-box{background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.12);border-radius:18px;padding:16px;}
+.stat-number{font-family:'Playfair Display';font-size:32px;font-weight:700;}
+.stat-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;margin-top:3px;}
+.section-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;margin-top:14px;margin-bottom:9px;}
+.recent-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(128,128,128,.1);font-size:13px;}
+.recent-item:last-child{border-bottom:none;}
+.recent-tag{font-size:10px;opacity:.4;text-transform:uppercase;letter-spacing:1px;}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.add-btn{width:32px;height:32px;border-radius:50%;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:19px;opacity:.7;transition:.2s;color:inherit;}
+.add-btn:hover{opacity:1;}
+.overview-sales-box{background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.12);border-radius:16px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;}
+/* TASKS */
+.task-quick-add{display:flex;gap:8px;margin-bottom:8px;}
+.task-quick-input{flex:1;font-size:13px;padding:9px 13px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.14);border-radius:12px;color:inherit;}
+.task-quick-input::placeholder{opacity:.4;}
+.task-due-toggle{width:34px;height:34px;border-radius:11px;background:rgba(128,128,128,.1);border:1px solid rgba(128,128,128,.15);cursor:pointer;font-size:14px;color:inherit;transition:.2s;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.task-due-toggle.active{background:rgba(90,160,120,.15);border-color:rgba(90,160,120,.35);}
+.task-quick-btn{width:34px;height:34px;border-radius:11px;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);cursor:pointer;font-size:18px;color:inherit;transition:.2s;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.task-quick-btn:hover{background:rgba(128,128,128,.28);}
+.task-due-row{display:none;gap:7px;margin-bottom:9px;}
+.task-due-row.visible{display:flex;}
+.task-due-input{flex:1;font-size:12px;padding:7px 10px;background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.12);border-radius:10px;color:inherit;}
+.task-filter-row{display:flex;gap:6px;margin-bottom:11px;}
+.task-filter-pill{padding:5px 13px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid rgba(128,128,128,.18);background:transparent;cursor:pointer;color:inherit;transition:.2s;opacity:.45;letter-spacing:.5px;}
+.task-filter-pill.active{opacity:1;background:rgba(128,128,128,.2);border-color:rgba(128,128,128,.35);}
+.tasks-scroll{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:7px;}
+.task2-item{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.11);border-radius:14px;transition:.25s var(--ui-curve);}
+.task2-item.done2{opacity:.45;border-color:rgba(128,128,128,.06);}
+.task2-check{width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(128,128,128,.4);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;margin-top:1px;transition:.2s;}
+.task2-item.done2 .task2-check{background:rgba(128,128,128,.35);border-color:transparent;}
+.task2-text{flex:1;min-width:0;font-size:14px;line-height:1.4;}
+.task2-item.done2 .task2-text{text-decoration:line-through;}
+.task2-due{font-size:10px;opacity:.5;margin-top:3px;letter-spacing:.2px;}
+.task2-due.overdue{color:#e05252;opacity:1;font-weight:600;}
+.task2-del{opacity:.22;cursor:pointer;font-size:12px;background:none;border:none;color:inherit;transition:.2s;padding:2px;flex-shrink:0;margin-top:1px;}
+.task2-del:hover{opacity:.85;color:#e05252;}
+.tasks-footer{padding-top:10px;border-top:1px solid rgba(128,128,128,.1);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+.tasks-footer-count{font-size:11px;opacity:.4;letter-spacing:.4px;}
+.clear-done-btn{font-size:11px;opacity:.35;background:none;border:none;color:inherit;cursor:pointer;transition:.2s;padding:3px 8px;border-radius:8px;}
+.clear-done-btn:hover{opacity:.8;background:rgba(128,128,128,.1);}
+/* SALES */
+.sales-form{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+.sales-input-row{display:flex;gap:7px;}
+.sales-input{flex:1;font-size:12px;padding:8px 11px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.12);border-radius:11px;color:inherit;}
+.sales-input::placeholder{opacity:.4;}
+.sales-btn-row{display:flex;gap:7px;}
+.sales-add-btn{flex:1;padding:8px 14px;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);border-radius:11px;cursor:pointer;font-size:12px;font-weight:600;color:inherit;transition:.3s;white-space:nowrap;}
+.sales-add-btn:hover{background:rgba(128,128,128,.25);}
+.sales-add-btn.editing{background:rgba(90,160,120,.15);border-color:rgba(90,160,120,.35);}
+.sale-cancel-edit-btn{display:none;padding:8px 11px;background:rgba(220,80,80,.08);border:1px solid rgba(220,80,80,.2);border-radius:11px;cursor:pointer;font-size:11px;font-weight:600;color:#e05252;transition:.2s;white-space:nowrap;}
+.sales-report-btn{padding:8px 14px;background:rgba(90,160,120,.12);border:1px solid rgba(90,160,120,.25);border-radius:11px;cursor:pointer;font-size:11px;font-weight:600;color:inherit;transition:.2s;white-space:nowrap;letter-spacing:.3px;}
+.sales-report-btn:hover{background:rgba(90,160,120,.22);}
+.sales-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:7px;}
+.sale-item{background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;padding:10px 12px;display:flex;align-items:flex-start;gap:9px;transition:.2s;}
+.sale-item.sale-editing{border-color:rgba(90,160,120,.4);background:rgba(90,160,120,.06);}
+.sale-num{font-family:'Playfair Display';font-size:18px;font-weight:700;opacity:.3;min-width:22px;line-height:1.2;}
+.sale-info{flex:1;min-width:0;}
+.sale-name{font-family:'Playfair Display';font-size:14px;font-weight:600;}
+.sale-meta{font-size:10px;opacity:.45;margin-top:2px;letter-spacing:.3px;}
+.sale-total{font-size:13px;font-weight:600;opacity:.8;white-space:nowrap;}
+.sale-edit-btn{opacity:.22;cursor:pointer;font-size:12px;background:none;border:none;color:inherit;transition:.2s;padding:2px;}
+.sale-edit-btn:hover{opacity:.85;color:rgba(90,160,120,.9);}
+.sale-del{opacity:.25;cursor:pointer;font-size:11px;background:none;border:none;color:inherit;transition:.2s;padding:2px;}.sale-del:hover{opacity:.8;color:#e05252;}
+/* PROGRESS BAR */
+.progress-wrap{padding:8px 0 6px;border-top:1px solid rgba(128,128,128,.1);flex-shrink:0;}
+.progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.progress-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;}
+.progress-pct{font-family:'Playfair Display';font-size:14px;font-weight:700;}
+.progress-track{height:5px;background:rgba(128,128,128,.15);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;transition:width .7s cubic-bezier(0.4,0,0.2,1),background .4s;}
+.progress-sub{font-size:10px;opacity:.38;margin-top:4px;letter-spacing:.3px;}
+.sales-summary{padding-top:9px;border-top:1px solid rgba(128,128,128,.12);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+.summary-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;}
+.summary-total{font-family:'Playfair Display';font-size:22px;font-weight:700;}
+.summary-count{font-size:10px;opacity:.4;margin-top:1px;}
+/* ARCHIVE */
+.arch-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;}
+.arch-day-card{width:100%;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.12);border-radius:16px;padding:12px 14px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:10px;}
+.arch-day-card:hover{background:rgba(128,128,128,.16);}
+.arch-day-card.arch-selected{border-color:rgba(128,128,128,.45);background:rgba(128,128,128,.18);}
+.arch-checkbox{width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(128,128,128,.4);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;transition:.2s;}
+.arch-day-card.arch-selected .arch-checkbox{background:rgba(128,128,128,.4);border-color:transparent;}
+.arch-day-info{flex:1;min-width:0;}
+.arch-day-date{font-family:'Playfair Display';font-size:13px;font-weight:600;}
+.arch-day-total{font-size:11px;font-weight:600;opacity:.7;margin-top:2px;}
+.arch-card-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.arch-del-btn{opacity:.25;cursor:pointer;font-size:12px;background:none;border:none;color:inherit;transition:.2s;padding:4px;}
+.arch-del-btn:hover{opacity:.85;color:#e05252;}
+.arch-select-bar{display:none;gap:8px;margin-bottom:10px;flex-shrink:0;}
+.arch-select-bar.visible{display:flex;}
+.arch-action-btn{flex:1;padding:8px 12px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:600;transition:.2s;border:1px solid;}
+.arch-delete-sel-btn{background:rgba(220,80,80,.08);border-color:rgba(220,80,80,.2);color:#e05252;}
+.arch-delete-sel-btn:hover{background:rgba(220,80,80,.18);}
+.arch-cancel-sel-btn{background:rgba(128,128,128,.08);border-color:rgba(128,128,128,.15);color:inherit;}
+.arch-cancel-sel-btn:hover{background:rgba(128,128,128,.16);}
+/* DOCK */
+.floating-dock{position:absolute;bottom:40px;height:70px;padding:0 20px;background:rgba(128,128,128,.1);backdrop-filter:blur(25px);border-radius:24px;border:1px solid rgba(128,128,128,.2);display:flex;align-items:center;gap:16px;box-shadow:0 20px 40px rgba(0,0,0,.15);}
+.dock-item{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.3;transition:.3s;font-size:19px;}
+.dock-item.active{opacity:1;background:rgba(128,128,128,.2);transform:translateY(-5px);}
+/* OVERLAYS */
+.overlay-screen{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;transition:.4s var(--ui-curve);transform:translateY(100%);opacity:0;pointer-events:none;overflow:hidden;}
+.overlay-screen.open{transform:translateY(0);opacity:1;pointer-events:all;}
+.overlay-inner{display:flex;flex-direction:column;height:100%;}
+.overlay-header{display:flex;align-items:center;gap:13px;padding:50px 28px 18px;flex-shrink:0;}
+.back-btn{width:34px;height:34px;border-radius:50%;background:rgba(128,128,128,.1);border:1px solid rgba(128,128,128,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;transition:.2s;flex-shrink:0;color:inherit;}
+.back-btn:hover{background:rgba(128,128,128,.2);}
+.overlay-body{flex:1;overflow-y:auto;padding:0 28px 40px;}
+/* PROFILE */
+.profile-avatar-large{width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;font-family:'Playfair Display';margin:0 auto 22px;border:2px solid rgba(128,128,128,.3);color:#fff;}
+.profile-section-divider{border:none;border-top:1px solid rgba(128,128,128,.15);margin:20px 0;}
+.profile-section-label{font-size:10px;text-transform:uppercase;letter-spacing:1.8px;opacity:.35;margin-bottom:14px;font-weight:600;}
+.profile-field{margin-bottom:16px;}
+.profile-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;opacity:.5;margin-bottom:7px;display:block;}
+.profile-input{width:100%;font-size:14px;padding:11px 14px;background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.12);border-radius:13px;color:inherit;transition:.2s;}
+.profile-input:focus:not([readonly]){border-color:rgba(128,128,128,.4);}
+.profile-input[readonly]{opacity:.42;cursor:default;}
+.profile-textarea{resize:none;min-height:75px;line-height:1.6;}
+.color-picker{display:flex;gap:9px;flex-wrap:wrap;}
+.color-swatch{width:32px;height:32px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:.2s;}
+.color-swatch.selected{border-color:rgba(255,255,255,.85);transform:scale(1.12);}
+body.theme-signup .color-swatch.selected{border-color:rgba(0,0,0,.5);}
+.profile-edit-btn{padding:9px 20px;background:rgba(128,128,128,.12);border:1px solid rgba(128,128,128,.2);border-radius:20px;cursor:pointer;font-size:13px;font-weight:600;color:inherit;transition:.2s;margin-left:auto;white-space:nowrap;}
+.profile-edit-btn:hover{background:rgba(128,128,128,.22);}
+.profile-edit-btn.active{background:rgba(220,100,80,.1);border-color:rgba(220,100,80,.25);color:#e05252;}
+.profile-save-btn{width:100%;padding:13px;background:rgba(90,160,120,.15);border:1px solid rgba(90,160,120,.3);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:15px;color:inherit;transition:.2s;margin-top:6px;}
+.profile-save-btn:hover{background:rgba(90,160,120,.25);}.profile-save-btn:active{transform:scale(.98);}
+.signout-profile-btn{width:100%;padding:13px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.15);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:15px;color:inherit;transition:.2s;margin-top:10px;}
+.signout-profile-btn:hover{background:rgba(128,128,128,.18);}
+.danger-zone{margin-top:12px;padding-top:22px;border-top:1px solid rgba(220,80,80,.2);}
+.danger-title{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#e05252;opacity:.7;margin-bottom:12px;}
+.delete-account-btn{width:100%;padding:12px;background:rgba(220,80,80,.08);border:1px solid rgba(220,80,80,.2);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:14px;color:#e05252;transition:.2s;}
+.delete-account-btn:hover{background:rgba(220,80,80,.15);}
+/* MODALS */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(10px);z-index:500;display:none;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal-card{border-radius:22px;padding:30px;width:90%;max-width:360px;}
+body.theme-login .modal-card{background:#1c1c1c;color:#e0e0e0;border:1px solid rgba(255,255,255,.08);}
+body.theme-signup .modal-card{background:#f0f0f0;color:#1a1a1a;border:1px solid rgba(0,0,0,.08);}
+body:not(.theme-login):not(.theme-signup) .modal-card{background:#2a2a2a;color:#e0e0e0;border:1px solid rgba(255,255,255,.08);}
+.modal-card h3{margin-bottom:20px;font-size:19px;}
+.modal-input{width:100%;padding:10px 13px;background:rgba(128,128,128,.1);border:1px solid rgba(128,128,128,.2);border-radius:11px;color:inherit;font-family:'Inter';font-size:13px;margin-bottom:9px;}
+.modal-input:focus{border-color:rgba(128,128,128,.5);}
+select.modal-input{cursor:pointer;}
+.modal-actions{display:flex;gap:9px;margin-top:16px;}
+.modal-btn{flex:1;padding:11px;border-radius:11px;border:none;cursor:pointer;font-family:'Playfair Display';font-size:14px;font-weight:600;transition:.2s;}
+.modal-btn:active{transform:scale(.97);}
+.modal-btn.confirm{background:rgba(200,200,200,.9);color:#121212;}
+.modal-btn.danger{background:rgba(220,80,80,.8);color:#fff;}
+.modal-btn.cancel{background:rgba(128,128,128,.15);color:inherit;}
+/* REPORT */
+.report-pre{font-family:'Courier New',Courier,monospace;font-size:12px;line-height:1.75;white-space:pre-wrap;background:rgba(128,128,128,.06);border:1px solid rgba(128,128,128,.12);border-radius:16px;padding:18px;overflow-x:auto;word-break:break-word;}
+/* TOAST */
+.toast{position:fixed;bottom:125px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(30,30,30,.95);color:#e0e0e0;padding:10px 20px;border-radius:18px;font-size:13px;opacity:0;transition:.3s;z-index:900;pointer-events:none;white-space:nowrap;}
+body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+/* DAY DETAIL */
+.day-detail-overlay{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;transition:.4s var(--ui-curve);transform:translateY(100%);opacity:0;pointer-events:none;overflow:hidden;}
+.day-detail-overlay.open{transform:translateY(0);opacity:1;pointer-events:all;}
+</style>
+</head>
+<body>
+
+<!-- OFFLINE BANNER -->
+<div class="offline-banner" id="offlineBanner">⚡ Offline — changes will sync when reconnected</div>
+
+<div class="loading-overlay" id="loadingOverlay"><div class="loading-spinner">✦</div></div>
+
+<!-- PORTAL -->
+<div class="container" id="portalContainer" style="display:none;">
+  <div id="selectionScreen" class="selection-screen">
+    <button onclick="showPage('login')" class="btn-main btn-login">Log In</button>
+    <button onclick="showPage('signup')" class="btn-main btn-signup">Sign Up</button>
+  </div>
+  <div id="loginPage" class="form-wrapper">
+    <div class="glass-card">
+      <h2 style="margin-bottom:24px">Welcome Back</h2>
+      <label>Username</label>
+      <input class="portal-input" type="text" id="loginUser" placeholder="your username">
+      <label>Password</label>
+      <input class="portal-input" type="password" id="loginPass" placeholder="••••••••">
+      <div class="error-msg" id="loginError"></div>
+      <button class="btn-submit" onclick="handleLogin()">Sign In</button>
+      <p onclick="resetPage()" style="margin-top:18px;font-size:12px;cursor:pointer;opacity:.5;">← Back</p>
+    </div>
+  </div>
+  <div id="signupPage" class="form-wrapper">
+    <div class="glass-card">
+      <h2 style="margin-bottom:24px">New Beginning</h2>
+      <label>Full Name</label>
+      <input class="portal-input" type="text" id="signupName" placeholder="your name">
+      <label>Username</label>
+      <input class="portal-input" type="text" id="signupUser" placeholder="choose a username">
+      <label>Email</label>
+      <input class="portal-input" type="email" id="signupEmail" placeholder="your@email.com">
+      <label>Password</label>
+      <input class="portal-input" type="password" id="signupPass" placeholder="min. 6 characters">
+      <div class="error-msg" id="signupError"></div>
+      <button class="btn-submit" onclick="handleSignup()">Create Account</button>
+      <p onclick="resetPage()" style="margin-top:18px;font-size:12px;cursor:pointer;opacity:.5;">← Back</p>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="dashboard-wrapper">
+  <div class="header-row">
+    <h1 id="greeting" style="font-weight:400;font-size:25px;">Workspace</h1>
+    <div class="header-right">
+      <div class="theme-toggle" onclick="toggleDashboardTheme()">◐</div>
+      <button class="avatar-btn" id="avatarBtn" onclick="openProfile()"></button>
+    </div>
+  </div>
+  <div class="carousel-container">
+    <div class="workspace-track" id="workspaceTrack">
+
+      <!-- SLIDE 0: OVERVIEW -->
+      <div class="workspace-card active">
+        <h2>Overview</h2>
+        <div class="overview-stats">
+          <div class="stat-box"><div class="stat-number" id="statTotal">0</div><div class="stat-label">Total Tasks</div></div>
+          <div class="stat-box"><div class="stat-number" id="statActive">0</div><div class="stat-label">Pending</div></div>
+        </div>
+        <div class="section-lbl">Today's Sales</div>
+        <div class="overview-sales-box">
+          <div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;">Revenue</div>
+            <div style="font-size:10px;opacity:.4;margin-top:2px;" id="overviewSalesCount">0 transactions</div>
+          </div>
+          <div style="font-family:'Playfair Display';font-size:20px;font-weight:700;" id="overviewSalesTotal">Ksh 0</div>
+        </div>
+        <div class="section-lbl">Recent Tasks</div>
+        <div id="recentList"></div>
+      </div>
+
+      <!-- SLIDE 1: TASKS -->
+      <div class="workspace-card">
+        <div class="card-header">
+          <h2>Tasks</h2>
+          <button class="add-btn" onclick="clearDoneTasks()" title="Clear completed">✓</button>
+        </div>
+        <div class="task-quick-add">
+          <input class="task-quick-input" id="quickTaskInput" placeholder="Add a task or note…" onkeydown="if(event.key==='Enter')addQuickTask()">
+          <button class="task-due-toggle" id="taskDueToggle" onclick="toggleTaskDueRow()" title="Set due date & reminder">📅</button>
+          <button class="task-quick-btn" onclick="addQuickTask()">+</button>
+        </div>
+        <div class="task-due-row" id="taskDueRow">
+          <input class="task-due-input" type="date" id="taskDueDate" placeholder="Date">
+          <input class="task-due-input" type="time" id="taskDueTime" placeholder="Time">
+        </div>
+        <div class="task-filter-row">
+          <button class="task-filter-pill active" id="pill-all" onclick="setTaskFilter('all')">All</button>
+          <button class="task-filter-pill" id="pill-pending" onclick="setTaskFilter('pending')">Pending</button>
+          <button class="task-filter-pill" id="pill-done" onclick="setTaskFilter('done')">Done</button>
+        </div>
+        <div class="tasks-scroll" id="tasksList2"></div>
+        <div class="tasks-footer">
+          <span class="tasks-footer-count" id="tasksFooterCount">0 tasks</span>
+          <button class="clear-done-btn" onclick="clearDoneTasks()">Clear done</button>
+        </div>
+      </div>
+
+      <!-- SLIDE 2: SALES LOG -->
+      <div class="workspace-card">
+        <div class="card-header">
+          <h2>Sales Log</h2>
+          <div style="font-size:10px;opacity:.4;text-transform:uppercase;letter-spacing:1px;" id="salesDateLabel"></div>
+        </div>
+        <div class="sales-form">
+          <div class="sales-input-row">
+            <input class="sales-input" id="saleItem" placeholder="Item name…">
+            <input class="sales-input" id="saleModel" placeholder="Model No.">
+          </div>
+          <div class="sales-input-row">
+            <input class="sales-input" id="saleSerial" placeholder="Serial No.">
+            <input class="sales-input" id="salePrice" placeholder="Price (Ksh)" type="number" min="0">
+            <input class="sales-input" id="saleQty" placeholder="Qty" type="number" min="1" style="max-width:60px;">
+          </div>
+          <div class="sales-btn-row">
+            <button class="sales-add-btn" id="saleSubmitBtn" onclick="addSale()">+ Log Sale</button>
+            <button class="sale-cancel-edit-btn" id="saleCancelEdit" onclick="cancelEditSale()">✕ Cancel</button>
+            <button class="sales-report-btn" onclick="generateSalesReport()">📋 Report</button>
+          </div>
+        </div>
+        <div class="sales-list" id="salesList"></div>
+        <div class="progress-wrap" id="progressWrap" style="display:none;">
+          <div class="progress-header">
+            <span class="progress-label">Target Progress</span>
+            <span class="progress-pct" id="progressPct">0%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+          <div class="progress-sub" id="progressSub"></div>
+        </div>
+        <div class="sales-summary">
+          <div>
+            <div class="summary-label">Today's Total</div>
+            <div class="summary-count" id="salesCount">0 transactions</div>
+          </div>
+          <div class="summary-total" id="salesTotalDisplay">Ksh 0</div>
+        </div>
+      </div>
+
+      <!-- SLIDE 3: ARCHIVE -->
+      <div class="workspace-card">
+        <div class="card-header" style="margin-bottom:8px;">
+          <h2>Archive</h2>
+          <div style="display:flex;gap:7px;align-items:center;">
+            <button class="add-btn" id="archSelectBtn" onclick="toggleArchiveSelect()" title="Select days" style="font-size:13px;">☑</button>
+            <button class="add-btn" id="archClearBtn" onclick="confirmClearArchive()" title="Clear all" style="font-size:14px;">🗑</button>
+          </div>
+        </div>
+        <p style="opacity:.4;font-size:12px;margin-bottom:10px;flex-shrink:0;">Past days' sales records.</p>
+        <div class="arch-select-bar" id="archSelectBar">
+          <button class="arch-action-btn arch-delete-sel-btn" onclick="deleteSelectedArchive()">Delete Selected</button>
+          <button class="arch-action-btn arch-cancel-sel-btn" onclick="cancelArchiveSelect()">Cancel</button>
+        </div>
+        <div class="arch-list" id="archSalesScroll"></div>
+      </div>
+
+    </div>
+  </div>
+  <div class="floating-dock">
+    <div class="dock-item active" onclick="moveTrack(0)">✦</div>
+    <div class="dock-item" onclick="moveTrack(1)">✓</div>
+    <div class="dock-item" onclick="moveTrack(2)">₭</div>
+    <div class="dock-item" onclick="moveTrack(3)">⧉</div>
+  </div>
+</div>
+
+<!-- PROFILE OVERLAY -->
+<div class="overlay-screen" id="profileOverlay">
+  <div class="overlay-inner">
+    <div class="overlay-header">
+      <button class="back-btn" onclick="closeProfile()">←</button>
+      <h2 style="font-size:21px;">My Profile</h2>
+      <button class="profile-edit-btn" id="profileEditBtn" onclick="toggleProfileEdit()">✎ Edit</button>
+    </div>
+    <div class="overlay-body">
+      <div class="profile-avatar-large" id="profileAvatarLarge"></div>
+      <div class="profile-field" id="colorPickerSection" style="opacity:.35;pointer-events:none;transition:.3s;">
+        <label class="profile-label">Avatar Colour</label>
+        <div class="color-picker" id="colorPicker"></div>
+      </div>
+      <hr class="profile-section-divider">
+      <div class="profile-section-label">Personal</div>
+      <div class="profile-field">
+        <label class="profile-label">Display Name</label>
+        <input class="profile-input" type="text" id="profileName" placeholder="Your name" readonly>
+      </div>
+      <div class="profile-field">
+        <label class="profile-label">Username <span style="opacity:.35;font-size:10px;">(cannot be changed)</span></label>
+        <input class="profile-input" type="text" id="profileUsername" readonly>
+      </div>
+      <div class="profile-field">
+        <label class="profile-label">Email <span style="opacity:.35;font-size:10px;">(cannot be changed)</span></label>
+        <input class="profile-input" type="email" id="profileEmail" readonly>
+      </div>
+      <div class="profile-field">
+        <label class="profile-label">Bio</label>
+        <textarea class="profile-input profile-textarea" id="profileBio" placeholder="A few words about yourself…" readonly></textarea>
+      </div>
+      <hr class="profile-section-divider">
+      <div class="profile-section-label">Work Details</div>
+      <div class="profile-field">
+        <label class="profile-label">Name of Outlet</label>
+        <input class="profile-input" type="text" id="profileOutlet" placeholder="e.g. Nairobi Junction Mall" readonly>
+      </div>
+      <div class="profile-field">
+        <label class="profile-label">Official Names</label>
+        <input class="profile-input" type="text" id="profileOfficialNames" placeholder="Full official names" readonly>
+      </div>
+      <div class="profile-field">
+        <label class="profile-label">Brand</label>
+        <input class="profile-input" type="text" id="profileBrand" placeholder="e.g. Samsung, Tecno…" readonly>
+      </div>
+      <div class="profile-field">
+        <label class="profile-label">Branch Target (Ksh)</label>
+        <input class="profile-input" type="number" id="profileBranchTarget" placeholder="e.g. 150000" min="0" readonly>
+      </div>
+      <hr class="profile-section-divider">
+      <div class="profile-section-label">Reminders & Settings</div>
+      <div class="profile-field">
+        <label class="profile-label">Morning Reminder <span style="opacity:.4;font-size:10px;">daily notification</span></label>
+        <input class="profile-input" type="time" id="profileMorningReminder" readonly>
+      </div>
+      <div class="profile-field">
+        <label class="profile-label">Evening Reminder <span style="opacity:.4;font-size:10px;">daily notification</span></label>
+        <input class="profile-input" type="time" id="profileEveningReminder" readonly>
+      </div>
+      <div class="profile-field">
+        <label class="profile-label">Member Since</label>
+        <input class="profile-input" type="text" id="profileMemberSince" readonly>
+      </div>
+      <button class="profile-save-btn" id="profileSaveBtn" onclick="saveProfile()" style="display:none;">Save Changes</button>
+      <button class="signout-profile-btn" onclick="handleLogout()">Sign Out</button>
+      <div class="danger-zone">
+        <div class="danger-title">Danger Zone</div>
+        <button class="delete-account-btn" onclick="confirmDeleteAccount()">Delete My Account</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT OVERLAY -->
+<div class="overlay-screen" id="reportOverlay">
+  <div class="overlay-inner">
+    <div class="overlay-header">
+      <button class="back-btn" onclick="closeReportOverlay()">←</button>
+      <h2 style="font-size:20px;">Daily Sales Report</h2>
+    </div>
+    <div class="overlay-body">
+      <pre class="report-pre" id="reportText"></pre>
+      <div style="display:flex;gap:10px;margin-top:14px;">
+        <button onclick="copyReport()" style="flex:1;padding:13px;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:14px;color:inherit;transition:.2s;" onmouseover="this.style.background='rgba(128,128,128,.25)'" onmouseout="this.style.background='rgba(128,128,128,.15)'">Copy Report</button>
+        <button onclick="shareReport()" style="flex:1;padding:13px;background:rgba(90,160,120,.12);border:1px solid rgba(90,160,120,.3);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:14px;color:inherit;transition:.2s;" onmouseover="this.style.background='rgba(90,160,120,.22)'" onmouseout="this.style.background='rgba(90,160,120,.12)'">Share ↗</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DAY DETAIL OVERLAY -->
+<div class="day-detail-overlay" id="dayDetailOverlay">
+  <div style="display:flex;flex-direction:column;height:100%;">
+    <div style="display:flex;align-items:center;gap:13px;padding:50px 28px 18px;flex-shrink:0;">
+      <button class="back-btn" onclick="closeDayDetail()">←</button>
+      <div style="flex:1;min-width:0;">
+        <div style="font-family:'Playfair Display';font-size:20px;font-weight:700;" id="dayDetailTitle"></div>
+        <div style="font-size:11px;opacity:.4;margin-top:3px;" id="dayDetailSubtitle"></div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="shareArchiveDayReport()" style="padding:7px 13px;background:rgba(90,160,120,.12);border:1px solid rgba(90,160,120,.28);border-radius:20px;cursor:pointer;font-size:12px;font-weight:600;color:inherit;transition:.2s;white-space:nowrap;">Share ↗</button>
+        <button onclick="confirmDeleteArchiveDay()" style="padding:7px 13px;background:rgba(220,80,80,.08);border:1px solid rgba(220,80,80,.2);border-radius:20px;cursor:pointer;font-size:12px;font-weight:600;color:#e05252;transition:.2s;white-space:nowrap;">Delete</button>
+      </div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:0 28px 40px;" id="dayDetailBody"></div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-card">
+    <h3 id="confirmTitle">Are you sure?</h3>
+    <p id="confirmMsg" style="font-size:13px;opacity:.6;margin-bottom:4px;line-height:1.5;"></p>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="closeModal('confirmModal')">Cancel</button>
+      <button class="modal-btn danger" id="confirmOkBtn">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAaN87Ce6H5vyzTctlUocJvMAcJqPnW6zA",
+  authDomain: "royal-horizon.firebaseapp.com",
+  databaseURL: "https://royal-horizon-default-rtdb.firebaseio.com",
+  projectId: "royal-horizon",
+  storageBucket: "royal-horizon.firebasestorage.app",
+  messagingSenderId: "536841749759",
+  appId: "1:536841749759:web:70715758286b8b269b38ca"
+};
+firebase.initializeApp(firebaseConfig);
+const appCheck = firebase.appCheck();
+appCheck.activate('6LdvTrUsAAAAAEcYkppU5JHvawph42rlHHzfNadO', true);
+const auth = firebase.auth();
+const db   = firebase.database();
+
+const AVATAR_COLORS = ['#8B7355','#6B8E7F','#7B6B8E','#8E7B6B','#5E8E8E','#8E6B7B','#6B7B8E','#7B8E6B'];
+
+let CU = null, currentProfile = null;
+let cachedTasks = [], tasksListenerRef = null, tasksListenerFn = null;
+let currentSlide = 0;
+let cachedSales = [], salesListenerRef = null, currentSalesDateKey = null;
+let taskFilter = 'all';
+let profileEditMode = false;
+let currentReportText = '';
+let editingSaleId = null;
+let taskDueRowVisible = false;
+let dailyReminderTimeouts = [];
+let reminderDayTimer = null;
+const scheduledTaskNotifs = new Set();
+
+function todayKey() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+// ---- MIDNIGHT ROLLOVER: re-attach sales listener when day changes ----
+function scheduleMidnightRollover() {
+  if (reminderDayTimer) clearTimeout(reminderDayTimer);
+  const now = new Date();
+  const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 5);
+  const msUntilMidnight = midnight - now;
+  reminderDayTimer = setTimeout(() => {
+    if (CU) {
+      initSalesListener();          // re-attach to new day's node
+      scheduleDailyReminders();     // reschedule tomorrow's reminders
+      scheduleMidnightRollover();   // keep the chain going
+    }
+  }, msUntilMidnight);
+}
+
+// ---- AUTH ----
+let authResolved = false;
+
+// FIX: auth timeout no longer calls showPortal() directly.
+// Instead it sets a flag so onAuthStateChanged still runs its full logic.
+const authTimeout = setTimeout(() => {
+  if (!authResolved) {
+    authResolved = true;
+    document.getElementById('loadingOverlay').style.display = 'none';
+    showPortal();
+  }
+}, 5000);
+
+auth.onAuthStateChanged(async (user) => {
+  // FIX: if the timeout already fired and showed the portal, we still need to
+  // handle a late-resolving logged-in user properly.
+  if (authResolved && !user) return; // timeout fired, no user — already showing portal
+
+  if (!authResolved) {
+    authResolved = true;
+    clearTimeout(authTimeout);
+  }
+
+  if (user) {
+    CU = user.uid;
+    const snap = await db.ref('users/' + CU + '/profile').once('value');
+    currentProfile = snap.val() || { name: 'Guest' };
+    // Hide portal in case timeout showed it
+    document.getElementById('portalContainer').style.display = 'none';
+    loadDashboard(true);
+    startTasksListener();
+    initSalesListener();
+    initOfflineSupport();
+    scheduleMidnightRollover();
+    requestNotificationPermission();
+  } else {
+    CU = null; currentProfile = null;
+    showPortal();
+    document.getElementById('loadingOverlay').style.display = 'none';
+  }
+});
+
+function showPortal() {
+  document.getElementById('portalContainer').style.display = '';
+  const dash = document.getElementById('dashboard');
+  dash.style.display = 'none'; dash.style.opacity = '0';
+}
+
+function showPage(type) {
+  ['loginError','signupError'].forEach(id => document.getElementById(id).textContent = '');
+  document.getElementById('selectionScreen').classList.add('fade-out');
+  setTimeout(() => {
+    document.body.className = type === 'login' ? 'theme-login' : 'theme-signup';
+    document.getElementById(type === 'login' ? 'loginPage' : 'signupPage').classList.add('active');
+  }, 200);
+}
+
+function resetPage() {
+  document.querySelectorAll('.form-wrapper').forEach(f => f.classList.remove('active'));
+  document.body.className = '';
+  setTimeout(() => document.getElementById('selectionScreen').classList.remove('fade-out'), 350);
+}
+
+async function handleLogin() {
+  const username = document.getElementById('loginUser').value.trim().toLowerCase();
+  const password = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginError');
+  if (!username || !password) { err.textContent = 'Please fill in all fields.'; return; }
+  try {
+    const snap = await db.ref('usernames/' + username).once('value');
+    if (!snap.exists()) { err.textContent = 'No account found with that username.'; return; }
+    const { email } = snap.val();
+    animateFormOut();
+    await auth.signInWithEmailAndPassword(email, password);
+  } catch(e) {
+    resetFormAnim();
+    err.textContent = (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential')
+      ? 'Incorrect password.' : (e.message || 'Login failed.');
+  }
+}
+
+async function handleSignup() {
+  const name     = document.getElementById('signupName').value.trim();
+  const username = document.getElementById('signupUser').value.trim().toLowerCase();
+  const email    = document.getElementById('signupEmail').value.trim();
+  const password = document.getElementById('signupPass').value;
+  const err = document.getElementById('signupError');
+  if (!name || !username || !email || !password) { err.textContent = 'Please fill in all fields.'; return; }
+  if (username.length < 3) { err.textContent = 'Username must be at least 3 characters.'; return; }
+  if (password.length < 6) { err.textContent = 'Password must be at least 6 characters.'; return; }
+  try {
+    const unameSnap = await db.ref('usernames/' + username).once('value');
+    if (unameSnap.exists()) { err.textContent = 'That username is already taken.'; return; }
+    const cred = await auth.createUserWithEmailAndPassword(email, password);
+    const uid  = cred.user.uid;
+    const now  = Date.now();
+    const profile = { name, username, email, bio: '', color: AVATAR_COLORS[0],
+      outlet: '', officialNames: '', brand: '', branchTarget: '',
+      morningReminder: '10:00', eveningReminder: '18:00', createdAt: now };
+    await Promise.all([
+      db.ref('usernames/' + username).set({ uid, email }),
+      db.ref('users/' + uid + '/profile').set(profile),
+    ]);
+    animateFormOut();
+  } catch(e) {
+    resetFormAnim();
+    err.textContent = e.code === 'auth/email-already-in-use'
+      ? 'That email is already registered.' : (e.message || 'Sign up failed.');
+  }
+}
+
+async function handleLogout() {
+  closeProfile();
+  document.getElementById('dashboard').style.opacity = '0';
+  setTimeout(async () => {
+    stopTasksListener();
+    stopSalesListener();
+    if (reminderDayTimer) { clearTimeout(reminderDayTimer); reminderDayTimer = null; }
+    dailyReminderTimeouts.forEach(t => clearTimeout(t));
+    dailyReminderTimeouts = [];
+    await auth.signOut();
+    cachedTasks = []; cachedSales = [];
+    scheduledTaskNotifs.clear();
+    ['loginUser','loginPass','signupName','signupUser','signupEmail','signupPass'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.value = '';
+    });
+    document.querySelectorAll('.form-wrapper').forEach(f => {
+      f.classList.remove('active'); f.style.transform=''; f.style.opacity='';
+    });
+    document.getElementById('selectionScreen').classList.remove('fade-out');
+    document.body.className = '';
+  }, 400);
+}
+
+function animateFormOut() {
+  const f = document.querySelector('.form-wrapper.active');
+  if (f) { f.style.transform = 'translate(-50%,-60%) scale(0.9)'; f.style.opacity = '0'; }
+}
+function resetFormAnim() {
+  const f = document.querySelector('.form-wrapper.active');
+  if (f) { f.style.transform = ''; f.style.opacity = ''; }
+}
+
+function loadDashboard(instant) {
+  document.getElementById('greeting').innerText = 'Welcome, ' + (currentProfile.name || 'Guest');
+  updateAvatar(currentProfile);
+  document.getElementById('portalContainer').style.display = 'none';
+  document.getElementById('loadingOverlay').style.display = 'none';
+  document.body.setAttribute('class', 'theme-login');
+  const dash = document.getElementById('dashboard');
+  dash.style.display = 'flex';
+  moveTrack(0);
+  if (instant) dash.style.opacity = '1';
+  else setTimeout(() => { dash.style.opacity = '1'; }, 50);
+}
+
+function updateAvatar(prof) {
+  const btn = document.getElementById('avatarBtn');
+  btn.style.background = prof.color || AVATAR_COLORS[0];
+  btn.textContent = (prof.name || 'G')[0].toUpperCase();
+}
+
+function initOfflineSupport() {
+  if (!CU) return;
+  db.ref('users/' + CU + '/tasks').keepSynced(true);
+  db.ref('users/' + CU + '/sales/' + todayKey()).keepSynced(true);
+  db.ref('.info/connected').on('value', snap => {
+    const connected = snap.val() === true;
+    const banner = document.getElementById('offlineBanner');
+    if (banner) banner.classList.toggle('visible', !connected);
+  });
+}
+
+async function requestNotificationPermission() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') {
+    const perm = await Notification.requestPermission();
+    if (perm === 'granted') scheduleDailyReminders();
+  } else if (Notification.permission === 'granted') {
+    scheduleDailyReminders();
+  }
+}
+
+// FIX: Clear any previously scheduled reminder timeouts before scheduling new ones.
+// Also schedules for tomorrow automatically if the time has already passed today.
+function scheduleDailyReminders() {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  dailyReminderTimeouts.forEach(t => clearTimeout(t));
+  dailyReminderTimeouts = [];
+
+  const prof = currentProfile || {};
+  const morningTime = prof.morningReminder || '10:00';
+  const eveningTime = prof.eveningReminder || '18:00';
+
+  [
+    { time: morningTime, msg: 'Good morning! Ready to start logging your sales for today?' },
+    { time: eveningTime, msg: "Time to wrap up! Don't forget to submit your daily sales report." }
+  ].forEach(({ time, msg }) => {
+    const [h, m] = time.split(':').map(Number);
+    const now = new Date();
+    const target = new Date();
+    target.setHours(h, m, 0, 0);
+
+    // If the time has already passed today, aim for tomorrow
+    if (target <= now) target.setDate(target.getDate() + 1);
+
+    const delay = target - now;
+    const t = setTimeout(() => {
+      try { new Notification('Royal Horizon', { body: msg, icon: '/icon-192.png' }); } catch(e) {}
+    }, delay);
+    dailyReminderTimeouts.push(t);
+  });
+}
+
+// FIX: When a task's due changes, remove it from the Set so the notification
+// can be re-registered. Also skip tasks whose due time has already passed.
+function scheduleTaskNotifications() {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  const today = todayKey();
+  const now = new Date();
+
+  cachedTasks
+    .filter(t => !t.done && t.dueDate === today && t.dueTime)
+    .forEach(t => {
+      if (scheduledTaskNotifs.has(t.id)) return;
+      const [h, m] = t.dueTime.split(':').map(Number);
+      const target = new Date();
+      target.setHours(h, m, 0, 0);
+      if (target <= now) return; // already passed, skip
+      scheduledTaskNotifs.add(t.id);
+      setTimeout(() => {
+        try { new Notification('Task Reminder — Royal Horizon', { body: t.title, icon: '/icon-192.png' }); } catch(e) {}
+      }, target - now);
+    });
+}
+
+function openProfile() {
+  const prof = currentProfile || {};
+  profileEditMode = false;
+  document.getElementById('profileName').value           = prof.name || '';
+  document.getElementById('profileUsername').value       = prof.username || '';
+  document.getElementById('profileEmail').value          = prof.email || '';
+  document.getElementById('profileBio').value            = prof.bio || '';
+  document.getElementById('profileOutlet').value         = prof.outlet || '';
+  document.getElementById('profileOfficialNames').value  = prof.officialNames || '';
+  document.getElementById('profileBrand').value          = prof.brand || '';
+  document.getElementById('profileBranchTarget').value   = prof.branchTarget || '';
+  document.getElementById('profileMorningReminder').value = prof.morningReminder || '10:00';
+  document.getElementById('profileEveningReminder').value = prof.eveningReminder || '18:00';
+  document.getElementById('profileMemberSince').value    = prof.createdAt
+    ? new Date(prof.createdAt).toLocaleDateString('en-GB', { year:'numeric', month:'long', day:'numeric' }) : '—';
+  setProfileReadOnly(true);
+  const btn = document.getElementById('profileEditBtn');
+  btn.textContent = '✎ Edit'; btn.classList.remove('active');
+  document.getElementById('profileSaveBtn').style.display = 'none';
+  const cp = document.getElementById('colorPicker');
+  cp.innerHTML = AVATAR_COLORS.map(c =>
+    `<div class="color-swatch${c===(prof.color||AVATAR_COLORS[0])?' selected':''}" style="background:${c}" onclick="pickColor('${c}',this)"></div>`
+  ).join('');
+  const cpSection = document.getElementById('colorPickerSection');
+  cpSection.style.opacity = '.35'; cpSection.style.pointerEvents = 'none';
+  const av = document.getElementById('profileAvatarLarge');
+  av.style.background = prof.color || AVATAR_COLORS[0];
+  av.textContent = (prof.name || 'G')[0].toUpperCase();
+  applyOverlayTheme(document.getElementById('profileOverlay'));
+  document.getElementById('profileOverlay').classList.add('open');
+}
+
+function setProfileReadOnly(readonly) {
+  const editableIds = ['profileName','profileBio','profileOutlet','profileOfficialNames',
+    'profileBrand','profileBranchTarget','profileMorningReminder','profileEveningReminder'];
+  editableIds.forEach(id => {
+    const el = document.getElementById(id); if (!el) return;
+    el.readOnly = readonly;
+    el.style.opacity = readonly ? '.42' : '1';
+    el.style.cursor  = readonly ? 'default' : '';
+  });
+}
+
+function toggleProfileEdit() {
+  if (profileEditMode) {
+    profileEditMode = false;
+    const prof = currentProfile || {};
+    document.getElementById('profileName').value           = prof.name || '';
+    document.getElementById('profileBio').value            = prof.bio || '';
+    document.getElementById('profileOutlet').value         = prof.outlet || '';
+    document.getElementById('profileOfficialNames').value  = prof.officialNames || '';
+    document.getElementById('profileBrand').value          = prof.brand || '';
+    document.getElementById('profileBranchTarget').value   = prof.branchTarget || '';
+    document.getElementById('profileMorningReminder').value = prof.morningReminder || '10:00';
+    document.getElementById('profileEveningReminder').value = prof.eveningReminder || '18:00';
+    document.getElementById('colorPicker').innerHTML = AVATAR_COLORS.map(c =>
+      `<div class="color-swatch${c===(prof.color||AVATAR_COLORS[0])?' selected':''}" style="background:${c}" onclick="pickColor('${c}',this)"></div>`
+    ).join('');
+    setProfileReadOnly(true);
+    const btn = document.getElementById('profileEditBtn');
+    btn.textContent = '✎ Edit'; btn.classList.remove('active');
+    document.getElementById('profileSaveBtn').style.display = 'none';
+    const cpSection = document.getElementById('colorPickerSection');
+    cpSection.style.opacity = '.35'; cpSection.style.pointerEvents = 'none';
+  } else {
+    profileEditMode = true;
+    setProfileReadOnly(false);
+    const btn = document.getElementById('profileEditBtn');
+    btn.textContent = '✕ Cancel'; btn.classList.add('active');
+    document.getElementById('profileSaveBtn').style.display = 'block';
+    const cpSection = document.getElementById('colorPickerSection');
+    cpSection.style.opacity = '1'; cpSection.style.pointerEvents = '';
+  }
+}
+
+function closeProfile() {
+  document.getElementById('profileOverlay').classList.remove('open');
+  if (profileEditMode) {
+    profileEditMode = false;
+    setProfileReadOnly(true);
+    document.getElementById('profileEditBtn').textContent = '✎ Edit';
+    document.getElementById('profileEditBtn').classList.remove('active');
+    document.getElementById('profileSaveBtn').style.display = 'none';
+  }
+}
+
+function pickColor(c, el) {
+  document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('profileAvatarLarge').style.background = c;
+}
+
+async function saveProfile() {
+  const sel = document.querySelector('.color-swatch.selected');
+  const color = sel ? sel.style.background : (currentProfile.color || AVATAR_COLORS[0]);
+  const updates = {
+    name: document.getElementById('profileName').value.trim() || currentProfile.name,
+    bio: document.getElementById('profileBio').value.trim(),
+    color,
+    outlet: document.getElementById('profileOutlet').value.trim(),
+    officialNames: document.getElementById('profileOfficialNames').value.trim(),
+    brand: document.getElementById('profileBrand').value.trim(),
+    branchTarget: document.getElementById('profileBranchTarget').value.trim(),
+    morningReminder: document.getElementById('profileMorningReminder').value || '10:00',
+    eveningReminder: document.getElementById('profileEveningReminder').value || '18:00',
+  };
+  try {
+    await db.ref('users/' + CU + '/profile').update(updates);
+    currentProfile = { ...currentProfile, ...updates };
+    document.getElementById('greeting').innerText = 'Welcome, ' + currentProfile.name;
+    updateAvatar(currentProfile);
+    scheduleDailyReminders(); // FIX: clears old timeouts and reschedules with new times
+    showToast('Profile saved ✓');
+    profileEditMode = true;
+    toggleProfileEdit();
+  } catch(e) { showToast('Save failed.'); }
+}
+
+function confirmDeleteAccount() {
+  showConfirm('Delete Account', 'This permanently deletes your account and all data. Cannot be undone.', async () => {
+    try {
+      await db.ref('users/' + CU).remove();
+      if (currentProfile && currentProfile.username) await db.ref('usernames/' + currentProfile.username).remove();
+      await auth.currentUser.delete();
+      showToast('Account deleted.');
+    } catch(e) {
+      if (e.code === 'auth/requires-recent-login') showToast('Please sign out and back in, then try again.');
+      else showToast('Could not delete fully. Check connection.');
+    }
+  }, 'Delete');
+}
+
+function startTasksListener() {
+  stopTasksListener();
+  if (!CU) return;
+  tasksListenerRef = db.ref('users/' + CU + '/tasks');
+  tasksListenerFn = (snap) => {
+    const val = snap.val() || {};
+    cachedTasks = Object.entries(val)
+      .map(([id, d]) => ({
+        id,
+        title: d.title || '',
+        done: d.done || false,
+        createdAt: d.createdAt || 0,
+        dueDate: d.dueDate || '',
+        dueTime: d.dueTime || ''
+      }))
+      .sort((a, b) => a.createdAt - b.createdAt);
+    renderTasksSlide();
+    renderOverviewTasks();
+    scheduleTaskNotifications();
+  };
+  tasksListenerRef.on('value', tasksListenerFn);
+}
+
+function stopTasksListener() {
+  if (tasksListenerRef && tasksListenerFn) {
+    tasksListenerRef.off('value', tasksListenerFn);
+    tasksListenerRef = null; tasksListenerFn = null;
+  }
+}
+
+function setTaskFilter(f) {
+  taskFilter = f;
+  document.querySelectorAll('.task-filter-pill').forEach(p => p.classList.remove('active'));
+  document.getElementById('pill-' + f).classList.add('active');
+  renderTasksSlide();
+}
+
+function formatTaskDue(dueDate, dueTime) {
+  if (!dueDate) return null;
+  const today = todayKey();
+  const now = new Date();
+  const tomorrowD = new Date(); tomorrowD.setDate(tomorrowD.getDate()+1);
+  const tomorrow = tomorrowD.getFullYear()+'-'+String(tomorrowD.getMonth()+1).padStart(2,'0')+'-'+String(tomorrowD.getDate()).padStart(2,'0');
+  const nowTime = String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  const isPast = dueDate < today || (dueDate === today && dueTime && dueTime < nowTime);
+  let label = '';
+  if (dueDate === today) label = 'Today';
+  else if (dueDate === tomorrow) label = 'Tomorrow';
+  else { const dt = new Date(dueDate+'T00:00:00'); label = dt.toLocaleDateString('en-GB',{day:'numeric',month:'short'}); }
+  if (dueTime) label += ' · ' + dueTime;
+  return { label, isPast };
+}
+
+function renderTasksSlide() {
+  let list = [...cachedTasks];
+  if (taskFilter === 'pending') list = list.filter(t => !t.done);
+  if (taskFilter === 'done')    list = list.filter(t =>  t.done);
+  const el = document.getElementById('tasksList2');
+  if (!el) return;
+  if (!list.length) {
+    const msgs = { all:'No tasks yet. Add one above ↑', pending:'All caught up! ✓', done:'No completed tasks yet.' };
+    el.innerHTML = `<div style="text-align:center;opacity:.28;padding:30px 0;"><div style="font-size:30px;margin-bottom:9px;">${taskFilter==='done'?'○':'✓'}</div><p style="font-size:12px;line-height:1.6;">${msgs[taskFilter]}</p></div>`;
+  } else {
+    el.innerHTML = list.map(t => {
+      const due = formatTaskDue(t.dueDate, t.dueTime);
+      return `<div class="task2-item${t.done?' done2':''}">
+        <div class="task2-check" onclick="toggleTask2('${t.id}')">${t.done?'✓':''}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="task2-text">${esc(t.title)}</div>
+          ${due ? `<div class="task2-due${due.isPast&&!t.done?' overdue':''}">${due.isPast&&!t.done?'⚠ ':'📅 '}${due.label}</div>` : ''}
+        </div>
+        <button class="task2-del" onclick="deleteTask2('${t.id}')">✕</button>
+      </div>`;
+    }).join('');
+  }
+  const pending = cachedTasks.filter(t => !t.done).length;
+  const done    = cachedTasks.filter(t =>  t.done).length;
+  const countEl = document.getElementById('tasksFooterCount');
+  if (countEl) countEl.textContent = `${pending} pending · ${done} done`;
+}
+
+function renderOverviewTasks() {
+  const totalEl = document.getElementById('statTotal');
+  const pendEl  = document.getElementById('statActive');
+  if (totalEl) totalEl.textContent = cachedTasks.length;
+  if (pendEl)  pendEl.textContent  = cachedTasks.filter(t => !t.done).length;
+  const recent = [...cachedTasks].filter(t => !t.done).slice(-3).reverse();
+  const el = document.getElementById('recentList');
+  if (!el) return;
+  if (!recent.length) { el.innerHTML = `<div style="opacity:.3;font-size:12px">No pending tasks.</div>`; return; }
+  el.innerHTML = recent.map(t => `<div class="recent-item"><span>${esc(t.title)}</span><span class="recent-tag">Pending</span></div>`).join('');
+}
+
+function toggleTaskDueRow() {
+  taskDueRowVisible = !taskDueRowVisible;
+  const row = document.getElementById('taskDueRow');
+  const btn = document.getElementById('taskDueToggle');
+  if (row) row.classList.toggle('visible', taskDueRowVisible);
+  if (btn) btn.classList.toggle('active', taskDueRowVisible);
+  if (!taskDueRowVisible) {
+    const d = document.getElementById('taskDueDate'); if (d) d.value = '';
+    const t = document.getElementById('taskDueTime'); if (t) t.value = '';
+  }
+}
+
+async function addQuickTask() {
+  const inp = document.getElementById('quickTaskInput');
+  const title = inp.value.trim(); if (!title) return;
+  const dueDate = document.getElementById('taskDueDate')?.value || '';
+  const dueTime = document.getElementById('taskDueTime')?.value || '';
+  inp.value = '';
+  if (taskDueRowVisible) toggleTaskDueRow();
+  try {
+    const taskData = { title, done: false, createdAt: Date.now() };
+    if (dueDate) taskData.dueDate = dueDate;
+    if (dueTime) taskData.dueTime = dueTime;
+    await db.ref('users/' + CU + '/tasks').push(taskData);
+  } catch(e) { showToast('Could not save task.'); }
+}
+
+async function toggleTask2(id) {
+  const t = cachedTasks.find(t => t.id === id); if (!t) return;
+  // FIX: When un-checking a completed task that had a notification registered,
+  // remove it from the Set so its notification can be re-scheduled if due time hasn't passed.
+  if (t.done) scheduledTaskNotifs.delete(id);
+  await db.ref('users/' + CU + '/tasks/' + id).update({ done: !t.done });
+}
+
+async function deleteTask2(id) {
+  scheduledTaskNotifs.delete(id); // clean up tracking set
+  await db.ref('users/' + CU + '/tasks/' + id).remove();
+}
+
+async function clearDoneTasks() {
+  const done = cachedTasks.filter(t => t.done);
+  if (!done.length) { showToast('No completed tasks to clear.'); return; }
+  showConfirm('Clear Completed', `Remove ${done.length} completed task${done.length>1?'s':''}?`, async () => {
+    const updates = {};
+    done.forEach(t => { updates['users/' + CU + '/tasks/' + t.id] = null; });
+    try { await db.ref().update(updates); showToast('Cleared ✓'); }
+    catch(e) { showToast('Clear failed.'); }
+  }, 'Clear');
+}
+
+// ---- SALES LISTENER ----
+// FIX: Track the date key the listener is attached to. On midnight rollover,
+// detach the old listener and attach to the new day's node.
+function stopSalesListener() {
+  if (salesListenerRef) {
+    salesListenerRef.off();
+    salesListenerRef = null;
+    currentSalesDateKey = null;
+  }
+}
+
+function initSalesListener() {
+  if (!CU) return;
+  stopSalesListener();
+  const key = todayKey();
+  currentSalesDateKey = key;
+  salesListenerRef = db.ref('users/' + CU + '/sales/' + key);
+  salesListenerRef.on('value', snap => {
+    const data = snap.val() || {};
+    cachedSales = Object.entries(data).map(([id, v]) => ({id, ...v})).sort((a,b) => a.order - b.order);
+    renderSalesLog();
+    renderOverviewSales();
+  });
+}
+
+function renderProgressBar() {
+  const target = parseFloat((currentProfile||{}).branchTarget) || 0;
+  const wrap = document.getElementById('progressWrap');
+  if (!wrap) return;
+  if (!target) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  const total  = cachedSales.reduce((s,e) => s + (e.price * e.qty), 0);
+  const rawPct = (total / target) * 100;
+  const pct    = Math.min(rawPct, 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent  = rawPct.toFixed(1) + '%';
+  document.getElementById('progressSub').textContent  = `Ksh ${total.toLocaleString()} of Ksh ${target.toLocaleString()}`;
+  const fill = document.getElementById('progressFill');
+  if (rawPct >= 100)     fill.style.background = 'rgba(60,180,100,.85)';
+  else if (rawPct >= 80) fill.style.background = 'rgba(90,160,120,.8)';
+  else if (rawPct >= 50) fill.style.background = 'rgba(200,160,60,.8)';
+  else                   fill.style.background = 'rgba(128,128,128,.45)';
+}
+
+function renderSalesLog() {
+  const list    = document.getElementById('salesList');
+  const dateEl  = document.getElementById('salesDateLabel');
+  const totalEl = document.getElementById('salesTotalDisplay');
+  const countEl = document.getElementById('salesCount');
+  if (!list) return;
+  dateEl.textContent = new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  if (!cachedSales.length) {
+    list.innerHTML = '<div style="text-align:center;opacity:.28;margin:auto;padding:18px 0;"><div style="font-size:28px;margin-bottom:8px;">₭</div><p style="font-size:12px;">No sales logged today.</p></div>';
+    totalEl.textContent = 'Ksh 0'; countEl.textContent = '0 transactions';
+    renderProgressBar(); return;
+  }
+  list.innerHTML = cachedSales.map((s,i) => `
+    <div class="sale-item${editingSaleId===s.id?' sale-editing':''}">
+      <div class="sale-num">${i+1}</div>
+      <div class="sale-info">
+        <div class="sale-name">${esc(s.item)}</div>
+        <div class="sale-meta">Model: ${esc(s.model||'—')} &nbsp;·&nbsp; S/N: ${esc(s.serial||'—')} &nbsp;·&nbsp; Qty: ${s.qty}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+        <div class="sale-total">Ksh ${(s.price * s.qty).toLocaleString()}</div>
+        <div style="display:flex;gap:6px;">
+          <button class="sale-edit-btn" onclick="editSale('${s.id}')">✎</button>
+          <button class="sale-del" onclick="deleteSale('${s.id}')">✕</button>
+        </div>
+      </div>
+    </div>`).join('');
+  const total = cachedSales.reduce((sum,s) => sum + (s.price * s.qty), 0);
+  totalEl.textContent = 'Ksh ' + total.toLocaleString();
+  countEl.textContent = cachedSales.length + ' transaction' + (cachedSales.length !== 1 ? 's' : '');
+  renderProgressBar();
+}
+
+function renderOverviewSales() {
+  const total = cachedSales.reduce((s,e) => s + (e.price * e.qty), 0);
+  const count = cachedSales.length;
+  const totalEl = document.getElementById('overviewSalesTotal');
+  const countEl = document.getElementById('overviewSalesCount');
+  if (totalEl) totalEl.textContent = 'Ksh ' + total.toLocaleString();
+  if (countEl) countEl.textContent = count + ' transaction' + (count !== 1 ? 's' : '');
+}
+
+function editSale(id) {
+  const s = cachedSales.find(s => s.id === id); if (!s) return;
+  editingSaleId = id;
+  document.getElementById('saleItem').value   = s.item || '';
+  document.getElementById('saleModel').value  = s.model || '';
+  document.getElementById('saleSerial').value = s.serial || '';
+  document.getElementById('salePrice').value  = s.price || '';
+  document.getElementById('saleQty').value    = s.qty || 1;
+  const submitBtn = document.getElementById('saleSubmitBtn');
+  const cancelBtn = document.getElementById('saleCancelEdit');
+  if (submitBtn) { submitBtn.textContent = '✓ Update Sale'; submitBtn.classList.add('editing'); }
+  if (cancelBtn) cancelBtn.style.display = 'block';
+  renderSalesLog();
+  document.getElementById('saleItem').focus();
+  showToast('Editing — make changes and tap Update');
+}
+
+function cancelEditSale() {
+  editingSaleId = null;
+  ['saleItem','saleModel','saleSerial','salePrice','saleQty'].forEach(id => { document.getElementById(id).value = ''; });
+  const submitBtn = document.getElementById('saleSubmitBtn');
+  const cancelBtn = document.getElementById('saleCancelEdit');
+  if (submitBtn) { submitBtn.textContent = '+ Log Sale'; submitBtn.classList.remove('editing'); }
+  if (cancelBtn) cancelBtn.style.display = 'none';
+  renderSalesLog();
+}
+
+async function addSale() {
+  const item   = document.getElementById('saleItem').value.trim();
+  const model  = document.getElementById('saleModel').value.trim();
+  const serial = document.getElementById('saleSerial').value.trim();
+  const price  = parseFloat(document.getElementById('salePrice').value);
+  const qty    = parseInt(document.getElementById('saleQty').value) || 1;
+  if (!item || isNaN(price) || price <= 0) { showToast('Item name and price are required.'); return; }
+  if (editingSaleId) {
+    try {
+      await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + editingSaleId).update({ item, model, serial, price, qty });
+      cancelEditSale();
+      showToast('Sale updated ✓');
+    } catch(e) { showToast('Update failed.'); }
+    return;
+  }
+  const key   = todayKey();
+  const label = new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  try {
+    await db.ref('users/' + CU + '/sales/' + key).push({ item, model, serial, price, qty, order: Date.now(), createdAt: Date.now() });
+    await db.ref('users/' + CU + '/salesArchiveMeta/' + key).set({ date: key, label });
+    ['saleItem','saleModel','saleSerial','salePrice','saleQty'].forEach(id => { document.getElementById(id).value = ''; });
+    showToast('Sale logged ✓');
+  } catch(e) { showToast('Failed to save sale.'); }
+}
+
+async function deleteSale(id) {
+  if (editingSaleId === id) cancelEditSale();
+  try {
+    await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + id).remove();
+    showToast('Sale removed.');
+  } catch(e) { showToast('Delete failed.'); }
+}
+
+function generateSalesReport() {
+  const prof   = currentProfile || {};
+  const date   = new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const total  = cachedSales.reduce((s,e) => s + (e.price * e.qty), 0);
+  const target = parseFloat(prof.branchTarget) || 0;
+  const pct    = target > 0 ? ((total / target) * 100).toFixed(1) : null;
+  const line   = '─'.repeat(38);
+  let r = `DAILY SALES REPORT\n${line}\n`;
+  r += `Date     : ${date}\n`;
+  r += `Outlet   : ${prof.outlet || '(not set)'}\n`;
+  r += `Officer  : ${prof.officialNames || '(not set)'}\n`;
+  r += `Brand    : ${prof.brand || '(not set)'}\n`;
+  if (target > 0) r += `Target   : Ksh ${target.toLocaleString()}\n`;
+  r += `${line}\n\n`;
+  if (!cachedSales.length) {
+    r += `No transactions recorded today.\n\n`;
+  } else {
+    r += `TRANSACTIONS (${cachedSales.length})\n\n`;
+    cachedSales.forEach((s, i) => {
+      r += `${i+1}. ${s.item}\n`;
+      r += `   Model : ${s.model || '—'}\n`;
+      r += `   S/N   : ${s.serial || '—'}\n`;
+      r += `   Qty   : ${s.qty}  ×  Ksh ${Number(s.price).toLocaleString()}\n`;
+      r += `   Total : Ksh ${(s.price * s.qty).toLocaleString()}\n`;
+      if (i < cachedSales.length - 1) r += '\n';
+    });
+    r += '\n';
+  }
+  r += `${line}\n`;
+  r += `DAILY TOTAL  : Ksh ${total.toLocaleString()}\n`;
+  r += `TRANSACTIONS : ${cachedSales.length}\n`;
+  if (target > 0) { r += `TARGET       : Ksh ${target.toLocaleString()}\n`; r += `ACHIEVEMENT  : ${pct}%\n`; }
+  r += `${line}\nRoyal Horizon Workspace`;
+  currentReportText = r;
+  const missing = [];
+  if (!prof.outlet) missing.push('Outlet');
+  if (!prof.officialNames) missing.push('Official Names');
+  if (!prof.brand) missing.push('Brand');
+  if (missing.length) showToast(`Tip: fill in ${missing.join(', ')} in Profile.`);
+  const el = document.getElementById('reportText');
+  if (el) el.textContent = r;
+  applyOverlayTheme(document.getElementById('reportOverlay'));
+  document.getElementById('reportOverlay').classList.add('open');
+}
+
+function closeReportOverlay() { document.getElementById('reportOverlay').classList.remove('open'); }
+
+function copyReport() {
+  if (!currentReportText) return;
+  // FIX: Use only the modern clipboard API. The deprecated execCommand fallback
+  // is removed. Show a helpful message if clipboard access is denied.
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(currentReportText)
+      .then(() => showToast('Copied to clipboard ✓'))
+      .catch(() => showToast('Clipboard access denied. Try the Share button.'));
+  } else {
+    showToast('Clipboard not available. Try the Share button.');
+  }
+}
+
+async function shareReport() {
+  if (!currentReportText) return;
+  if (navigator.share) {
+    try { await navigator.share({ title:'Daily Sales Report', text:currentReportText }); } catch(e) {}
+  } else { copyReport(); showToast('Copied — paste to share.'); }
+}
+
+let archiveSelectMode = false;
+let selectedArchiveDays = new Set();
+let currentDayDetailKey = null;
+let currentDayDetailLabel = null;
+
+function toggleArchiveSelect() {
+  archiveSelectMode = !archiveSelectMode;
+  selectedArchiveDays.clear();
+  document.getElementById('archSelectBar').classList.toggle('visible', archiveSelectMode);
+  document.getElementById('archSelectBtn').style.opacity = archiveSelectMode ? '1' : '.7';
+  renderArchiveSales();
+}
+
+function cancelArchiveSelect() {
+  archiveSelectMode = false; selectedArchiveDays.clear();
+  document.getElementById('archSelectBar').classList.remove('visible');
+  document.getElementById('archSelectBtn').style.opacity = '.7';
+  renderArchiveSales();
+}
+
+function toggleArchiveDaySelect(dateKey) {
+  if (selectedArchiveDays.has(dateKey)) selectedArchiveDays.delete(dateKey);
+  else selectedArchiveDays.add(dateKey);
+  document.querySelectorAll('.arch-day-card').forEach(card => {
+    if (card.dataset.key === dateKey) {
+      const sel = selectedArchiveDays.has(dateKey);
+      card.classList.toggle('arch-selected', sel);
+      const cb = card.querySelector('.arch-checkbox'); if (cb) cb.textContent = sel ? '✓' : '';
+    }
+  });
+}
+
+async function deleteSelectedArchive() {
+  if (!selectedArchiveDays.size) { showToast('Select at least one day.'); return; }
+  const n = selectedArchiveDays.size;
+  showConfirm('Delete Selected', `Permanently delete ${n} day${n>1?'s':''} from archive?`, async () => {
+    const updates = {};
+    selectedArchiveDays.forEach(key => {
+      updates['users/' + CU + '/sales/' + key] = null;
+      updates['users/' + CU + '/salesArchiveMeta/' + key] = null;
+    });
+    try { await db.ref().update(updates); cancelArchiveSelect(); showToast('Deleted ✓'); }
+    catch(e) { showToast('Delete failed.'); }
+  }, 'Delete');
+}
+
+// FIX: escape the label argument used in the onclick attribute to prevent
+// single-quote injection breaking the attribute string.
+async function deleteSingleArchiveDay(dateKey, e) {
+  e.stopPropagation();
+  showConfirm('Delete Day', "Remove this day's sales from archive?", async () => {
+    try {
+      await Promise.all([
+        db.ref('users/' + CU + '/sales/' + dateKey).remove(),
+        db.ref('users/' + CU + '/salesArchiveMeta/' + dateKey).remove()
+      ]);
+      renderArchiveSales(); showToast('Removed ✓');
+    } catch(e) { showToast('Delete failed.'); }
+  }, 'Delete');
+}
+
+async function confirmClearArchive() {
+  showConfirm('Clear All Archive', "Delete all past sales history? Today's log is not affected.", async () => {
+    try {
+      const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
+      const meta = metaSnap.val() || {};
+      const today = todayKey();
+      const updates = {};
+      Object.keys(meta).filter(k => k !== today).forEach(key => {
+        updates['users/' + CU + '/sales/' + key] = null;
+        updates['users/' + CU + '/salesArchiveMeta/' + key] = null;
+      });
+      if (!Object.keys(updates).length) { showToast('Nothing to clear.'); return; }
+      await db.ref().update(updates); renderArchiveSales(); showToast('Archive cleared ✓');
+    } catch(e) { showToast('Clear failed.'); }
+  }, 'Clear All');
+}
+
+// FIX: renderArchiveSales now fetches all day totals in parallel with Promise.all
+// instead of firing un-awaited async calls inside forEach, preventing race conditions.
+async function renderArchiveSales() {
+  const scroll = document.getElementById('archSalesScroll');
+  if (!scroll || !CU) return;
+  scroll.innerHTML = '<div style="opacity:.3;font-size:12px;padding:10px 0;">Loading…</div>';
+  try {
+    const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
+    const meta = metaSnap.val() || {};
+    const today = todayKey();
+    const days = Object.values(meta).filter(d => d.date !== today).sort((a,b) => b.date.localeCompare(a.date));
+    if (!days.length) {
+      scroll.innerHTML = '<div style="text-align:center;opacity:.28;padding:30px 0;"><div style="font-size:26px;margin-bottom:8px;">⧉</div><p style="font-size:12px;">No past sales yet.</p></div>';
+      return;
+    }
+
+    // Fetch all totals in parallel, then render everything at once
+    const totals = await Promise.all(
+      days.map(d =>
+        db.ref('users/' + CU + '/sales/' + d.date).once('value').then(snap => {
+          const entries = Object.values(snap.val() || {});
+          const total   = entries.reduce((s, e) => s + (e.price * e.qty), 0);
+          return { total, count: entries.length };
+        })
+      )
+    );
+
+    // FIX: escape the label before embedding in onclick to prevent quote injection
+    scroll.innerHTML = days.map((d, i) => {
+      const isSel    = selectedArchiveDays.has(d.date);
+      const { total, count } = totals[i];
+      const safeLabel = esc(d.label).replace(/'/g, '&#39;');
+      return `<div class="arch-day-card${isSel?' arch-selected':''}" data-key="${d.date}"
+          onclick="${archiveSelectMode
+            ? `toggleArchiveDaySelect('${d.date}')`
+            : `openDayDetail('${d.date}','${safeLabel}')`}">
+        ${archiveSelectMode ? `<div class="arch-checkbox">${isSel?'✓':''}</div>` : ''}
+        <div class="arch-day-info">
+          <div class="arch-day-date">${esc(d.label)}</div>
+          <div class="arch-day-total">Ksh ${total.toLocaleString()} · ${count} sale${count!==1?'s':''}</div>
+        </div>
+        <div class="arch-card-right">
+          ${!archiveSelectMode ? `<button class="arch-del-btn" onclick="deleteSingleArchiveDay('${d.date}',event)">✕</button>` : ''}
+          ${!archiveSelectMode ? `<span style="opacity:.3;font-size:14px;">›</span>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    scroll.innerHTML = '<div style="opacity:.3;font-size:12px;padding:10px 0;">Could not load history.</div>';
+  }
+}
+
+async function openDayDetail(dateKey, label) {
+  currentDayDetailKey = dateKey; currentDayDetailLabel = label;
+  const overlay = document.getElementById('dayDetailOverlay');
+  const body    = document.getElementById('dayDetailBody');
+  document.getElementById('dayDetailTitle').textContent    = label;
+  document.getElementById('dayDetailSubtitle').textContent = 'Sales breakdown';
+  body.innerHTML = '<div style="padding:20px 0;opacity:.4;font-size:13px;">Loading…</div>';
+  applyOverlayTheme(overlay);
+  overlay.classList.add('open');
+  try {
+    const snap = await db.ref('users/' + CU + '/sales/' + dateKey).once('value');
+    const entries = Object.entries(snap.val() || {}).map(([id,v]) => ({id,...v})).sort((a,b) => a.order - b.order);
+    if (!entries.length) { body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">No entries for this day.</div>'; return; }
+    const total = entries.reduce((s,e) => s + (e.price * e.qty), 0);
+    body.innerHTML = entries.map((e,i) => `
+      <div style="background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;">
+        <div style="font-family:'Playfair Display';font-size:16px;font-weight:700;opacity:.3;min-width:20px;">${i+1}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:'Playfair Display';font-size:14px;font-weight:600;">${esc(e.item)}</div>
+          <div style="font-size:10px;opacity:.45;margin-top:2px;">Model: ${esc(e.model||'—')} · S/N: ${esc(e.serial||'—')} · Qty: ${e.qty}</div>
+        </div>
+        <div style="font-size:13px;font-weight:600;white-space:nowrap;">Ksh ${(e.price * e.qty).toLocaleString()}</div>
+      </div>`).join('') +
+      `<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0 0;border-top:1px solid rgba(128,128,128,.15);margin-top:4px;">
+        <span style="font-size:12px;opacity:.4;text-transform:uppercase;letter-spacing:1.5px;">Total</span>
+        <span style="font-family:'Playfair Display';font-size:22px;font-weight:700;">Ksh ${total.toLocaleString()}</span>
+      </div>`;
+  } catch(e) { body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">Failed to load.</div>'; }
+}
+
+function closeDayDetail() {
+  document.getElementById('dayDetailOverlay').classList.remove('open');
+  currentDayDetailKey = null; currentDayDetailLabel = null;
+}
+
+function confirmDeleteArchiveDay() {
+  if (!currentDayDetailKey) return;
+  showConfirm('Delete Day', `Remove "${currentDayDetailLabel}" from archive?`, async () => {
+    try {
+      await Promise.all([
+        db.ref('users/' + CU + '/sales/' + currentDayDetailKey).remove(),
+        db.ref('users/' + CU + '/salesArchiveMeta/' + currentDayDetailKey).remove()
+      ]);
+      closeDayDetail(); renderArchiveSales(); showToast('Day deleted ✓');
+    } catch(e) { showToast('Delete failed.'); }
+  }, 'Delete');
+}
+
+async function shareArchiveDayReport() {
+  if (!currentDayDetailKey) return;
+  const prof = currentProfile || {};
+  try {
+    const snap = await db.ref('users/' + CU + '/sales/' + currentDayDetailKey).once('value');
+    const entries = Object.entries(snap.val() || {}).map(([id,v]) => ({id,...v})).sort((a,b) => a.order - b.order);
+    const total  = entries.reduce((s,e) => s + (e.price * e.qty), 0);
+    const target = parseFloat(prof.branchTarget) || 0;
+    const pct    = target > 0 ? ((total / target) * 100).toFixed(1) : null;
+    const line   = '─'.repeat(38);
+    let r = `SALES REPORT — ${currentDayDetailLabel}\n${line}\n`;
+    r += `Outlet  : ${prof.outlet || '(not set)'}\nOfficer : ${prof.officialNames || '(not set)'}\nBrand   : ${prof.brand || '(not set)'}\n`;
+    if (target > 0) r += `Target  : Ksh ${target.toLocaleString()}\n`;
+    r += `${line}\n\n`;
+    if (!entries.length) { r += 'No transactions recorded.\n\n'; }
+    else {
+      r += `TRANSACTIONS (${entries.length})\n\n`;
+      entries.forEach((e,i) => { r += `${i+1}. ${e.item}\n   Model : ${e.model||'—'} | S/N: ${e.serial||'—'}\n   Qty : ${e.qty} × Ksh ${Number(e.price).toLocaleString()} = Ksh ${(e.price*e.qty).toLocaleString()}\n\n`; });
+    }
+    r += `${line}\nTOTAL : Ksh ${total.toLocaleString()}\n`;
+    if (pct) r += `ACHIEVEMENT : ${pct}%\n`;
+    r += `${line}\nRoyal Horizon Workspace`;
+    if (navigator.share) {
+      try { await navigator.share({ title:`Sales Report – ${currentDayDetailLabel}`, text:r }); } catch(e) {}
+    } else {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(r).then(() => showToast('Report copied ✓')).catch(() => showToast('Could not copy.'));
+      } else { showToast('Sharing not available on this device.'); }
+    }
+  } catch(e) { showToast('Could not generate report.'); }
+}
+
+function moveTrack(idx) {
+  document.getElementById('workspaceTrack').style.transform = `translateX(calc(-${idx*80}vw - ${idx*30}px))`;
+  document.querySelectorAll('.workspace-card').forEach((c,i) => c.classList.toggle('active', i===idx));
+  document.querySelectorAll('.dock-item').forEach((d,i) => d.classList.toggle('active', i===idx));
+  currentSlide = idx;
+  if (idx === 2) renderSalesLog();
+  if (idx === 3) renderArchiveSales();
+}
+
+// FIX: Swipe handler now tracks both X and Y deltas. If the vertical movement
+// is greater than horizontal, the gesture is treated as a scroll and ignored.
+let tX = 0, tY = 0;
+document.getElementById('workspaceTrack').addEventListener('touchstart', e => {
+  tX = e.touches[0].clientX;
+  tY = e.touches[0].clientY;
+}, { passive: true });
+
+document.getElementById('workspaceTrack').addEventListener('touchend', e => {
+  const dx = tX - e.changedTouches[0].clientX;
+  const dy = tY - e.changedTouches[0].clientY;
+  // Only treat as a horizontal swipe if horizontal delta dominates
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+    if (dx > 0 && currentSlide < 3) moveTrack(currentSlide + 1);
+    else if (dx < 0 && currentSlide > 0) moveTrack(currentSlide - 1);
+  }
+}, { passive: true });
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.getElementById('confirmModal').addEventListener('click', function(e) { if(e.target===this) closeModal('confirmModal'); });
+
+function showConfirm(title, msg, onOk, btnLabel='Confirm') {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMsg').textContent   = msg;
+  const btn = document.getElementById('confirmOkBtn');
+  btn.textContent = btnLabel;
+  btn.onclick = () => { closeModal('confirmModal'); onOk(); };
+  document.getElementById('confirmModal').classList.add('open');
+}
+
+document.addEventListener('keydown', e => {
+  if (!CU) return;
+  const typing = ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName);
+  if (e.key === 'Escape') { closeModal('confirmModal'); closeProfile(); closeReportOverlay(); closeDayDetail(); }
+  if (e.key === 'n' && !typing && currentSlide === 1) { e.preventDefault(); document.getElementById('quickTaskInput').focus(); }
+});
+
+function toggleDashboardTheme() {
+  document.body.className = document.body.className === 'theme-login' ? 'theme-signup' : 'theme-login';
+  document.querySelectorAll('.overlay-screen.open,.day-detail-overlay.open').forEach(el => applyOverlayTheme(el));
+}
+function applyOverlayTheme(el) {
+  const light = document.body.className === 'theme-signup';
+  el.style.background = light ? '#f0f0f0' : '#111111';
+  el.style.color       = light ? '#1a1a1a' : '#e0e0e0';
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+function esc(s='') {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+<script>
+// FIX: Only register the service worker if the file actually exists (404 check),
+// preventing silent failures from a missing sw.js.
+if ('serviceWorker' in navigator) {
+  fetch('sw.js', { method: 'HEAD' })
+    .then(res => {
+      if (res.ok) navigator.serviceWorker.register('sw.js');
+    })
+    .catch(() => {}); // network error or sw.js absent — silently skip
+}
+</script>
+</body>
+</html>
