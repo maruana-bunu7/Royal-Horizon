@@ -592,7 +592,7 @@ auth.onAuthStateChanged(async (user) => {
     const snap = await db.ref('users/' + CU + '/profile').once('value');
     currentProfile = snap.val() || { name: 'Guest' };
     loadDashboard(true);
-    document.getElementById('loadingOverlay').classList.add('hidden');
+    document.getElementById('loadingOverlay').style.display = 'none';
     startTasksListener();
     initSalesListener();
     initOfflineSupport();
@@ -703,7 +703,6 @@ function resetFormAnim() {
 }
 
 function loadDashboard(instant) {
-  alert('loadDashboard called, profile: ' + JSON.stringify(currentProfile));
   document.getElementById('greeting').innerText = 'Welcome, ' + (currentProfile.name || 'Guest');
   updateAvatar(currentProfile);
   document.getElementById('portalContainer').style.display = 'none';
