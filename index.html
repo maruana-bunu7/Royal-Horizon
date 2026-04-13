@@ -25,10 +25,9 @@ h1,h2,h3,.btn-main,.btn-submit,.modal-btn,.proj-detail-title{font-family:'Playfa
 .offline-banner{position:fixed;top:0;left:0;right:0;z-index:1500;background:rgba(200,160,60,.96);color:#1a1100;text-align:center;font-size:12px;font-weight:600;padding:9px 16px;transform:translateY(-100%);transition:.35s var(--ui-curve);letter-spacing:.3px;pointer-events:none;}
 .offline-banner.visible{transform:translateY(0);}
 /* LOADING */
-.loading-overlay{position:fixed;inset:0;background:#111;z-index:2000;display:flex;align-items:center;justify-content:center;transition:opacity .5s;}
-.loading-overlay.hidden{opacity:0;pointer-events:none;}
-@keyframes pulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.2);opacity:1}}
+.loading-overlay{position:fixed;inset:0;background:#111;z-index:2000;display:flex;align-items:center;justify-content:center;}
 .loading-spinner{font-size:38px;animation:pulse 1.6s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.2);opacity:1}}
 /* PORTAL */
 .container{width:100%;max-width:420px;text-align:center;position:relative;z-index:10;}
 .selection-screen{display:flex;gap:20px;justify-content:center;transition:.3s ease,transform var(--ui-speed) var(--ui-curve);}
@@ -358,7 +357,6 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
           </div>
         </div>
         <div class="sales-list" id="salesList"></div>
-        <!-- PROGRESS BAR -->
         <div class="progress-wrap" id="progressWrap" style="display:none;">
           <div class="progress-header">
             <span class="progress-label">Target Progress</span>
@@ -565,7 +563,6 @@ let taskDueRowVisible = false;
 let dailyRemindersScheduled = false;
 const scheduledTaskNotifs = new Set();
 
-// ── DATE KEY
 function todayKey() {
   const d = new Date();
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
@@ -577,38 +574,30 @@ let authResolved = false;
 const authTimeout = setTimeout(() => {
   if (!authResolved) {
     authResolved = true;
-    document.getElementById('loadingOverlay').classList.add('hidden');
+    document.getElementById('loadingOverlay').style.display = 'none';
     showPortal();
   }
 }, 5000);
 
 auth.onAuthStateChanged(async (user) => {
-  if (authResolved) return; // timeout already fired, ignore
+  if (authResolved) return;
   authResolved = true;
   clearTimeout(authTimeout);
-  
+
   if (user) {
     CU = user.uid;
     const snap = await db.ref('users/' + CU + '/profile').once('value');
     currentProfile = snap.val() || { name: 'Guest' };
     loadDashboard(true);
-    document.getElementById('loadingOverlay').style.display = 'none';
     startTasksListener();
     initSalesListener();
     initOfflineSupport();
     requestNotificationPermission();
   } else {
     CU = null; currentProfile = null;
-    stopTasksListener();
-    if (salesUnsubscribe) salesUnsubscribe();
     showPortal();
     document.getElementById('loadingOverlay').style.display = 'none';
   }
-
-  startTasksListener();
-  initSalesListener();
-  initOfflineSupport();
-  requestNotificationPermission();
 });
 
 function showPortal() {
@@ -625,6 +614,7 @@ function showPage(type) {
     document.getElementById(type === 'login' ? 'loginPage' : 'signupPage').classList.add('active');
   }, 200);
 }
+
 function resetPage() {
   document.querySelectorAll('.form-wrapper').forEach(f => f.classList.remove('active'));
   document.body.className = '';
@@ -711,10 +701,10 @@ function loadDashboard(instant) {
   document.getElementById('greeting').innerText = 'Welcome, ' + (currentProfile.name || 'Guest');
   updateAvatar(currentProfile);
   document.getElementById('portalContainer').style.display = 'none';
+  document.getElementById('loadingOverlay').style.display = 'none';
+  document.body.setAttribute('class', 'theme-login');
   const dash = document.getElementById('dashboard');
   dash.style.display = 'flex';
-  document.body.setAttribute('class', 'theme-login');
-  document.getElementById('loadingOverlay').style.display = 'none';
   moveTrack(0);
   if (instant) dash.style.opacity = '1';
   else setTimeout(() => { dash.style.opacity = '1'; }, 50);
@@ -726,13 +716,10 @@ function updateAvatar(prof) {
   btn.textContent = (prof.name || 'G')[0].toUpperCase();
 }
 
-// ── OFFLINE SUPPORT
 function initOfflineSupport() {
   if (!CU) return;
-  // Keep today's data synced locally for offline access
   db.ref('users/' + CU + '/tasks').keepSynced(true);
   db.ref('users/' + CU + '/sales/' + todayKey()).keepSynced(true);
-  // Connection state banner
   db.ref('.info/connected').on('value', snap => {
     const connected = snap.val() === true;
     const banner = document.getElementById('offlineBanner');
@@ -740,7 +727,6 @@ function initOfflineSupport() {
   });
 }
 
-// ── NOTIFICATIONS
 async function requestNotificationPermission() {
   if (!('Notification' in window)) return;
   if (Notification.permission === 'default') {
@@ -793,7 +779,6 @@ function scheduleTaskNotifications() {
   });
 }
 
-// ── PROFILE
 function openProfile() {
   const prof = currentProfile || {};
   profileEditMode = false;
@@ -908,7 +893,6 @@ async function saveProfile() {
     currentProfile = { ...currentProfile, ...updates };
     document.getElementById('greeting').innerText = 'Welcome, ' + currentProfile.name;
     updateAvatar(currentProfile);
-    // Reschedule reminders with new times
     dailyRemindersScheduled = false;
     scheduleDailyReminders();
     showToast('Profile saved ✓');
@@ -931,9 +915,9 @@ function confirmDeleteAccount() {
   }, 'Delete');
 }
 
-// ── TASKS
 function startTasksListener() {
   stopTasksListener();
+  if (!CU) return;
   tasksListenerRef = db.ref('users/' + CU + '/tasks');
   tasksListenerFn = (snap) => {
     const val = snap.val() || {};
@@ -1071,7 +1055,6 @@ async function clearDoneTasks() {
   }, 'Clear');
 }
 
-// ── AI ASSISTANT
 async function sendAI() {
   const inp = document.getElementById('aiInput');
   const prompt = inp.value.trim(); if (!prompt) return;
@@ -1109,7 +1092,6 @@ async function sendAI() {
   btn.disabled = false; btn.textContent = '→'; inp.value = '';
 }
 
-// ── SALES LOG
 function initSalesListener() {
   if (!CU) return;
   if (salesUnsubscribe) salesUnsubscribe();
@@ -1185,7 +1167,6 @@ function renderOverviewSales() {
   if (countEl) countEl.textContent = count + ' transaction' + (count !== 1 ? 's' : '');
 }
 
-// ── EDIT SALE
 function editSale(id) {
   const s = cachedSales.find(s => s.id === id); if (!s) return;
   editingSaleId = id;
@@ -1246,7 +1227,6 @@ async function deleteSale(id) {
   } catch(e) { showToast('Delete failed.'); }
 }
 
-// ── SALES REPORT
 function generateSalesReport() {
   const prof   = currentProfile || {};
   const date   = new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
@@ -1313,7 +1293,6 @@ async function shareReport() {
   } else { copyReport(); showToast('Copied — paste to share.'); }
 }
 
-// ── ARCHIVE
 let archiveSelectMode = false;
 let selectedArchiveDays = new Set();
 let currentDayDetailKey = null;
@@ -1508,7 +1487,6 @@ async function shareArchiveDayReport() {
   } catch(e) { showToast('Could not generate report.'); }
 }
 
-// ── CAROUSEL
 function moveTrack(idx) {
   document.getElementById('workspaceTrack').style.transform = `translateX(calc(-${idx*80}vw - ${idx*30}px))`;
   document.querySelectorAll('.workspace-card').forEach((c,i) => c.classList.toggle('active', i===idx));
@@ -1528,7 +1506,6 @@ document.getElementById('workspaceTrack').addEventListener('touchend', e => {
   }
 }, { passive:true });
 
-// ── MODALS
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 document.getElementById('confirmModal').addEventListener('click', function(e) { if(e.target===this) closeModal('confirmModal'); });
 
@@ -1541,7 +1518,6 @@ function showConfirm(title, msg, onOk, btnLabel='Confirm') {
   document.getElementById('confirmModal').classList.add('open');
 }
 
-// ── KEYBOARD
 document.addEventListener('keydown', e => {
   if (!CU) return;
   const typing = ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName);
@@ -1549,7 +1525,6 @@ document.addEventListener('keydown', e => {
   if (e.key === 'n' && !typing && currentSlide === 1) { e.preventDefault(); document.getElementById('quickTaskInput').focus(); }
 });
 
-// ── THEME
 function toggleDashboardTheme() {
   document.body.className = document.body.className === 'theme-login' ? 'theme-signup' : 'theme-login';
   document.querySelectorAll('.overlay-screen.open,.day-detail-overlay.open').forEach(el => applyOverlayTheme(el));
@@ -1560,7 +1535,6 @@ function applyOverlayTheme(el) {
   el.style.color       = light ? '#1a1a1a' : '#e0e0e0';
 }
 
-// ── UTILS
 let toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
