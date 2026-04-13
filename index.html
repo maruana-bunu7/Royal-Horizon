@@ -708,7 +708,7 @@ function loadDashboard(instant) {
   document.getElementById('portalContainer').style.display = 'none';
   const dash = document.getElementById('dashboard');
   dash.style.display = 'flex';
-  document.body.className = 'theme-login';
+  document.body.setAttribute('class', 'theme-login');
   moveTrack(0);
   if (instant) dash.style.opacity = '1';
   else setTimeout(() => { dash.style.opacity = '1'; }, 50);
