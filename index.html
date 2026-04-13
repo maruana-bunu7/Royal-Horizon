@@ -709,6 +709,7 @@ function loadDashboard(instant) {
   const dash = document.getElementById('dashboard');
   dash.style.display = 'flex';
   document.body.setAttribute('class', 'theme-login');
+  document.getElementById('loadingOverlay').style.display = 'none';
   moveTrack(0);
   if (instant) dash.style.opacity = '1';
   else setTimeout(() => { dash.style.opacity = '1'; }, 50);
