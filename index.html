@@ -572,11 +572,17 @@ function todayKey() {
 }
 
 // ── AUTH
+const authTimeout = setTimeout(() => {
+  document.getElementById('loadingOverlay').classList.add('hidden');
+  showPortal();
+}, 8000); // 5 seconds max wait
+
 auth.onAuthStateChanged(async (user) => {
+  clearTimeout(authTimeout); // Firebase responded, cancel timeout
   if (user) {
     CU = user.uid;
-    const snap = await db.ref('users/' + CU + '/profile').once('value');
-    currentProfile = snap.val() || { name: 'Guest', color: AVATAR_COLORS[0] };
+    const snap = await db.ref('users/' + CU + '/profi');
+    currentProfile = snap.val() || { name: 'Guest' };
     loadDashboard(true);
     startTasksListener();
     initSalesListener();
