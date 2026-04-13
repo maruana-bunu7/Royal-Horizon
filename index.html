@@ -21,10 +21,15 @@ body.theme-login{background:var(--soft-black);color:#e0e0e0;}
 body.theme-signup{background:var(--soft-white);color:#1a1a1a;}
 h1,h2,h3,.btn-main,.btn-submit,.modal-btn,.proj-detail-title{font-family:'Playfair Display',Georgia,serif;letter-spacing:.5px;}
 ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:rgba(128,128,128,.3);border-radius:3px;}
+/* OFFLINE BANNER */
+.offline-banner{position:fixed;top:0;left:0;right:0;z-index:1500;background:rgba(200,160,60,.96);color:#1a1100;text-align:center;font-size:12px;font-weight:600;padding:9px 16px;transform:translateY(-100%);transition:.35s var(--ui-curve);letter-spacing:.3px;pointer-events:none;}
+.offline-banner.visible{transform:translateY(0);}
+/* LOADING */
 .loading-overlay{position:fixed;inset:0;background:#111;z-index:2000;display:flex;align-items:center;justify-content:center;transition:opacity .5s;}
 .loading-overlay.hidden{opacity:0;pointer-events:none;}
 @keyframes pulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.2);opacity:1}}
 .loading-spinner{font-size:38px;animation:pulse 1.6s ease-in-out infinite;}
+/* PORTAL */
 .container{width:100%;max-width:420px;text-align:center;position:relative;z-index:10;}
 .selection-screen{display:flex;gap:20px;justify-content:center;transition:.3s ease,transform var(--ui-speed) var(--ui-curve);}
 .selection-screen.fade-out{opacity:0;transform:scale(.97);pointer-events:none;}
@@ -42,15 +47,18 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .btn-submit:active{transform:scale(.98);}
 .theme-login .btn-submit{background:#f4f4f4;color:#121212;}.theme-signup .btn-submit{background:#121212;color:#f4f4f4;}
 .error-msg{color:#e05252;font-size:12px;margin-bottom:12px;min-height:14px;text-align:left;}
+/* DASHBOARD */
 .dashboard-wrapper{position:fixed;top:0;left:0;width:100vw;height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:100;opacity:0;transition:.8s var(--slide-curve);}
 .header-row{position:absolute;top:40px;width:85%;display:flex;justify-content:space-between;align-items:center;}
 .header-right{display:flex;gap:14px;align-items:center;}
 .avatar-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;border:none;font-family:'Playfair Display',serif;flex-shrink:0;color:#fff;}
 .theme-toggle{cursor:pointer;font-size:22px;opacity:.5;transition:.2s;}.theme-toggle:hover{opacity:1;}
+/* CAROUSEL */
 .carousel-container{width:100%;height:75vh;display:flex;align-items:center;overflow:visible;padding:0 10%;}
 .workspace-track{display:flex;gap:30px;transition:transform var(--slide-speed) var(--slide-curve);will-change:transform;}
 .workspace-card{min-width:80vw;height:65vh;background:rgba(128,128,128,.08);backdrop-filter:blur(15px);border:1px solid rgba(128,128,128,.15);border-radius:40px;padding:35px;opacity:.15;transform:scale(.92);transition:opacity var(--slide-speed) var(--slide-curve),transform var(--slide-speed) var(--slide-curve);display:flex;flex-direction:column;}
 .workspace-card.active{opacity:1;transform:scale(1);background:rgba(128,128,128,.12);}
+/* OVERVIEW */
 .overview-stats{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:16px;}
 .stat-box{background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.12);border-radius:18px;padding:16px;}
 .stat-number{font-family:'Playfair Display';font-size:32px;font-weight:700;}
@@ -68,12 +76,18 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
 .add-btn{width:32px;height:32px;border-radius:50%;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:19px;opacity:.7;transition:.2s;color:inherit;}
 .add-btn:hover{opacity:1;}
-/* TASKS SLIDE */
-.task-quick-add{display:flex;gap:8px;margin-bottom:11px;}
+.overview-sales-box{background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.12);border-radius:16px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;}
+/* TASKS */
+.task-quick-add{display:flex;gap:8px;margin-bottom:8px;}
 .task-quick-input{flex:1;font-size:13px;padding:9px 13px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.14);border-radius:12px;color:inherit;}
 .task-quick-input::placeholder{opacity:.4;}
+.task-due-toggle{width:34px;height:34px;border-radius:11px;background:rgba(128,128,128,.1);border:1px solid rgba(128,128,128,.15);cursor:pointer;font-size:14px;color:inherit;transition:.2s;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.task-due-toggle.active{background:rgba(90,160,120,.15);border-color:rgba(90,160,120,.35);}
 .task-quick-btn{width:34px;height:34px;border-radius:11px;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);cursor:pointer;font-size:18px;color:inherit;transition:.2s;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .task-quick-btn:hover{background:rgba(128,128,128,.28);}
+.task-due-row{display:none;gap:7px;margin-bottom:9px;}
+.task-due-row.visible{display:flex;}
+.task-due-input{flex:1;font-size:12px;padding:7px 10px;background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.12);border-radius:10px;color:inherit;}
 .task-filter-row{display:flex;gap:6px;margin-bottom:11px;}
 .task-filter-pill{padding:5px 13px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid rgba(128,128,128,.18);background:transparent;cursor:pointer;color:inherit;transition:.2s;opacity:.45;letter-spacing:.5px;}
 .task-filter-pill.active{opacity:1;background:rgba(128,128,128,.2);border-color:rgba(128,128,128,.35);}
@@ -84,7 +98,8 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .task2-item.done2 .task2-check{background:rgba(128,128,128,.35);border-color:transparent;}
 .task2-text{flex:1;min-width:0;font-size:14px;line-height:1.4;}
 .task2-item.done2 .task2-text{text-decoration:line-through;}
-.task2-note{font-size:11px;opacity:.42;margin-top:3px;}
+.task2-due{font-size:10px;opacity:.5;margin-top:3px;letter-spacing:.2px;}
+.task2-due.overdue{color:#e05252;opacity:1;font-weight:600;}
 .task2-del{opacity:.22;cursor:pointer;font-size:12px;background:none;border:none;color:inherit;transition:.2s;padding:2px;flex-shrink:0;margin-top:1px;}
 .task2-del:hover{opacity:.85;color:#e05252;}
 .tasks-footer{padding-top:10px;border-top:1px solid rgba(128,128,128,.1);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
@@ -92,24 +107,37 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .clear-done-btn{font-size:11px;opacity:.35;background:none;border:none;color:inherit;cursor:pointer;transition:.2s;padding:3px 8px;border-radius:8px;}
 .clear-done-btn:hover{opacity:.8;background:rgba(128,128,128,.1);}
 /* SALES */
-.sales-form{display:flex;flex-direction:column;gap:7px;margin-bottom:12px;}
+.sales-form{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
 .sales-input-row{display:flex;gap:7px;}
 .sales-input{flex:1;font-size:12px;padding:8px 11px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.12);border-radius:11px;color:inherit;}
 .sales-input::placeholder{opacity:.4;}
 .sales-btn-row{display:flex;gap:7px;}
-.sales-add-btn{flex:1;padding:8px 16px;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);border-radius:11px;cursor:pointer;font-size:12px;font-weight:600;color:inherit;transition:.2s;white-space:nowrap;}
+.sales-add-btn{flex:1;padding:8px 14px;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);border-radius:11px;cursor:pointer;font-size:12px;font-weight:600;color:inherit;transition:.3s;white-space:nowrap;}
 .sales-add-btn:hover{background:rgba(128,128,128,.25);}
+.sales-add-btn.editing{background:rgba(90,160,120,.15);border-color:rgba(90,160,120,.35);}
+.sale-cancel-edit-btn{display:none;padding:8px 11px;background:rgba(220,80,80,.08);border:1px solid rgba(220,80,80,.2);border-radius:11px;cursor:pointer;font-size:11px;font-weight:600;color:#e05252;transition:.2s;white-space:nowrap;}
 .sales-report-btn{padding:8px 14px;background:rgba(90,160,120,.12);border:1px solid rgba(90,160,120,.25);border-radius:11px;cursor:pointer;font-size:11px;font-weight:600;color:inherit;transition:.2s;white-space:nowrap;letter-spacing:.3px;}
 .sales-report-btn:hover{background:rgba(90,160,120,.22);}
 .sales-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:7px;}
-.sale-item{background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;padding:10px 12px;display:flex;align-items:flex-start;gap:9px;}
+.sale-item{background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;padding:10px 12px;display:flex;align-items:flex-start;gap:9px;transition:.2s;}
+.sale-item.sale-editing{border-color:rgba(90,160,120,.4);background:rgba(90,160,120,.06);}
 .sale-num{font-family:'Playfair Display';font-size:18px;font-weight:700;opacity:.3;min-width:22px;line-height:1.2;}
 .sale-info{flex:1;min-width:0;}
 .sale-name{font-family:'Playfair Display';font-size:14px;font-weight:600;}
 .sale-meta{font-size:10px;opacity:.45;margin-top:2px;letter-spacing:.3px;}
 .sale-total{font-size:13px;font-weight:600;opacity:.8;white-space:nowrap;}
+.sale-edit-btn{opacity:.22;cursor:pointer;font-size:12px;background:none;border:none;color:inherit;transition:.2s;padding:2px;}
+.sale-edit-btn:hover{opacity:.85;color:rgba(90,160,120,.9);}
 .sale-del{opacity:.25;cursor:pointer;font-size:11px;background:none;border:none;color:inherit;transition:.2s;padding:2px;}.sale-del:hover{opacity:.8;color:#e05252;}
-.sales-summary{margin-top:auto;padding-top:11px;border-top:1px solid rgba(128,128,128,.12);display:flex;justify-content:space-between;align-items:center;}
+/* PROGRESS BAR */
+.progress-wrap{padding:8px 0 6px;border-top:1px solid rgba(128,128,128,.1);flex-shrink:0;}
+.progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.progress-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;}
+.progress-pct{font-family:'Playfair Display';font-size:14px;font-weight:700;}
+.progress-track{height:5px;background:rgba(128,128,128,.15);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;transition:width .7s cubic-bezier(0.4,0,0.2,1),background .4s;}
+.progress-sub{font-size:10px;opacity:.38;margin-top:4px;letter-spacing:.3px;}
+.sales-summary{padding-top:9px;border-top:1px solid rgba(128,128,128,.12);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
 .summary-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;}
 .summary-total{font-family:'Playfair Display';font-size:22px;font-weight:700;}
 .summary-count{font-size:10px;opacity:.4;margin-top:1px;}
@@ -122,7 +150,6 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .arch-day-card.arch-selected .arch-checkbox{background:rgba(128,128,128,.4);border-color:transparent;}
 .arch-day-info{flex:1;min-width:0;}
 .arch-day-date{font-family:'Playfair Display';font-size:13px;font-weight:600;}
-.arch-day-meta{font-size:10px;opacity:.4;margin-top:1px;}
 .arch-day-total{font-size:11px;font-weight:600;opacity:.7;margin-top:2px;}
 .arch-card-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .arch-del-btn{opacity:.25;cursor:pointer;font-size:12px;background:none;border:none;color:inherit;transition:.2s;padding:4px;}
@@ -194,14 +221,15 @@ select.modal-input{cursor:pointer;}
 .toast{position:fixed;bottom:125px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(30,30,30,.95);color:#e0e0e0;padding:10px 20px;border-radius:18px;font-size:13px;opacity:0;transition:.3s;z-index:900;pointer-events:none;white-space:nowrap;}
 body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-/* DAY DETAIL OVERLAY */
+/* DAY DETAIL */
 .day-detail-overlay{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;transition:.4s var(--ui-curve);transform:translateY(100%);opacity:0;pointer-events:none;overflow:hidden;}
 .day-detail-overlay.open{transform:translateY(0);opacity:1;pointer-events:all;}
-/* OVERVIEW */
-.overview-sales-box{background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.12);border-radius:16px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;}
 </style>
 </head>
 <body>
+
+<!-- OFFLINE BANNER -->
+<div class="offline-banner" id="offlineBanner">⚡ Offline — changes will sync when reconnected</div>
 
 <div class="loading-overlay" id="loadingOverlay"><div class="loading-spinner">✦</div></div>
 
@@ -284,11 +312,16 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
       <div class="workspace-card">
         <div class="card-header">
           <h2>Tasks</h2>
-          <button class="add-btn" id="clearDoneBtnHeader" onclick="clearDoneTasks()" title="Clear completed">✓</button>
+          <button class="add-btn" onclick="clearDoneTasks()" title="Clear completed">✓</button>
         </div>
         <div class="task-quick-add">
           <input class="task-quick-input" id="quickTaskInput" placeholder="Add a task or note…" onkeydown="if(event.key==='Enter')addQuickTask()">
+          <button class="task-due-toggle" id="taskDueToggle" onclick="toggleTaskDueRow()" title="Set due date & reminder">📅</button>
           <button class="task-quick-btn" onclick="addQuickTask()">+</button>
+        </div>
+        <div class="task-due-row" id="taskDueRow">
+          <input class="task-due-input" type="date" id="taskDueDate" placeholder="Date">
+          <input class="task-due-input" type="time" id="taskDueTime" placeholder="Time">
         </div>
         <div class="task-filter-row">
           <button class="task-filter-pill active" id="pill-all" onclick="setTaskFilter('all')">All</button>
@@ -319,11 +352,21 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
             <input class="sales-input" id="saleQty" placeholder="Qty" type="number" min="1" style="max-width:60px;">
           </div>
           <div class="sales-btn-row">
-            <button class="sales-add-btn" onclick="addSale()">+ Log Sale</button>
+            <button class="sales-add-btn" id="saleSubmitBtn" onclick="addSale()">+ Log Sale</button>
+            <button class="sale-cancel-edit-btn" id="saleCancelEdit" onclick="cancelEditSale()">✕ Cancel</button>
             <button class="sales-report-btn" onclick="generateSalesReport()">📋 Report</button>
           </div>
         </div>
         <div class="sales-list" id="salesList"></div>
+        <!-- PROGRESS BAR -->
+        <div class="progress-wrap" id="progressWrap" style="display:none;">
+          <div class="progress-header">
+            <span class="progress-label">Target Progress</span>
+            <span class="progress-pct" id="progressPct">0%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+          <div class="progress-sub" id="progressSub"></div>
+        </div>
         <div class="sales-summary">
           <div>
             <div class="summary-label">Today's Total</div>
@@ -370,14 +413,10 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
     </div>
     <div class="overlay-body">
       <div class="profile-avatar-large" id="profileAvatarLarge"></div>
-
-      <!-- Avatar colour — only interactive in edit mode -->
       <div class="profile-field" id="colorPickerSection" style="opacity:.35;pointer-events:none;transition:.3s;">
         <label class="profile-label">Avatar Colour</label>
         <div class="color-picker" id="colorPicker"></div>
       </div>
-
-      <!-- PERSONAL INFO -->
       <hr class="profile-section-divider">
       <div class="profile-section-label">Personal</div>
       <div class="profile-field">
@@ -396,8 +435,6 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
         <label class="profile-label">Bio</label>
         <textarea class="profile-input profile-textarea" id="profileBio" placeholder="A few words about yourself…" readonly></textarea>
       </div>
-
-      <!-- WORK INFO -->
       <hr class="profile-section-divider">
       <div class="profile-section-label">Work Details</div>
       <div class="profile-field">
@@ -416,10 +453,16 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
         <label class="profile-label">Branch Target (Ksh)</label>
         <input class="profile-input" type="number" id="profileBranchTarget" placeholder="e.g. 150000" min="0" readonly>
       </div>
-
-      <!-- SETTINGS -->
       <hr class="profile-section-divider">
-      <div class="profile-section-label">Settings</div>
+      <div class="profile-section-label">Reminders & Settings</div>
+      <div class="profile-field">
+        <label class="profile-label">Morning Reminder <span style="opacity:.4;font-size:10px;">daily notification</span></label>
+        <input class="profile-input" type="time" id="profileMorningReminder" readonly>
+      </div>
+      <div class="profile-field">
+        <label class="profile-label">Evening Reminder <span style="opacity:.4;font-size:10px;">daily notification</span></label>
+        <input class="profile-input" type="time" id="profileEveningReminder" readonly>
+      </div>
       <div class="profile-field">
         <label class="profile-label">Gemini API Key <span style="opacity:.45;font-size:10px;">(optional — for AI)</span></label>
         <input class="profile-input" type="password" id="profileApiKey" placeholder="AIza…" readonly>
@@ -428,7 +471,6 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
         <label class="profile-label">Member Since</label>
         <input class="profile-input" type="text" id="profileMemberSince" readonly>
       </div>
-
       <button class="profile-save-btn" id="profileSaveBtn" onclick="saveProfile()" style="display:none;">Save Changes</button>
       <button class="signout-profile-btn" onclick="handleLogout()">Sign Out</button>
       <div class="danger-zone">
@@ -518,13 +560,15 @@ let cachedSales = [], salesUnsubscribe = null;
 let taskFilter = 'all';
 let profileEditMode = false;
 let currentReportText = '';
+let editingSaleId = null;
+let taskDueRowVisible = false;
+let dailyRemindersScheduled = false;
+const scheduledTaskNotifs = new Set();
 
-// ── LOCAL date key
+// ── DATE KEY
 function todayKey() {
   const d = new Date();
-  return d.getFullYear() + '-' +
-    String(d.getMonth()+1).padStart(2,'0') + '-' +
-    String(d.getDate()).padStart(2,'0');
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
 
 // ── AUTH
@@ -536,9 +580,12 @@ auth.onAuthStateChanged(async (user) => {
     loadDashboard(true);
     startTasksListener();
     initSalesListener();
+    initOfflineSupport();
+    requestNotificationPermission();
   } else {
     CU = null; currentProfile = null;
     stopTasksListener();
+    if (salesUnsubscribe) salesUnsubscribe();
     showPortal();
   }
   document.getElementById('loadingOverlay').classList.add('hidden');
@@ -598,7 +645,8 @@ async function handleSignup() {
     const uid = cred.user.uid;
     const now = Date.now();
     const profile = { name, username, email, bio: '', color: AVATAR_COLORS[0], apiKey: '',
-      outlet: '', officialNames: '', brand: '', branchTarget: '', createdAt: now };
+      outlet: '', officialNames: '', brand: '', branchTarget: '',
+      morningReminder: '10:00', eveningReminder: '18:00', createdAt: now };
     await Promise.all([
       db.ref('usernames/' + username).set({ uid, email }),
       db.ref('users/' + uid + '/profile').set(profile),
@@ -619,6 +667,8 @@ async function handleLogout() {
     if (salesUnsubscribe) salesUnsubscribe();
     await auth.signOut();
     cachedTasks = []; cachedSales = [];
+    dailyRemindersScheduled = false;
+    scheduledTaskNotifs.clear();
     ['loginUser','loginPass','signupName','signupUser','signupEmail','signupPass'].forEach(id => {
       const el = document.getElementById(id); if (el) el.value = '';
     });
@@ -654,50 +704,112 @@ function updateAvatar(prof) {
   btn.textContent = (prof.name || 'G')[0].toUpperCase();
 }
 
+// ── OFFLINE SUPPORT
+function initOfflineSupport() {
+  if (!CU) return;
+  // Keep today's data synced locally for offline access
+  db.ref('users/' + CU + '/tasks').keepSynced(true);
+  db.ref('users/' + CU + '/sales/' + todayKey()).keepSynced(true);
+  // Connection state banner
+  db.ref('.info/connected').on('value', snap => {
+    const connected = snap.val() === true;
+    const banner = document.getElementById('offlineBanner');
+    if (banner) banner.classList.toggle('visible', !connected);
+  });
+}
+
+// ── NOTIFICATIONS
+async function requestNotificationPermission() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') {
+    const perm = await Notification.requestPermission();
+    if (perm === 'granted') scheduleDailyReminders();
+  } else if (Notification.permission === 'granted') {
+    scheduleDailyReminders();
+  }
+}
+
+function scheduleDailyReminders() {
+  if (dailyRemindersScheduled) return;
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  dailyRemindersScheduled = true;
+  const prof = currentProfile || {};
+  const morningTime = prof.morningReminder || '10:00';
+  const eveningTime = prof.eveningReminder || '18:00';
+  [
+    { time: morningTime, msg: 'Good morning! Ready to start logging your sales for today?' },
+    { time: eveningTime, msg: "Time to wrap up! Don't forget to submit your daily sales report." }
+  ].forEach(({ time, msg }) => {
+    const [h, m] = time.split(':').map(Number);
+    const now = new Date();
+    const target = new Date();
+    target.setHours(h, m, 0, 0);
+    const delay = target - now;
+    if (delay > 0) {
+      setTimeout(() => {
+        try { new Notification('Royal Horizon', { body: msg, icon: '/icon-192.png' }); } catch(e) {}
+      }, delay);
+    }
+  });
+}
+
+function scheduleTaskNotifications() {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  const today = todayKey();
+  cachedTasks.filter(t => !t.done && t.dueDate === today && t.dueTime && !scheduledTaskNotifs.has(t.id)).forEach(t => {
+    const [h, m] = t.dueTime.split(':').map(Number);
+    const now = new Date();
+    const target = new Date();
+    target.setHours(h, m, 0, 0);
+    const delay = target - now;
+    if (delay > 0) {
+      scheduledTaskNotifs.add(t.id);
+      setTimeout(() => {
+        try { new Notification('Task Reminder — Royal Horizon', { body: t.title, icon: '/icon-192.png' }); } catch(e) {}
+      }, delay);
+    }
+  });
+}
+
 // ── PROFILE
 function openProfile() {
   const prof = currentProfile || {};
   profileEditMode = false;
-
-  document.getElementById('profileName').value        = prof.name || '';
-  document.getElementById('profileUsername').value    = prof.username || '';
-  document.getElementById('profileEmail').value       = prof.email || '';
-  document.getElementById('profileBio').value         = prof.bio || '';
-  document.getElementById('profileApiKey').value      = prof.apiKey || '';
-  document.getElementById('profileOutlet').value      = prof.outlet || '';
-  document.getElementById('profileOfficialNames').value = prof.officialNames || '';
-  document.getElementById('profileBrand').value       = prof.brand || '';
-  document.getElementById('profileBranchTarget').value = prof.branchTarget || '';
-  document.getElementById('profileMemberSince').value = prof.createdAt
+  document.getElementById('profileName').value           = prof.name || '';
+  document.getElementById('profileUsername').value       = prof.username || '';
+  document.getElementById('profileEmail').value          = prof.email || '';
+  document.getElementById('profileBio').value            = prof.bio || '';
+  document.getElementById('profileApiKey').value         = prof.apiKey || '';
+  document.getElementById('profileOutlet').value         = prof.outlet || '';
+  document.getElementById('profileOfficialNames').value  = prof.officialNames || '';
+  document.getElementById('profileBrand').value          = prof.brand || '';
+  document.getElementById('profileBranchTarget').value   = prof.branchTarget || '';
+  document.getElementById('profileMorningReminder').value = prof.morningReminder || '10:00';
+  document.getElementById('profileEveningReminder').value = prof.eveningReminder || '18:00';
+  document.getElementById('profileMemberSince').value    = prof.createdAt
     ? new Date(prof.createdAt).toLocaleDateString('en-GB', { year:'numeric', month:'long', day:'numeric' }) : '—';
-
   setProfileReadOnly(true);
-
   const btn = document.getElementById('profileEditBtn');
   btn.textContent = '✎ Edit'; btn.classList.remove('active');
   document.getElementById('profileSaveBtn').style.display = 'none';
-
   const cp = document.getElementById('colorPicker');
   cp.innerHTML = AVATAR_COLORS.map(c =>
     `<div class="color-swatch${c===(prof.color||AVATAR_COLORS[0])?' selected':''}" style="background:${c}" onclick="pickColor('${c}',this)"></div>`
   ).join('');
   const cpSection = document.getElementById('colorPickerSection');
   cpSection.style.opacity = '.35'; cpSection.style.pointerEvents = 'none';
-
   const av = document.getElementById('profileAvatarLarge');
   av.style.background = prof.color || AVATAR_COLORS[0];
   av.textContent = (prof.name || 'G')[0].toUpperCase();
-
   applyOverlayTheme(document.getElementById('profileOverlay'));
   document.getElementById('profileOverlay').classList.add('open');
 }
 
 function setProfileReadOnly(readonly) {
-  // username, email, memberSince are ALWAYS readonly
-  const editableIds = ['profileName','profileBio','profileApiKey','profileOutlet','profileOfficialNames','profileBrand','profileBranchTarget'];
+  const editableIds = ['profileName','profileBio','profileApiKey','profileOutlet','profileOfficialNames',
+    'profileBrand','profileBranchTarget','profileMorningReminder','profileEveningReminder'];
   editableIds.forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
+    const el = document.getElementById(id); if (!el) return;
     el.readOnly = readonly;
     el.style.opacity = readonly ? '.42' : '1';
     el.style.cursor  = readonly ? 'default' : '';
@@ -706,17 +818,17 @@ function setProfileReadOnly(readonly) {
 
 function toggleProfileEdit() {
   if (profileEditMode) {
-    // Cancel — restore original values
     profileEditMode = false;
     const prof = currentProfile || {};
-    document.getElementById('profileName').value        = prof.name || '';
-    document.getElementById('profileBio').value         = prof.bio || '';
-    document.getElementById('profileApiKey').value      = prof.apiKey || '';
-    document.getElementById('profileOutlet').value      = prof.outlet || '';
-    document.getElementById('profileOfficialNames').value = prof.officialNames || '';
-    document.getElementById('profileBrand').value       = prof.brand || '';
-    document.getElementById('profileBranchTarget').value = prof.branchTarget || '';
-    // Reset color picker
+    document.getElementById('profileName').value           = prof.name || '';
+    document.getElementById('profileBio').value            = prof.bio || '';
+    document.getElementById('profileApiKey').value         = prof.apiKey || '';
+    document.getElementById('profileOutlet').value         = prof.outlet || '';
+    document.getElementById('profileOfficialNames').value  = prof.officialNames || '';
+    document.getElementById('profileBrand').value          = prof.brand || '';
+    document.getElementById('profileBranchTarget').value   = prof.branchTarget || '';
+    document.getElementById('profileMorningReminder').value = prof.morningReminder || '10:00';
+    document.getElementById('profileEveningReminder').value = prof.eveningReminder || '18:00';
     document.getElementById('colorPicker').innerHTML = AVATAR_COLORS.map(c =>
       `<div class="color-swatch${c===(prof.color||AVATAR_COLORS[0])?' selected':''}" style="background:${c}" onclick="pickColor('${c}',this)"></div>`
     ).join('');
@@ -739,7 +851,6 @@ function toggleProfileEdit() {
 
 function closeProfile() {
   document.getElementById('profileOverlay').classList.remove('open');
-  // If edit mode was open, close cleanly
   if (profileEditMode) {
     profileEditMode = false;
     setProfileReadOnly(true);
@@ -767,21 +878,25 @@ async function saveProfile() {
     officialNames: document.getElementById('profileOfficialNames').value.trim(),
     brand: document.getElementById('profileBrand').value.trim(),
     branchTarget: document.getElementById('profileBranchTarget').value.trim(),
+    morningReminder: document.getElementById('profileMorningReminder').value || '10:00',
+    eveningReminder: document.getElementById('profileEveningReminder').value || '18:00',
   };
   try {
     await db.ref('users/' + CU + '/profile').update(updates);
     currentProfile = { ...currentProfile, ...updates };
     document.getElementById('greeting').innerText = 'Welcome, ' + currentProfile.name;
     updateAvatar(currentProfile);
+    // Reschedule reminders with new times
+    dailyRemindersScheduled = false;
+    scheduleDailyReminders();
     showToast('Profile saved ✓');
-    // Exit edit mode smoothly
-    profileEditMode = true; // trick toggleProfileEdit into thinking we're in edit mode so it cancels
+    profileEditMode = true;
     toggleProfileEdit();
   } catch(e) { showToast('Save failed.'); }
 }
 
 function confirmDeleteAccount() {
-  showConfirm('Delete Account', 'This permanently deletes your account and all your data. Cannot be undone.', async () => {
+  showConfirm('Delete Account', 'This permanently deletes your account and all data. Cannot be undone.', async () => {
     try {
       await db.ref('users/' + CU).remove();
       if (currentProfile && currentProfile.username) await db.ref('usernames/' + currentProfile.username).remove();
@@ -801,10 +916,18 @@ function startTasksListener() {
   tasksListenerFn = (snap) => {
     const val = snap.val() || {};
     cachedTasks = Object.entries(val)
-      .map(([id, d]) => ({ id, title: d.title || '', done: d.done || false, createdAt: d.createdAt || 0 }))
+      .map(([id, d]) => ({
+        id,
+        title: d.title || '',
+        done: d.done || false,
+        createdAt: d.createdAt || 0,
+        dueDate: d.dueDate || '',
+        dueTime: d.dueTime || ''
+      }))
       .sort((a, b) => a.createdAt - b.createdAt);
     renderTasksSlide();
     renderOverviewTasks();
+    scheduleTaskNotifications();
   };
   tasksListenerRef.on('value', tasksListenerFn);
 }
@@ -823,62 +946,86 @@ function setTaskFilter(f) {
   renderTasksSlide();
 }
 
+function formatTaskDue(dueDate, dueTime) {
+  if (!dueDate) return null;
+  const today = todayKey();
+  const now = new Date();
+  const tomorrowD = new Date(); tomorrowD.setDate(tomorrowD.getDate()+1);
+  const tomorrow = tomorrowD.getFullYear()+'-'+String(tomorrowD.getMonth()+1).padStart(2,'0')+'-'+String(tomorrowD.getDate()).padStart(2,'0');
+  const nowTime = String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  const isPast = dueDate < today || (dueDate === today && dueTime && dueTime < nowTime);
+  let label = '';
+  if (dueDate === today) label = 'Today';
+  else if (dueDate === tomorrow) label = 'Tomorrow';
+  else { const dt = new Date(dueDate+'T00:00:00'); label = dt.toLocaleDateString('en-GB',{day:'numeric',month:'short'}); }
+  if (dueTime) label += ' · ' + dueTime;
+  return { label, isPast };
+}
+
 function renderTasksSlide() {
   let list = [...cachedTasks];
   if (taskFilter === 'pending') list = list.filter(t => !t.done);
   if (taskFilter === 'done')    list = list.filter(t =>  t.done);
-
   const el = document.getElementById('tasksList2');
   if (!el) return;
-
   if (!list.length) {
     const msgs = { all:'No tasks yet. Add one above ↑', pending:'All caught up! ✓', done:'No completed tasks yet.' };
     el.innerHTML = `<div style="text-align:center;opacity:.28;padding:30px 0;"><div style="font-size:30px;margin-bottom:9px;">${taskFilter==='done'?'○':'✓'}</div><p style="font-size:12px;line-height:1.6;">${msgs[taskFilter]}</p></div>`;
   } else {
-    el.innerHTML = list.map(t => `
-      <div class="task2-item${t.done?' done2':''}">
+    el.innerHTML = list.map(t => {
+      const due = formatTaskDue(t.dueDate, t.dueTime);
+      return `<div class="task2-item${t.done?' done2':''}">
         <div class="task2-check" onclick="toggleTask2('${t.id}')">${t.done?'✓':''}</div>
         <div style="flex:1;min-width:0;">
           <div class="task2-text">${esc(t.title)}</div>
+          ${due ? `<div class="task2-due${due.isPast&&!t.done?' overdue':''}">${due.isPast&&!t.done?'⚠ ':'📅 '}${due.label}</div>` : ''}
         </div>
         <button class="task2-del" onclick="deleteTask2('${t.id}')">✕</button>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   }
-
-  const total   = cachedTasks.length;
   const pending = cachedTasks.filter(t => !t.done).length;
-  const done    = cachedTasks.filter(t => t.done).length;
+  const done    = cachedTasks.filter(t =>  t.done).length;
   const countEl = document.getElementById('tasksFooterCount');
   if (countEl) countEl.textContent = `${pending} pending · ${done} done`;
 }
 
 function renderOverviewTasks() {
-  const total   = cachedTasks.length;
-  const pending = cachedTasks.filter(t => !t.done).length;
   const totalEl = document.getElementById('statTotal');
   const pendEl  = document.getElementById('statActive');
-  if (totalEl) totalEl.textContent = total;
-  if (pendEl)  pendEl.textContent  = pending;
-
-  // Recent tasks in overview
+  if (totalEl) totalEl.textContent = cachedTasks.length;
+  if (pendEl)  pendEl.textContent  = cachedTasks.filter(t => !t.done).length;
   const recent = [...cachedTasks].filter(t => !t.done).slice(-3).reverse();
   const el = document.getElementById('recentList');
   if (!el) return;
-  if (!recent.length) {
-    el.innerHTML = `<div style="opacity:.3;font-size:12px">No pending tasks.</div>`;
-    return;
+  if (!recent.length) { el.innerHTML = `<div style="opacity:.3;font-size:12px">No pending tasks.</div>`; return; }
+  el.innerHTML = recent.map(t => `<div class="recent-item"><span>${esc(t.title)}</span><span class="recent-tag">Pending</span></div>`).join('');
+}
+
+function toggleTaskDueRow() {
+  taskDueRowVisible = !taskDueRowVisible;
+  const row = document.getElementById('taskDueRow');
+  const btn = document.getElementById('taskDueToggle');
+  if (row) row.classList.toggle('visible', taskDueRowVisible);
+  if (btn) btn.classList.toggle('active', taskDueRowVisible);
+  if (!taskDueRowVisible) {
+    const d = document.getElementById('taskDueDate'); if (d) d.value = '';
+    const t = document.getElementById('taskDueTime'); if (t) t.value = '';
   }
-  el.innerHTML = recent.map(t =>
-    `<div class="recent-item"><span>${esc(t.title)}</span><span class="recent-tag">Pending</span></div>`
-  ).join('');
 }
 
 async function addQuickTask() {
   const inp = document.getElementById('quickTaskInput');
   const title = inp.value.trim(); if (!title) return;
+  const dueDate = document.getElementById('taskDueDate')?.value || '';
+  const dueTime = document.getElementById('taskDueTime')?.value || '';
   inp.value = '';
+  if (taskDueRowVisible) toggleTaskDueRow();
   try {
-    await db.ref('users/' + CU + '/tasks').push({ title, done: false, createdAt: Date.now() });
+    const taskData = { title, done: false, createdAt: Date.now() };
+    if (dueDate) taskData.dueDate = dueDate;
+    if (dueTime) taskData.dueTime = dueTime;
+    await db.ref('users/' + CU + '/tasks').push(taskData);
   } catch(e) { showToast('Could not save task.'); }
 }
 
@@ -908,13 +1055,11 @@ async function sendAI() {
   const prompt = inp.value.trim(); if (!prompt) return;
   const btn = document.getElementById('aiSendBtn'), resp = document.getElementById('aiResponse');
   btn.disabled = true; btn.textContent = '…'; resp.textContent = 'Thinking…';
-
   const pending = cachedTasks.filter(t => !t.done).length;
   const done    = cachedTasks.filter(t =>  t.done).length;
-  const taskCtx = `Tasks: ${cachedTasks.length} total, ${pending} pending, ${done} done. Pending: ${cachedTasks.filter(t=>!t.done).map(t=>'"'+t.title+'"').join(', ')||'none'}.`;
+  const taskCtx  = `Tasks: ${cachedTasks.length} total, ${pending} pending, ${done} done. Pending: ${cachedTasks.filter(t=>!t.done).map(t=>'"'+t.title+'"').join(', ')||'none'}.`;
   const salesCtx = `Today's sales: ${cachedSales.length} transactions, Ksh ${cachedSales.reduce((s,e)=>s+(e.price*e.qty),0).toLocaleString()}.`;
-  const profCtx = currentProfile ? `Outlet: ${currentProfile.outlet||'—'}. Brand: ${currentProfile.brand||'—'}. Target: Ksh ${currentProfile.branchTarget||'0'}.` : '';
-
+  const profCtx  = currentProfile ? `Outlet: ${currentProfile.outlet||'—'}. Brand: ${currentProfile.brand||'—'}. Target: Ksh ${currentProfile.branchTarget||'0'}.` : '';
   const apiKey = (currentProfile||{}).apiKey||'';
   if (!apiKey) {
     resp.textContent = 'Add your Gemini API key in My Profile to enable the AI assistant.';
@@ -923,13 +1068,11 @@ async function sendAI() {
   try {
     const res = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      { method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
-          system_instruction: { parts: [{ text: `You are a concise workspace assistant. ${taskCtx} ${salesCtx} ${profCtx}` }] },
-          contents: [{ role: 'user', parts: [{ text: prompt }] }],
-          generationConfig: { maxOutputTokens: 1000 }
+          system_instruction: { parts:[{ text:`You are a concise workspace assistant. ${taskCtx} ${salesCtx} ${profCtx}` }] },
+          contents:[{ role:'user', parts:[{ text:prompt }] }],
+          generationConfig:{ maxOutputTokens:1000 }
         })
       }
     );
@@ -952,13 +1095,30 @@ function initSalesListener() {
   const ref = db.ref('users/' + CU + '/sales/' + key);
   ref.on('value', snap => {
     const data = snap.val() || {};
-    cachedSales = Object.entries(data)
-      .map(([id, v]) => ({id, ...v}))
-      .sort((a, b) => a.order - b.order);
+    cachedSales = Object.entries(data).map(([id, v]) => ({id, ...v})).sort((a,b) => a.order - b.order);
     renderSalesLog();
     renderOverviewSales();
   });
   salesUnsubscribe = () => ref.off();
+}
+
+function renderProgressBar() {
+  const target = parseFloat((currentProfile||{}).branchTarget) || 0;
+  const wrap = document.getElementById('progressWrap');
+  if (!wrap) return;
+  if (!target) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  const total  = cachedSales.reduce((s,e) => s + (e.price * e.qty), 0);
+  const rawPct = (total / target) * 100;
+  const pct    = Math.min(rawPct, 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent  = rawPct.toFixed(1) + '%';
+  document.getElementById('progressSub').textContent  = `Ksh ${total.toLocaleString()} of Ksh ${target.toLocaleString()}`;
+  const fill = document.getElementById('progressFill');
+  if (rawPct >= 100)     fill.style.background = 'rgba(60,180,100,.85)';
+  else if (rawPct >= 80) fill.style.background = 'rgba(90,160,120,.8)';
+  else if (rawPct >= 50) fill.style.background = 'rgba(200,160,60,.8)';
+  else                   fill.style.background = 'rgba(128,128,128,.45)';
 }
 
 function renderSalesLog() {
@@ -970,10 +1130,11 @@ function renderSalesLog() {
   dateEl.textContent = new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
   if (!cachedSales.length) {
     list.innerHTML = '<div style="text-align:center;opacity:.28;margin:auto;padding:18px 0;"><div style="font-size:28px;margin-bottom:8px;">₭</div><p style="font-size:12px;">No sales logged today.</p></div>';
-    totalEl.textContent = 'Ksh 0'; countEl.textContent = '0 transactions'; return;
+    totalEl.textContent = 'Ksh 0'; countEl.textContent = '0 transactions';
+    renderProgressBar(); return;
   }
   list.innerHTML = cachedSales.map((s,i) => `
-    <div class="sale-item">
+    <div class="sale-item${editingSaleId===s.id?' sale-editing':''}">
       <div class="sale-num">${i+1}</div>
       <div class="sale-info">
         <div class="sale-name">${esc(s.item)}</div>
@@ -981,12 +1142,16 @@ function renderSalesLog() {
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
         <div class="sale-total">Ksh ${(s.price * s.qty).toLocaleString()}</div>
-        <button class="sale-del" onclick="deleteSale('${s.id}')">✕</button>
+        <div style="display:flex;gap:6px;">
+          <button class="sale-edit-btn" onclick="editSale('${s.id}')">✎</button>
+          <button class="sale-del" onclick="deleteSale('${s.id}')">✕</button>
+        </div>
       </div>
     </div>`).join('');
   const total = cachedSales.reduce((sum,s) => sum + (s.price * s.qty), 0);
   totalEl.textContent = 'Ksh ' + total.toLocaleString();
   countEl.textContent = cachedSales.length + ' transaction' + (cachedSales.length !== 1 ? 's' : '');
+  renderProgressBar();
 }
 
 function renderOverviewSales() {
@@ -998,6 +1163,34 @@ function renderOverviewSales() {
   if (countEl) countEl.textContent = count + ' transaction' + (count !== 1 ? 's' : '');
 }
 
+// ── EDIT SALE
+function editSale(id) {
+  const s = cachedSales.find(s => s.id === id); if (!s) return;
+  editingSaleId = id;
+  document.getElementById('saleItem').value   = s.item || '';
+  document.getElementById('saleModel').value  = s.model || '';
+  document.getElementById('saleSerial').value = s.serial || '';
+  document.getElementById('salePrice').value  = s.price || '';
+  document.getElementById('saleQty').value    = s.qty || 1;
+  const submitBtn = document.getElementById('saleSubmitBtn');
+  const cancelBtn = document.getElementById('saleCancelEdit');
+  if (submitBtn) { submitBtn.textContent = '✓ Update Sale'; submitBtn.classList.add('editing'); }
+  if (cancelBtn) cancelBtn.style.display = 'block';
+  renderSalesLog();
+  document.getElementById('saleItem').focus();
+  showToast('Editing — make changes and tap Update');
+}
+
+function cancelEditSale() {
+  editingSaleId = null;
+  ['saleItem','saleModel','saleSerial','salePrice','saleQty'].forEach(id => { document.getElementById(id).value = ''; });
+  const submitBtn = document.getElementById('saleSubmitBtn');
+  const cancelBtn = document.getElementById('saleCancelEdit');
+  if (submitBtn) { submitBtn.textContent = '+ Log Sale'; submitBtn.classList.remove('editing'); }
+  if (cancelBtn) cancelBtn.style.display = 'none';
+  renderSalesLog();
+}
+
 async function addSale() {
   const item   = document.getElementById('saleItem').value.trim();
   const model  = document.getElementById('saleModel').value.trim();
@@ -1005,12 +1198,18 @@ async function addSale() {
   const price  = parseFloat(document.getElementById('salePrice').value);
   const qty    = parseInt(document.getElementById('saleQty').value) || 1;
   if (!item || isNaN(price) || price <= 0) { showToast('Item name and price are required.'); return; }
+  if (editingSaleId) {
+    try {
+      await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + editingSaleId).update({ item, model, serial, price, qty });
+      cancelEditSale();
+      showToast('Sale updated ✓');
+    } catch(e) { showToast('Update failed.'); }
+    return;
+  }
   const key   = todayKey();
   const label = new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
   try {
-    await db.ref('users/' + CU + '/sales/' + key).push({
-      item, model, serial, price, qty, order: Date.now(), createdAt: Date.now()
-    });
+    await db.ref('users/' + CU + '/sales/' + key).push({ item, model, serial, price, qty, order: Date.now(), createdAt: Date.now() });
     await db.ref('users/' + CU + '/salesArchiveMeta/' + key).set({ date: key, label });
     ['saleItem','saleModel','saleSerial','salePrice','saleQty'].forEach(id => { document.getElementById(id).value = ''; });
     showToast('Sale logged ✓');
@@ -1018,6 +1217,7 @@ async function addSale() {
 }
 
 async function deleteSale(id) {
+  if (editingSaleId === id) cancelEditSale();
   try {
     await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + id).remove();
     showToast('Sale removed.');
@@ -1027,24 +1227,18 @@ async function deleteSale(id) {
 // ── SALES REPORT
 function generateSalesReport() {
   const prof   = currentProfile || {};
-  const date   = new Date().toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-  const total  = cachedSales.reduce((s, e) => s + (e.price * e.qty), 0);
+  const date   = new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const total  = cachedSales.reduce((s,e) => s + (e.price * e.qty), 0);
   const target = parseFloat(prof.branchTarget) || 0;
   const pct    = target > 0 ? ((total / target) * 100).toFixed(1) : null;
   const line   = '─'.repeat(38);
-
-  // Header block
-  let r = '';
-  r += `DAILY SALES REPORT\n`;
-  r += `${line}\n`;
+  let r = `DAILY SALES REPORT\n${line}\n`;
   r += `Date     : ${date}\n`;
   r += `Outlet   : ${prof.outlet || '(not set)'}\n`;
   r += `Officer  : ${prof.officialNames || '(not set)'}\n`;
   r += `Brand    : ${prof.brand || '(not set)'}\n`;
   if (target > 0) r += `Target   : Ksh ${target.toLocaleString()}\n`;
   r += `${line}\n\n`;
-
-  // Transactions
   if (!cachedSales.length) {
     r += `No transactions recorded today.\n\n`;
   } else {
@@ -1059,30 +1253,19 @@ function generateSalesReport() {
     });
     r += '\n';
   }
-
-  // Summary
   r += `${line}\n`;
   r += `DAILY TOTAL  : Ksh ${total.toLocaleString()}\n`;
   r += `TRANSACTIONS : ${cachedSales.length}\n`;
-  if (target > 0) {
-    r += `TARGET       : Ksh ${target.toLocaleString()}\n`;
-    r += `ACHIEVEMENT  : ${pct}%\n`;
-  }
-  r += `${line}\n`;
-  r += `Royal Horizon Workspace`;
-
+  if (target > 0) { r += `TARGET       : Ksh ${target.toLocaleString()}\n`; r += `ACHIEVEMENT  : ${pct}%\n`; }
+  r += `${line}\nRoyal Horizon Workspace`;
   currentReportText = r;
-
-  // Check for missing work details
   const missing = [];
-  if (!prof.outlet)        missing.push('Outlet');
+  if (!prof.outlet) missing.push('Outlet');
   if (!prof.officialNames) missing.push('Official Names');
-  if (!prof.brand)         missing.push('Brand');
+  if (!prof.brand) missing.push('Brand');
   if (missing.length) showToast(`Tip: fill in ${missing.join(', ')} in Profile.`);
-
   const el = document.getElementById('reportText');
   if (el) el.textContent = r;
-
   applyOverlayTheme(document.getElementById('reportOverlay'));
   document.getElementById('reportOverlay').classList.add('open');
 }
@@ -1094,29 +1277,18 @@ function copyReport() {
   navigator.clipboard.writeText(currentReportText)
     .then(() => showToast('Copied to clipboard ✓'))
     .catch(() => {
-      // Fallback
       const ta = document.createElement('textarea');
       ta.value = currentReportText;
-      document.body.appendChild(ta);
-      ta.select(); document.execCommand('copy');
-      document.body.removeChild(ta);
-      showToast('Copied ✓');
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta); showToast('Copied ✓');
     });
 }
 
 async function shareReport() {
   if (!currentReportText) return;
   if (navigator.share) {
-    try {
-      await navigator.share({
-        title: 'Daily Sales Report',
-        text: currentReportText
-      });
-    } catch(e) { /* user cancelled */ }
-  } else {
-    copyReport();
-    showToast('Copied — paste to share.');
-  }
+    try { await navigator.share({ title:'Daily Sales Report', text:currentReportText }); } catch(e) {}
+  } else { copyReport(); showToast('Copied — paste to share.'); }
 }
 
 // ── ARCHIVE
@@ -1134,8 +1306,7 @@ function toggleArchiveSelect() {
 }
 
 function cancelArchiveSelect() {
-  archiveSelectMode = false;
-  selectedArchiveDays.clear();
+  archiveSelectMode = false; selectedArchiveDays.clear();
   document.getElementById('archSelectBar').classList.remove('visible');
   document.getElementById('archSelectBtn').style.opacity = '.7';
   renderArchiveSales();
@@ -1144,13 +1315,11 @@ function cancelArchiveSelect() {
 function toggleArchiveDaySelect(dateKey) {
   if (selectedArchiveDays.has(dateKey)) selectedArchiveDays.delete(dateKey);
   else selectedArchiveDays.add(dateKey);
-  // Update card UI without full re-render
   document.querySelectorAll('.arch-day-card').forEach(card => {
     if (card.dataset.key === dateKey) {
       const sel = selectedArchiveDays.has(dateKey);
       card.classList.toggle('arch-selected', sel);
-      const cb = card.querySelector('.arch-checkbox');
-      if (cb) cb.textContent = sel ? '✓' : '';
+      const cb = card.querySelector('.arch-checkbox'); if (cb) cb.textContent = sel ? '✓' : '';
     }
   });
 }
@@ -1164,11 +1333,8 @@ async function deleteSelectedArchive() {
       updates['users/' + CU + '/sales/' + key] = null;
       updates['users/' + CU + '/salesArchiveMeta/' + key] = null;
     });
-    try {
-      await db.ref().update(updates);
-      cancelArchiveSelect();
-      showToast('Deleted ✓');
-    } catch(e) { showToast('Delete failed.'); }
+    try { await db.ref().update(updates); cancelArchiveSelect(); showToast('Deleted ✓'); }
+    catch(e) { showToast('Delete failed.'); }
   }, 'Delete');
 }
 
@@ -1180,8 +1346,7 @@ async function deleteSingleArchiveDay(dateKey, e) {
         db.ref('users/' + CU + '/sales/' + dateKey).remove(),
         db.ref('users/' + CU + '/salesArchiveMeta/' + dateKey).remove()
       ]);
-      renderArchiveSales();
-      showToast('Removed ✓');
+      renderArchiveSales(); showToast('Removed ✓');
     } catch(e) { showToast('Delete failed.'); }
   }, 'Delete');
 }
@@ -1198,9 +1363,7 @@ async function confirmClearArchive() {
         updates['users/' + CU + '/salesArchiveMeta/' + key] = null;
       });
       if (!Object.keys(updates).length) { showToast('Nothing to clear.'); return; }
-      await db.ref().update(updates);
-      renderArchiveSales();
-      showToast('Archive cleared ✓');
+      await db.ref().update(updates); renderArchiveSales(); showToast('Archive cleared ✓');
     } catch(e) { showToast('Clear failed.'); }
   }, 'Clear All');
 }
@@ -1213,14 +1376,11 @@ async function renderArchiveSales() {
     const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
     const meta = metaSnap.val() || {};
     const today = todayKey();
-    const days = Object.values(meta)
-      .filter(d => d.date !== today)
-      .sort((a, b) => b.date.localeCompare(a.date));
+    const days = Object.values(meta).filter(d => d.date !== today).sort((a,b) => b.date.localeCompare(a.date));
     if (!days.length) {
       scroll.innerHTML = '<div style="text-align:center;opacity:.28;padding:30px 0;"><div style="font-size:26px;margin-bottom:8px;">⧉</div><p style="font-size:12px;">No past sales yet.</p></div>';
       return;
     }
-    // Render cards immediately, load totals async
     scroll.innerHTML = days.map(d => {
       const isSel = selectedArchiveDays.has(d.date);
       return `<div class="arch-day-card${isSel?' arch-selected':''}" data-key="${d.date}"
@@ -1231,16 +1391,15 @@ async function renderArchiveSales() {
           <div class="arch-day-total" id="archDayTotal-${d.date}">Loading…</div>
         </div>
         <div class="arch-card-right">
-          ${!archiveSelectMode ? `<button class="arch-del-btn" onclick="deleteSingleArchiveDay('${d.date}',event)" title="Delete">✕</button>` : ''}
+          ${!archiveSelectMode ? `<button class="arch-del-btn" onclick="deleteSingleArchiveDay('${d.date}',event)">✕</button>` : ''}
           ${!archiveSelectMode ? `<span style="opacity:.3;font-size:14px;">›</span>` : ''}
         </div>
       </div>`;
     }).join('');
-    // Load totals async
     days.forEach(async d => {
       const snap = await db.ref('users/' + CU + '/sales/' + d.date).once('value');
       const entries = Object.values(snap.val() || {});
-      const total = entries.reduce((s, e) => s + (e.price * e.qty), 0);
+      const total = entries.reduce((s,e) => s + (e.price * e.qty), 0);
       const el = document.getElementById('archDayTotal-' + d.date);
       if (el) el.textContent = `Ksh ${total.toLocaleString()} · ${entries.length} sale${entries.length!==1?'s':''}`;
     });
@@ -1250,8 +1409,7 @@ async function renderArchiveSales() {
 }
 
 async function openDayDetail(dateKey, label) {
-  currentDayDetailKey   = dateKey;
-  currentDayDetailLabel = label;
+  currentDayDetailKey = dateKey; currentDayDetailLabel = label;
   const overlay = document.getElementById('dayDetailOverlay');
   const body    = document.getElementById('dayDetailBody');
   document.getElementById('dayDetailTitle').textContent    = label;
@@ -1261,15 +1419,10 @@ async function openDayDetail(dateKey, label) {
   overlay.classList.add('open');
   try {
     const snap = await db.ref('users/' + CU + '/sales/' + dateKey).once('value');
-    const entries = Object.entries(snap.val() || {})
-      .map(([id, v]) => ({id, ...v}))
-      .sort((a, b) => a.order - b.order);
-    if (!entries.length) {
-      body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">No entries for this day.</div>';
-      return;
-    }
-    const total = entries.reduce((s, e) => s + (e.price * e.qty), 0);
-    body.innerHTML = entries.map((e, i) => `
+    const entries = Object.entries(snap.val() || {}).map(([id,v]) => ({id,...v})).sort((a,b) => a.order - b.order);
+    if (!entries.length) { body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">No entries for this day.</div>'; return; }
+    const total = entries.reduce((s,e) => s + (e.price * e.qty), 0);
+    body.innerHTML = entries.map((e,i) => `
       <div style="background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;">
         <div style="font-family:'Playfair Display';font-size:16px;font-weight:700;opacity:.3;min-width:20px;">${i+1}</div>
         <div style="flex:1;min-width:0;">
@@ -1282,9 +1435,7 @@ async function openDayDetail(dateKey, label) {
         <span style="font-size:12px;opacity:.4;text-transform:uppercase;letter-spacing:1.5px;">Total</span>
         <span style="font-family:'Playfair Display';font-size:22px;font-weight:700;">Ksh ${total.toLocaleString()}</span>
       </div>`;
-  } catch(e) {
-    body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">Failed to load.</div>';
-  }
+  } catch(e) { body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">Failed to load.</div>'; }
 }
 
 function closeDayDetail() {
@@ -1300,9 +1451,7 @@ function confirmDeleteArchiveDay() {
         db.ref('users/' + CU + '/sales/' + currentDayDetailKey).remove(),
         db.ref('users/' + CU + '/salesArchiveMeta/' + currentDayDetailKey).remove()
       ]);
-      closeDayDetail();
-      renderArchiveSales();
-      showToast('Day deleted ✓');
+      closeDayDetail(); renderArchiveSales(); showToast('Day deleted ✓');
     } catch(e) { showToast('Delete failed.'); }
   }, 'Delete');
 }
@@ -1312,39 +1461,27 @@ async function shareArchiveDayReport() {
   const prof = currentProfile || {};
   try {
     const snap = await db.ref('users/' + CU + '/sales/' + currentDayDetailKey).once('value');
-    const entries = Object.entries(snap.val() || {})
-      .map(([id, v]) => ({id, ...v}))
-      .sort((a, b) => a.order - b.order);
-    const total  = entries.reduce((s, e) => s + (e.price * e.qty), 0);
+    const entries = Object.entries(snap.val() || {}).map(([id,v]) => ({id,...v})).sort((a,b) => a.order - b.order);
+    const total  = entries.reduce((s,e) => s + (e.price * e.qty), 0);
     const target = parseFloat(prof.branchTarget) || 0;
     const pct    = target > 0 ? ((total / target) * 100).toFixed(1) : null;
     const line   = '─'.repeat(38);
     let r = `SALES REPORT — ${currentDayDetailLabel}\n${line}\n`;
-    r += `Outlet  : ${prof.outlet || '(not set)'}\n`;
-    r += `Officer : ${prof.officialNames || '(not set)'}\n`;
-    r += `Brand   : ${prof.brand || '(not set)'}\n`;
+    r += `Outlet  : ${prof.outlet || '(not set)'}\nOfficer : ${prof.officialNames || '(not set)'}\nBrand   : ${prof.brand || '(not set)'}\n`;
     if (target > 0) r += `Target  : Ksh ${target.toLocaleString()}\n`;
     r += `${line}\n\n`;
-    if (!entries.length) {
-      r += 'No transactions recorded.\n\n';
-    } else {
+    if (!entries.length) { r += 'No transactions recorded.\n\n'; }
+    else {
       r += `TRANSACTIONS (${entries.length})\n\n`;
-      entries.forEach((e, i) => {
-        r += `${i+1}. ${e.item}\n`;
-        r += `   Model : ${e.model||'—'} | S/N: ${e.serial||'—'}\n`;
-        r += `   Qty : ${e.qty} × Ksh ${Number(e.price).toLocaleString()} = Ksh ${(e.price*e.qty).toLocaleString()}\n\n`;
-      });
+      entries.forEach((e,i) => { r += `${i+1}. ${e.item}\n   Model : ${e.model||'—'} | S/N: ${e.serial||'—'}\n   Qty : ${e.qty} × Ksh ${Number(e.price).toLocaleString()} = Ksh ${(e.price*e.qty).toLocaleString()}\n\n`; });
     }
     r += `${line}\nTOTAL : Ksh ${total.toLocaleString()}\n`;
     if (pct) r += `ACHIEVEMENT : ${pct}%\n`;
     r += `${line}\nRoyal Horizon Workspace`;
     if (navigator.share) {
-      try { await navigator.share({ title: `Sales Report – ${currentDayDetailLabel}`, text: r }); }
-      catch(e) { /* cancelled */ }
+      try { await navigator.share({ title:`Sales Report – ${currentDayDetailLabel}`, text:r }); } catch(e) {}
     } else {
-      navigator.clipboard.writeText(r)
-        .then(() => showToast('Report copied ✓'))
-        .catch(() => showToast('Could not copy.'));
+      navigator.clipboard.writeText(r).then(() => showToast('Report copied ✓')).catch(() => showToast('Could not copy.'));
     }
   } catch(e) { showToast('Could not generate report.'); }
 }
@@ -1369,13 +1506,13 @@ document.getElementById('workspaceTrack').addEventListener('touchend', e => {
   }
 }, { passive:true });
 
-// ── MODALS & CONFIRM
+// ── MODALS
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 document.getElementById('confirmModal').addEventListener('click', function(e) { if(e.target===this) closeModal('confirmModal'); });
 
 function showConfirm(title, msg, onOk, btnLabel='Confirm') {
   document.getElementById('confirmTitle').textContent = title;
-  document.getElementById('confirmMsg').textContent = msg;
+  document.getElementById('confirmMsg').textContent   = msg;
   const btn = document.getElementById('confirmOkBtn');
   btn.textContent = btnLabel;
   btn.onclick = () => { closeModal('confirmModal'); onOk(); };
@@ -1386,16 +1523,8 @@ function showConfirm(title, msg, onOk, btnLabel='Confirm') {
 document.addEventListener('keydown', e => {
   if (!CU) return;
   const typing = ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName);
-  if (e.key === 'Escape') {
-    closeModal('confirmModal');
-    closeProfile();
-    closeReportOverlay();
-    closeDayDetail();
-  }
-  if (e.key === 'n' && !typing && currentSlide === 1) {
-    e.preventDefault();
-    document.getElementById('quickTaskInput').focus();
-  }
+  if (e.key === 'Escape') { closeModal('confirmModal'); closeProfile(); closeReportOverlay(); closeDayDetail(); }
+  if (e.key === 'n' && !typing && currentSlide === 1) { e.preventDefault(); document.getElementById('quickTaskInput').focus(); }
 });
 
 // ── THEME
