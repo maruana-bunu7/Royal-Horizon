@@ -1,28 +1,82 @@
-const CACHE_NAME = 'rh-cache-v8';
+// Royal Horizon — Firebase Cloud Messaging Service Worker
+// Place this file in the ROOT of your GitHub Pages repo (same folder as index.html)
 
-const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json'
+importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js');
+
+firebase.initializeApp({
+  apiKey:            "AIzaSyAaN87Ce6H5vyzTctlUocJvMAcJqPnW6zA",
+  authDomain:        "royal-horizon.firebaseapp.com",
+  databaseURL:       "https://royal-horizon-default-rtdb.firebaseio.com",
+  projectId:         "royal-horizon",
+  storageBucket:     "royal-horizon.firebasestorage.app",
+  messagingSenderId: "536841749759",
+  appId:             "1:536841749759:web:70715758286b8b269b38ca"
+});
+
+const messaging = firebase.messaging();
+
+// ── BACKGROUND MESSAGES (app closed / tab not focused) ──
+// FCM automatically shows the notification from the `notification` payload field.
+// This handler fires for data-only payloads where we build the notification manually.
+messaging.onBackgroundMessage(payload => {
+  const title = (payload.notification && payload.notification.title)
+    || (payload.data && payload.data.title)
+    || 'Royal Horizon';
+
+  const body = (payload.notification && payload.notification.body)
+    || (payload.data && payload.data.body)
+    || '';
+
+  const icon  = (payload.data && payload.data.icon)  || '/icon-192.png';
+  const badge = (payload.data && payload.data.badge) || '/icon-192.png';
+  const tag   = (payload.data && payload.data.tag)   || 'rh-notification';
+  const url   = (payload.data && payload.data.url)   || '/';
+
+  return self.registration.showNotification(title, {
+    body,
+    icon,
+    badge,
+    tag,
+    renotify: true,
+    data: { url }
+  });
+});
+
+// ── NOTIFICATION CLICK — open or focus the app ──
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  const targetUrl = (event.notification.data && event.notification.data.url) || '/';
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+      // If a tab with the app is already open, focus it
+      for (const client of windowClients) {
+        if (client.url.includes('Royal-Hori') && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      // Otherwise open a new tab
+      if (clients.openWindow) return clients.openWindow(targetUrl);
+    })
+  );
+});
+
+// ── CACHE SHELL FOR OFFLINE USE ──
+const CACHE_NAME = 'rh-shell-v1';
+const SHELL_ASSETS = [
+  './',
+  './index.html'
 ];
 
-const APP_SHELL = [
-  '/',
-  '/index.html',
-  '/manifest.json'
-];
-
-// ---- INSTALL ----
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(SHELL_ASSETS))
   );
   self.skipWaiting();
 });
 
-// ---- ACTIVATE ----
-self.addEventListener('activate', e => {
-  e.waitUntil(
+self.addEventListener('activate', event => {
+  event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
     )
@@ -30,52 +84,20 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
-// ---- FETCH ----
+// Network-first for HTML/JS, cache fallback for offline
 self.addEventListener('fetch', event => {
-  const url = event.request.url;
+  if (event.request.method !== 'GET') return;
+  const url = new URL(event.request.url);
+  // Only handle same-origin requests
+  if (url.origin !== self.location.origin) return;
 
-  // 🚫 NEVER cache Firebase or API calls
-  if (
-    url.includes('googleapis.com') ||
-    url.includes('firebaseio.com') ||
-    url.includes('firebaseapp.com') ||
-    url.includes('identitytoolkit') ||
-    url.includes('securetoken')
-  ) {
-    event.respondWith(fetch(event.request));
-    return;
-  }
-
-  // 🎨 Fonts → stale while revalidate
-  if (
-    url.includes('gstatic.com') ||
-    url.includes('fonts.googleapis.com') ||
-    url.includes('fonts.gstatic.com')
-  ) {
-    event.respondWith(
-      caches.match(event.request).then(cached => {
-        const fetchPromise = fetch(event.request).then(networkRes => {
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, networkRes.clone());
-          });
-          return networkRes;
-        });
-        return cached || fetchPromise;
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        return response;
       })
-    );
-    return;
-  }
-
-  // 🧱 App shell → cache first
-  if (APP_SHELL.some(path => url.endsWith(path))) {
-    event.respondWith(
-      caches.match(event.request).then(cached => {
-        return cached || fetch(event.request);
-      })
-    );
-    return;
-  }
-
-  // 🌐 Everything else → network only
-  event.respondWith(fetch(event.request));
+      .catch(() => caches.match(event.request))
+  );
 });
