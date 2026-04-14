@@ -26,7 +26,7 @@ h1,h2,h3,.btn-main,.btn-submit,.modal-btn,.proj-detail-title{font-family:'Playfa
 .offline-banner{position:fixed;top:0;left:0;right:0;z-index:1500;background:rgba(200,160,60,.96);color:#1a1100;text-align:center;font-size:12px;font-weight:600;padding:9px 16px;transform:translateY(-100%);transition:.35s var(--ui-curve);letter-spacing:.3px;pointer-events:none;}
 .offline-banner.visible{transform:translateY(0);}
 
-/* LOADING */
+/* LOADING — inline SVG fallback, no broken icon-192.png */
 .loading-overlay{position:fixed;inset:0;background:#000000;z-index:2000;display:flex;align-items:center;justify-content:center;}
 .loading-content{display:flex;flex-direction:column;align-items:center;gap:20px;}
 .loading-icon{width:72px;height:72px;border-radius:18px;animation:pulse 1.6s ease-in-out infinite;box-shadow:0 0 40px rgba(200,168,75,.25),0 0 80px rgba(200,168,75,.1);}
@@ -43,28 +43,23 @@ h1,h2,h3,.btn-main,.btn-submit,.modal-btn,.proj-detail-title{font-family:'Playfa
 
 /* PORTAL */
 .container{width:100%;max-width:420px;text-align:center;position:relative;z-index:10;}
-
 .portal-wordmark{margin-bottom:48px;opacity:0;transform:translateY(10px);animation:wordmarkIn .9s var(--ui-curve) .2s forwards;}
 .portal-logo-icon{font-size:34px;margin-bottom:14px;display:block;line-height:1;}
 .portal-logo-icon svg{display:block;margin:0 auto;}
 .portal-logo-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;letter-spacing:.5px;opacity:.88;}
 .portal-logo-sub{font-size:11px;text-transform:uppercase;letter-spacing:3px;opacity:.35;margin-top:4px;font-weight:400;}
 @keyframes wordmarkIn{to{opacity:1;transform:translateY(0);}}
-
 .rh-icon .rh-bg{fill:#0d0b08;transition:fill .4s;}
 body.theme-signup .rh-icon .rh-bg{fill:#1a1410;}
 @media(prefers-color-scheme:light){.rh-icon .rh-bg{fill:#1a1410;}}
-
 .selection-screen{display:flex;flex-direction:column;align-items:center;gap:14px;transition:.3s ease,transform var(--ui-speed) var(--ui-curve);}
 .selection-screen.fade-out{opacity:0;transform:scale(.97) translateY(-6px);pointer-events:none;}
-
 .btn-main{width:100%;max-width:280px;padding:17px 40px;border:none;border-radius:16px;font-size:15px;font-weight:600;cursor:pointer;transition:.28s var(--ui-curve);letter-spacing:.3px;position:relative;overflow:hidden;}
 .btn-main::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.07);opacity:0;transition:.2s;}
 .btn-main:hover::after{opacity:1;}
 .btn-main:active{transform:scale(.97);}
 .btn-login{background:#000000;color:#f0f0f0;box-shadow:0 8px 28px rgba(0,0,0,.32),0 2px 8px rgba(0,0,0,.18),0 0 0 1px rgba(200,168,75,.15);}
 .btn-signup{background:rgba(240,240,240,.92);color:#1a1a1a;box-shadow:0 8px 28px rgba(0,0,0,.1),0 2px 6px rgba(0,0,0,.07);border:1px solid rgba(200,200,200,.5);}
-
 .portal-btn-divider{font-size:10px;text-transform:uppercase;letter-spacing:2.5px;opacity:.3;margin:0;}
 .form-wrapper{position:absolute;top:50%;left:50%;transform:translate(-50%,-45%);width:90%;opacity:0;visibility:hidden;transition:.4s var(--ui-curve);}
 .form-wrapper.active{opacity:1;visibility:visible;transform:translate(-50%,-50%);}
@@ -89,11 +84,24 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .theme-toggle{cursor:pointer;font-size:22px;opacity:.5;transition:.2s;}
 .theme-toggle:hover{opacity:1;}
 
+/* ── GREETING ── */
+/* light mode: greeting text must be dark & readable */
+body.theme-signup .header-row h1{color:#1a1a1a;}
+body.theme-signup .theme-toggle{color:#1a1a1a;}
+body.theme-signup .avatar-btn{color:#1a1a1a !important;}
+
 /* CAROUSEL */
 .carousel-container{width:100%;height:75vh;display:flex;align-items:center;overflow:visible;padding:0 10%;}
 .workspace-track{display:flex;gap:30px;transition:transform var(--slide-speed) var(--slide-curve);will-change:transform;}
 .workspace-card{min-width:80vw;height:65vh;background:rgba(128,128,128,.08);backdrop-filter:blur(15px);border:1px solid rgba(128,128,128,.15);border-radius:40px;padding:35px;opacity:.15;transform:scale(.92);transition:opacity var(--slide-speed) var(--slide-curve),transform var(--slide-speed) var(--slide-curve);display:flex;flex-direction:column;}
 .workspace-card.active{opacity:1;transform:scale(1);background:rgba(0,0,0,.45);border-color:var(--gold-border);box-shadow:0 0 0 1px var(--gold-border),0 8px 40px var(--gold-glow),0 2px 12px rgba(0,0,0,.25);}
+
+/* SLIDE INDICATOR DOTS */
+.slide-dots{position:absolute;bottom:112px;left:50%;transform:translateX(-50%);display:flex;gap:7px;align-items:center;z-index:10;}
+.slide-dot{width:6px;height:6px;border-radius:50%;background:rgba(200,168,75,.3);transition:.35s var(--ui-curve);cursor:pointer;}
+.slide-dot.active{width:18px;border-radius:3px;background:var(--gold);}
+body.theme-signup .slide-dot{background:rgba(100,80,20,.22);}
+body.theme-signup .slide-dot.active{background:#a07818;}
 
 /* ── OVERVIEW SLIDE ── */
 .overview-stats{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:12px;}
@@ -122,6 +130,15 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .monthly-earned{font-family:'Playfair Display';font-size:14px;font-weight:700;opacity:.85;}
 .monthly-target-lbl{font-size:10px;opacity:.38;letter-spacing:.3px;}
 .monthly-status-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle;}
+
+/* WOW text for week-over-week */
+.wow-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:10px;background:rgba(90,190,130,.12);border:1px solid rgba(90,190,130,.28);color:rgba(90,190,130,.9);letter-spacing:.3px;margin-left:6px;}
+.wow-badge.negative{background:rgba(220,80,80,.1);border-color:rgba(220,80,80,.22);color:rgba(220,80,80,.85);}
+body.theme-signup .wow-badge{background:rgba(40,130,80,.1);border-color:rgba(40,130,80,.25);color:rgba(30,110,60,.9);}
+body.theme-signup .wow-badge.negative{background:rgba(180,40,40,.08);border-color:rgba(180,40,40,.2);color:rgba(160,30,30,.85);}
+
+/* Monthly projection */
+.monthly-projection{font-size:10px;opacity:.45;letter-spacing:.3px;margin-top:4px;}
 
 /* TASKS */
 .task-quick-add{display:flex;gap:8px;margin-bottom:8px;}
@@ -152,6 +169,12 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .tasks-footer-count{font-size:11px;opacity:.4;letter-spacing:.4px;}
 .clear-done-btn{font-size:11px;opacity:.35;background:none;border:none;color:inherit;cursor:pointer;transition:.2s;padding:3px 8px;border-radius:8px;}
 .clear-done-btn:hover{opacity:.8;background:rgba(128,128,128,.1);}
+
+/* EMPTY STATE — Playfair quote */
+.empty-state-quote{text-align:center;opacity:.28;padding:24px 8px;}
+.empty-state-quote .eq-icon{font-size:26px;margin-bottom:8px;}
+.empty-state-quote .eq-text{font-family:'Playfair Display',serif;font-size:13px;font-style:italic;line-height:1.6;opacity:.85;}
+.empty-state-quote .eq-attr{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;margin-top:6px;opacity:.55;}
 
 /* ── SALES LOG SLIDE ── */
 .sales-hero{flex-shrink:0;display:flex;align-items:center;gap:16px;background:rgba(0,0,0,.3);border:1px solid rgba(128,128,128,.1);border-left:2px solid var(--gold-border);border-radius:20px;padding:14px 16px;margin-bottom:10px;}
@@ -336,13 +359,14 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
 .lsf-cat-option-group{font-size:9px;opacity:.35;text-transform:uppercase;letter-spacing:.8px;margin-top:1px;}
 .sale-cat-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:2px 7px;border-radius:8px;background:rgba(128,128,128,.12);border:1px solid rgba(128,128,128,.18);opacity:.75;margin-left:5px;vertical-align:middle;}
 
-/* SALES BAR CHART */
+/* SALES BAR CHART — gold gradient for past, green for today */
 .sales-chart-wrap{flex-shrink:0;background:rgba(0,0,0,.3);border:1px solid rgba(128,128,128,.1);border-radius:18px;padding:12px 14px;margin-bottom:10px;}
 .sales-chart-title{font-size:10px;text-transform:uppercase;letter-spacing:1.4px;opacity:.4;margin-bottom:10px;}
 .sales-chart-bars{display:flex;align-items:flex-end;gap:5px;height:60px;}
 .sales-chart-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
-.sales-chart-bar{width:100%;border-radius:5px 5px 0 0;transition:height .7s cubic-bezier(0.4,0,0.2,1),background .4s;min-height:3px;background:rgba(128,128,128,.35);}
+.sales-chart-bar{width:100%;border-radius:5px 5px 0 0;transition:height .7s cubic-bezier(0.4,0,0.2,1),background .4s;min-height:3px;background:linear-gradient(180deg,#e8cc80 0%,#c8a84b 55%,#9a7020 100%);}
 .sales-chart-bar.today{background:rgba(90,190,130,.75);}
+.sales-chart-bar.zero{background:rgba(128,128,128,.2);}
 .sales-chart-lbl{font-size:9px;opacity:.38;letter-spacing:.3px;white-space:nowrap;}
 .sales-chart-val{font-size:9px;font-weight:600;opacity:.5;white-space:nowrap;}
 
@@ -355,9 +379,7 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
 .day-detail-overlay{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;transition:.4s var(--ui-curve);transform:translateY(100%);opacity:0;pointer-events:none;overflow:hidden;}
 .day-detail-overlay.open{transform:translateY(0);opacity:1;pointer-events:all;}
 
-/* ══ LIGHT MODE (theme-signup) OVERRIDES ══
-   All dark rgba(0,0,0,x) surfaces become warm white/paper tones.
-   Borders use soft warm-grey. Text hierarchy uses true dark ink.      */
+/* ══ LIGHT MODE (theme-signup) OVERRIDES ══ */
 body.theme-signup {
   --lm-card:rgba(255,255,255,.72);
   --lm-card-border:rgba(180,170,155,.28);
@@ -367,10 +389,10 @@ body.theme-signup {
   --lm-dock:rgba(255,255,255,.88);
 }
 
-/* Main workspace card */
+/* Main workspace card — light mode needs visible card bg */
 body.theme-signup .workspace-card {
-  background: var(--lm-card);
-  border-color: var(--lm-card-border);
+  background: rgba(255,255,255,.45);
+  border-color: rgba(180,170,155,.35);
   color: #1a1a1a;
 }
 body.theme-signup .workspace-card.active {
@@ -379,8 +401,24 @@ body.theme-signup .workspace-card.active {
   box-shadow: 0 0 0 1px var(--gold-border), 0 8px 40px rgba(200,168,75,.14), 0 2px 16px rgba(0,0,0,.08);
   color: #1a1a1a;
 }
+/* inactive cards on light: legible but clearly dimmed */
+body.theme-signup .workspace-card:not(.active) {
+  opacity: .45;
+  background: rgba(255,255,255,.55);
+}
 
-/* Sales hero & chart panels — dark blobs → warm paper */
+/* Ensure all text inside cards is dark on light mode */
+body.theme-signup .workspace-card h2,
+body.theme-signup .workspace-card h3,
+body.theme-signup .stat-number,
+body.theme-signup .sale-name,
+body.theme-signup .arch-day-date,
+body.theme-signup .monthly-earned,
+body.theme-signup .sales-hero-total {
+  color: #1a1a1a;
+}
+
+/* Sales hero & chart panels */
 body.theme-signup .sales-hero {
   background: var(--lm-inner);
   border-color: var(--lm-inner-border);
@@ -415,12 +453,13 @@ body.theme-signup .stat-box {
   box-shadow: 0 1px 4px rgba(0,0,0,.06);
 }
 
-/* Donut bg stroke — lighter for light mode */
+/* Donut bg stroke */
 body.theme-signup .sales-donut-bg { stroke: rgba(180,170,155,.3); }
 
-/* Chart bars */
-body.theme-signup .sales-chart-bar { background: rgba(160,150,135,.3); }
+/* Chart bars — gold gradient for past, green today */
+body.theme-signup .sales-chart-bar { background: linear-gradient(180deg,#d4b050 0%,#a07818 100%); }
 body.theme-signup .sales-chart-bar.today { background: rgba(60,160,100,.65); }
+body.theme-signup .sales-chart-bar.zero { background: rgba(180,170,155,.25); }
 
 /* Floating dock */
 body.theme-signup .floating-dock {
@@ -428,22 +467,27 @@ body.theme-signup .floating-dock {
   border-color: var(--gold-border);
   box-shadow: 0 8px 32px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.07), 0 0 0 1px var(--gold-dim);
 }
-body.theme-signup .dock-item { color: #1a1a1a; }
-body.theme-signup .dock-item.active { background: var(--gold-dim); }
+body.theme-signup .dock-item { color: #2a1e00; }
+body.theme-signup .dock-item.active { background: var(--gold-dim); color: #1a1a1a; }
+body.theme-signup .dock-item:not(.active) { opacity: .45; }
 body.theme-signup .dock-item.active svg { filter: drop-shadow(0 0 3px rgba(160,120,20,.35)); }
+body.theme-signup .slide-dot { background: rgba(100,80,20,.2); }
+body.theme-signup .slide-dot.active { background: #a07818; }
 
 /* Log sale bottom bar */
 body.theme-signup .sales-log-btn {
   background: rgba(255,255,255,.6);
   border-color: rgba(180,170,155,.3);
+  color: #1a1a1a;
 }
 body.theme-signup .sales-log-btn:hover { background: rgba(255,255,255,.85); }
 body.theme-signup .sales-report-btn {
   background: rgba(90,160,120,.1);
   border-color: rgba(90,160,120,.28);
+  color: #1a1a1a;
 }
 
-/* Section/label text — less washed out on white */
+/* Section / label text */
 body.theme-signup .stat-label,
 body.theme-signup .section-lbl,
 body.theme-signup .sales-hero-sub,
@@ -452,7 +496,14 @@ body.theme-signup .monthly-hero-label,
 body.theme-signup .lsf-label,
 body.theme-signup .profile-label,
 body.theme-signup .profile-section-title,
-body.theme-signup .dock-lbl {
+body.theme-signup .dock-lbl,
+body.theme-signup .sales-chart-lbl,
+body.theme-signup .recent-tag,
+body.theme-signup .sale-meta,
+body.theme-signup .arch-day-total,
+body.theme-signup .tasks-footer-count,
+body.theme-signup .monthly-target-lbl,
+body.theme-signup .monthly-projection {
   color: var(--lm-sub-text);
   opacity: 1;
 }
@@ -462,18 +513,20 @@ body.theme-signup .profile-section-card {
   background: rgba(255,255,255,.62);
   border-color: var(--lm-card-border);
 }
+body.theme-signup .profile-static { color: #2a241e; opacity: 1; }
+body.theme-signup .profile-id-name { color: #1a1a1a; }
+body.theme-signup .profile-id-meta { color: #5a5448; opacity: 1; }
 
 /* Add btn */
 body.theme-signup .add-btn {
   background: rgba(180,170,155,.18);
   border-color: rgba(180,170,155,.28);
+  color: #2a241e;
 }
 
-/* Tasks footer border */
+/* Tasks & borders */
 body.theme-signup .tasks-footer { border-top-color: rgba(180,170,155,.22); }
-
-/* Sales/task item bottom borders */
-body.theme-signup .recent-item { border-bottom-color: rgba(180,170,155,.2); }
+body.theme-signup .recent-item { border-bottom-color: rgba(180,170,155,.2); color: #1a1a1a; }
 body.theme-signup .sales-bottom-bar { border-top-color: rgba(180,170,155,.22); }
 
 /* Task filter pills */
@@ -487,15 +540,30 @@ body.theme-signup .task-filter-pill.active {
   color: #1a1a1a;
 }
 
-/* Avatar border stays gold, just tweak glow */
+/* Task items in light mode */
+body.theme-signup .task2-text { color: #1a1a1a; }
+body.theme-signup .task2-due { color: #5a5448; }
+body.theme-signup .task2-check { border-color: rgba(100,80,30,.3); }
+body.theme-signup .task2-item.done2 .task2-check { background: rgba(160,140,80,.35); }
+
+/* Sale total light */
+body.theme-signup .sale-total { color: #1a1a1a; }
+body.theme-signup .sale-num { color: #5a5448; }
+body.theme-signup .sales-donut-center { color: #1a1a1a; }
+body.theme-signup .today-sales-strip { color: #1a1a1a; }
+body.theme-signup #overviewSalesTotal { color: #1a1a1a; }
+
+/* Avatar */
 body.theme-signup .avatar-btn {
   border-color: var(--gold-border);
   box-shadow: 0 2px 8px rgba(0,0,0,.12);
 }
 
-/* Monthly pct — gold still works, but darken a touch */
+/* Monthly pct */
 body.theme-signup .monthly-hero-pct { color: #a07818; }
 body.theme-signup .monthly-fill { background: linear-gradient(90deg, #8a6010, #b8942e, #d4b050); }
+body.theme-signup .monthly-earned { color: #1a1a1a; }
+body.theme-signup .monthly-hero-label { color: #5a5448; opacity: 1; }
 
 /* Modal on light bg */
 body.theme-signup .modal-input {
@@ -511,6 +579,16 @@ body.theme-signup .report-pre {
   color: #2a241e;
 }
 
+/* Archive light */
+body.theme-signup .arch-day-card {
+  background: rgba(255,255,255,.65);
+  border-color: rgba(180,170,155,.25);
+}
+body.theme-signup .arch-day-card:hover { background: rgba(255,255,255,.9); }
+
+/* Empty state quote light */
+body.theme-signup .empty-state-quote { color: #5a5448; }
+
 /* Scrollbar thumb */
 body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35); }
 </style>
@@ -520,10 +598,30 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
 <!-- OFFLINE BANNER -->
 <div class="offline-banner" id="offlineBanner">⚡ Offline — changes will sync when reconnected</div>
 
-<!-- LOADING -->
+<!-- LOADING — inline SVG so no broken image on first load -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="loading-content">
-    <img src="icon-192.png" class="loading-icon" alt="Royal Horizon" width="72" height="72">
+    <svg class="loading-icon" width="72" height="72" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" style="border-radius:18px;">
+      <defs>
+        <radialGradient id="lBg" cx="50%" cy="38%" r="70%"><stop offset="0%" stop-color="#1e1a12"/><stop offset="45%" stop-color="#0e0c08"/><stop offset="100%" stop-color="#060504"/></radialGradient>
+        <radialGradient id="lSph" cx="38%" cy="32%" r="65%"><stop offset="0%" stop-color="#fffbe8"/><stop offset="18%" stop-color="#f5d97a"/><stop offset="50%" stop-color="#c8a84b"/><stop offset="78%" stop-color="#7a5e1a"/><stop offset="100%" stop-color="#3a2900"/></radialGradient>
+        <radialGradient id="lRim" cx="50%" cy="50%" r="50%"><stop offset="60%" stop-color="transparent"/><stop offset="85%" stop-color="#c8a84b" stop-opacity="0.3"/><stop offset="100%" stop-color="#e8c96a" stop-opacity="0.5"/></radialGradient>
+        <linearGradient id="lA1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#c8a84b" stop-opacity="0.15"/><stop offset="50%" stop-color="#fff8e1" stop-opacity="1"/><stop offset="100%" stop-color="#c8a84b" stop-opacity="0.15"/></linearGradient>
+        <linearGradient id="lHG" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f5e090"/><stop offset="40%" stop-color="#c8a84b"/><stop offset="100%" stop-color="#7a5e1a"/></linearGradient>
+        <filter id="lSG" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="18" result="b"/><feComposite in="SourceGraphic" in2="b" operator="over"/></filter>
+        <filter id="lAM" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="35"/></filter>
+      </defs>
+      <rect width="1024" height="1024" fill="url(#lBg)"/>
+      <ellipse cx="512" cy="610" rx="200" ry="60" fill="#c8a84b" opacity="0.22" filter="url(#lAM)"/>
+      <path d="M 302 620 A 210 112 0 0 1 722 620" fill="none" stroke="url(#lA1)" stroke-width="3.5"/>
+      <circle cx="512" cy="460" r="112" fill="url(#lSph)" filter="url(#lSG)"/>
+      <circle cx="512" cy="460" r="112" fill="url(#lRim)"/>
+      <g transform="translate(512,460)" opacity="0.82">
+        <rect x="-38" y="-42" width="18" height="84" rx="4" fill="url(#lHG)" opacity="0.9"/>
+        <rect x="20" y="-42" width="18" height="84" rx="4" fill="url(#lHG)" opacity="0.9"/>
+        <rect x="-38" y="-9" width="76" height="18" rx="4" fill="url(#lHG)" opacity="0.9"/>
+      </g>
+    </svg>
     <div class="loading-wordmark">Royal Horizon</div>
   </div>
 </div>
@@ -541,100 +639,33 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
   <svg class="rh-icon" width="64" height="64" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <clipPath id="rhSq"><rect class="rh-bg" width="1024" height="1024" rx="230" ry="230"/></clipPath>
-      <radialGradient id="rhBg" cx="50%" cy="38%" r="70%">
-        <stop offset="0%"   stop-color="#1e1a12"/>
-        <stop offset="45%"  stop-color="#0e0c08"/>
-        <stop offset="100%" stop-color="#060504"/>
-      </radialGradient>
-      <radialGradient id="rhTl" cx="50%" cy="0%" r="60%">
-        <stop offset="0%"  stop-color="#c8a84b" stop-opacity="0.12"/>
-        <stop offset="100%" stop-color="#c8a84b" stop-opacity="0"/>
-      </radialGradient>
-      <radialGradient id="rhSph" cx="38%" cy="32%" r="65%">
-        <stop offset="0%"   stop-color="#fffbe8"/>
-        <stop offset="18%"  stop-color="#f5d97a"/>
-        <stop offset="50%"  stop-color="#c8a84b"/>
-        <stop offset="78%"  stop-color="#7a5e1a"/>
-        <stop offset="100%" stop-color="#3a2900"/>
-      </radialGradient>
-      <radialGradient id="rhRim" cx="50%" cy="50%" r="50%">
-        <stop offset="60%"  stop-color="transparent"/>
-        <stop offset="85%"  stop-color="#c8a84b" stop-opacity="0.3"/>
-        <stop offset="100%" stop-color="#e8c96a" stop-opacity="0.5"/>
-      </radialGradient>
-      <linearGradient id="rhA1" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%"   stop-color="#c8a84b" stop-opacity="0.15"/>
-        <stop offset="35%"  stop-color="#e8c96a" stop-opacity="0.9"/>
-        <stop offset="50%"  stop-color="#fff8e1" stop-opacity="1"/>
-        <stop offset="65%"  stop-color="#e8c96a" stop-opacity="0.9"/>
-        <stop offset="100%" stop-color="#c8a84b" stop-opacity="0.15"/>
-      </linearGradient>
-      <linearGradient id="rhA2" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%"   stop-color="#c8a84b" stop-opacity="0.1"/>
-        <stop offset="35%"  stop-color="#d4a93c" stop-opacity="0.75"/>
-        <stop offset="50%"  stop-color="#f0d87a" stop-opacity="0.9"/>
-        <stop offset="65%"  stop-color="#d4a93c" stop-opacity="0.75"/>
-        <stop offset="100%" stop-color="#c8a84b" stop-opacity="0.1"/>
-      </linearGradient>
-      <linearGradient id="rhA3" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%"   stop-color="#c8a84b" stop-opacity="0.05"/>
-        <stop offset="50%"  stop-color="#d4a93c" stop-opacity="0.7"/>
-        <stop offset="100%" stop-color="#c8a84b" stop-opacity="0.05"/>
-      </linearGradient>
-      <linearGradient id="rhHL" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%"   stop-color="#c8a84b" stop-opacity="0"/>
-        <stop offset="50%"  stop-color="#e8c96a" stop-opacity="1"/>
-        <stop offset="100%" stop-color="#c8a84b" stop-opacity="0"/>
-      </linearGradient>
-      <linearGradient id="rhHG" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%"  stop-color="#f5e090"/>
-        <stop offset="40%" stop-color="#c8a84b"/>
-        <stop offset="100%" stop-color="#7a5e1a"/>
-      </linearGradient>
-      <radialGradient id="rhVig" cx="50%" cy="50%" r="70%">
-        <stop offset="55%"  stop-color="transparent"/>
-        <stop offset="100%" stop-color="#000" stop-opacity="0.55"/>
-      </radialGradient>
-      <filter id="rhSG" x="-40%" y="-40%" width="180%" height="180%">
-        <feGaussianBlur stdDeviation="18" result="b"/>
-        <feComposite in="SourceGraphic" in2="b" operator="over"/>
-      </filter>
-      <filter id="rhAG" x="-20%" y="-60%" width="140%" height="220%">
-        <feGaussianBlur stdDeviation="6" result="b"/>
-        <feComposite in="SourceGraphic" in2="b" operator="over"/>
-      </filter>
-      <filter id="rhAM" x="-80%" y="-80%" width="260%" height="260%">
-        <feGaussianBlur stdDeviation="35"/>
-      </filter>
+      <radialGradient id="rhBg" cx="50%" cy="38%" r="70%"><stop offset="0%" stop-color="#1e1a12"/><stop offset="45%" stop-color="#0e0c08"/><stop offset="100%" stop-color="#060504"/></radialGradient>
+      <radialGradient id="rhTl" cx="50%" cy="0%" r="60%"><stop offset="0%" stop-color="#c8a84b" stop-opacity="0.12"/><stop offset="100%" stop-color="#c8a84b" stop-opacity="0"/></radialGradient>
+      <radialGradient id="rhSph" cx="38%" cy="32%" r="65%"><stop offset="0%" stop-color="#fffbe8"/><stop offset="18%" stop-color="#f5d97a"/><stop offset="50%" stop-color="#c8a84b"/><stop offset="78%" stop-color="#7a5e1a"/><stop offset="100%" stop-color="#3a2900"/></radialGradient>
+      <radialGradient id="rhRim" cx="50%" cy="50%" r="50%"><stop offset="60%" stop-color="transparent"/><stop offset="85%" stop-color="#c8a84b" stop-opacity="0.3"/><stop offset="100%" stop-color="#e8c96a" stop-opacity="0.5"/></radialGradient>
+      <linearGradient id="rhA1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#c8a84b" stop-opacity="0.15"/><stop offset="35%" stop-color="#e8c96a" stop-opacity="0.9"/><stop offset="50%" stop-color="#fff8e1" stop-opacity="1"/><stop offset="65%" stop-color="#e8c96a" stop-opacity="0.9"/><stop offset="100%" stop-color="#c8a84b" stop-opacity="0.15"/></linearGradient>
+      <linearGradient id="rhA2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#c8a84b" stop-opacity="0.1"/><stop offset="35%" stop-color="#d4a93c" stop-opacity="0.75"/><stop offset="50%" stop-color="#f0d87a" stop-opacity="0.9"/><stop offset="65%" stop-color="#d4a93c" stop-opacity="0.75"/><stop offset="100%" stop-color="#c8a84b" stop-opacity="0.1"/></linearGradient>
+      <linearGradient id="rhA3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#c8a84b" stop-opacity="0.05"/><stop offset="50%" stop-color="#d4a93c" stop-opacity="0.7"/><stop offset="100%" stop-color="#c8a84b" stop-opacity="0.05"/></linearGradient>
+      <linearGradient id="rhHL" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#c8a84b" stop-opacity="0"/><stop offset="50%" stop-color="#e8c96a" stop-opacity="1"/><stop offset="100%" stop-color="#c8a84b" stop-opacity="0"/></linearGradient>
+      <linearGradient id="rhHG" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f5e090"/><stop offset="40%" stop-color="#c8a84b"/><stop offset="100%" stop-color="#7a5e1a"/></linearGradient>
+      <radialGradient id="rhVig" cx="50%" cy="50%" r="70%"><stop offset="55%" stop-color="transparent"/><stop offset="100%" stop-color="#000" stop-opacity="0.55"/></radialGradient>
+      <filter id="rhSG" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="18" result="b"/><feComposite in="SourceGraphic" in2="b" operator="over"/></filter>
+      <filter id="rhAG" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="6" result="b"/><feComposite in="SourceGraphic" in2="b" operator="over"/></filter>
+      <filter id="rhAM" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="35"/></filter>
     </defs>
     <g clip-path="url(#rhSq)">
       <rect width="1024" height="1024" fill="url(#rhBg)"/>
       <rect width="1024" height="1024" fill="url(#rhTl)"/>
-      <g opacity="0.06" stroke="#c8a84b" stroke-width="1">
-        <line x1="512" y1="620" x2="100" y2="980"/><line x1="512" y1="620" x2="300" y2="980"/>
-        <line x1="512" y1="620" x2="512" y2="980"/><line x1="512" y1="620" x2="724" y2="980"/>
-        <line x1="512" y1="620" x2="924" y2="980"/>
-        <line x1="40" y1="780" x2="984" y2="780"/><line x1="0" y1="970" x2="1024" y2="970"/>
-      </g>
+      <g opacity="0.06" stroke="#c8a84b" stroke-width="1"><line x1="512" y1="620" x2="100" y2="980"/><line x1="512" y1="620" x2="300" y2="980"/><line x1="512" y1="620" x2="512" y2="980"/><line x1="512" y1="620" x2="724" y2="980"/><line x1="512" y1="620" x2="924" y2="980"/><line x1="40" y1="780" x2="984" y2="780"/><line x1="0" y1="970" x2="1024" y2="970"/></g>
       <ellipse cx="512" cy="610" rx="200" ry="60" fill="#c8a84b" opacity="0.22" filter="url(#rhAM)"/>
-      <g filter="url(#rhAG)">
-        <path d="M 132 620 A 380 190 0 0 1 892 620" fill="none" stroke="url(#rhA3)" stroke-width="2.5" opacity="0.85"/>
-        <path d="M 212 620 A 300 155 0 0 1 812 620" fill="none" stroke="url(#rhA2)" stroke-width="3" opacity="0.9"/>
-        <path d="M 302 620 A 210 112 0 0 1 722 620" fill="none" stroke="url(#rhA1)" stroke-width="3.5"/>
-      </g>
+      <g filter="url(#rhAG)"><path d="M 132 620 A 380 190 0 0 1 892 620" fill="none" stroke="url(#rhA3)" stroke-width="2.5" opacity="0.85"/><path d="M 212 620 A 300 155 0 0 1 812 620" fill="none" stroke="url(#rhA2)" stroke-width="3" opacity="0.9"/><path d="M 302 620 A 210 112 0 0 1 722 620" fill="none" stroke="url(#rhA1)" stroke-width="3.5"/></g>
       <line x1="80" y1="620" x2="944" y2="620" stroke="url(#rhHL)" stroke-width="1.5"/>
       <circle cx="512" cy="460" r="130" fill="#c8a84b" opacity="0.15" filter="url(#rhAM)"/>
       <circle cx="512" cy="460" r="112" fill="url(#rhSph)" filter="url(#rhSG)"/>
       <circle cx="512" cy="460" r="112" fill="url(#rhRim)"/>
       <ellipse cx="476" cy="414" rx="38" ry="24" fill="white" opacity="0.28" transform="rotate(-18,476,414)"/>
       <ellipse cx="468" cy="406" rx="11" ry="7" fill="white" opacity="0.55" transform="rotate(-18,468,406)"/>
-      <g transform="translate(512,460)" opacity="0.82">
-        <rect x="-38" y="-42" width="18" height="84" rx="4" fill="url(#rhHG)" opacity="0.9"/>
-        <rect x="20" y="-42" width="18" height="84" rx="4" fill="url(#rhHG)" opacity="0.9"/>
-        <rect x="-38" y="-9" width="76" height="18" rx="4" fill="url(#rhHG)" opacity="0.9"/>
-        <rect x="-38" y="-42" width="18" height="84" rx="4" fill="black" opacity="0.2"/>
-        <rect x="20" y="-42" width="18" height="84" rx="4" fill="black" opacity="0.2"/>
-      </g>
+      <g transform="translate(512,460)" opacity="0.82"><rect x="-38" y="-42" width="18" height="84" rx="4" fill="url(#rhHG)" opacity="0.9"/><rect x="20" y="-42" width="18" height="84" rx="4" fill="url(#rhHG)" opacity="0.9"/><rect x="-38" y="-9" width="76" height="18" rx="4" fill="url(#rhHG)" opacity="0.9"/><rect x="-38" y="-42" width="18" height="84" rx="4" fill="black" opacity="0.2"/><rect x="20" y="-42" width="18" height="84" rx="4" fill="black" opacity="0.2"/></g>
       <rect width="1024" height="1024" fill="url(#rhVig)"/>
     </g>
   </svg>
@@ -701,8 +732,12 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
           <div>
             <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;">Today's Revenue</div>
             <div style="font-size:10px;opacity:.4;margin-top:2px;" id="overviewSalesCount">0 transactions</div>
+            <div class="monthly-projection" id="monthlyProjection" style="display:none;"></div>
           </div>
-          <div style="font-family:'Playfair Display';font-size:20px;font-weight:700;" id="overviewSalesTotal">Ksh 0</div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;">
+            <div style="font-family:'Playfair Display';font-size:20px;font-weight:700;" id="overviewSalesTotal">Ksh 0</div>
+            <div id="wowBadge" style="display:none;"></div>
+          </div>
         </div>
         <div class="monthly-hero" id="monthlyHero" style="display:none;">
           <div class="monthly-hero-top">
@@ -803,31 +838,30 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
 
     </div>
   </div>
+
+  <!-- SLIDE INDICATOR DOTS -->
+  <div class="slide-dots" id="slideDots">
+    <div class="slide-dot active" onclick="moveTrack(0)"></div>
+    <div class="slide-dot" onclick="moveTrack(1)"></div>
+    <div class="slide-dot" onclick="moveTrack(2)"></div>
+    <div class="slide-dot" onclick="moveTrack(3)"></div>
+  </div>
+
   <div class="floating-dock">
     <div class="dock-item active" onclick="moveTrack(0)" title="Overview">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/>
-        <rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>
-      </svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
       <span class="dock-lbl">Overview</span>
     </div>
     <div class="dock-item" onclick="moveTrack(1)" title="Tasks">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-      </svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
       <span class="dock-lbl">Tasks</span>
     </div>
     <div class="dock-item" onclick="moveTrack(2)" title="Sales Log">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/>
-      </svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>
       <span class="dock-lbl">Sales</span>
     </div>
     <div class="dock-item" onclick="moveTrack(3)" title="Archive">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5" rx="1"/>
-        <line x1="10" y1="12" x2="14" y2="12"/>
-      </svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5" rx="1"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
       <span class="dock-lbl">Archive</span>
     </div>
   </div>
@@ -933,64 +967,23 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
       </div>
       <div class="profile-section-card">
         <div class="profile-section-title">Personal</div>
-        <div class="profile-field">
-          <label class="profile-label">Display Name</label>
-          <div class="profile-static" id="profileNameStatic"></div>
-          <input class="profile-input edit-shown" type="text" id="profileName" placeholder="Your name" style="display:none;">
-        </div>
-        <div class="profile-field">
-          <label class="profile-label">Username</label>
-          <div class="profile-static" id="profileUsernameStatic"></div>
-        </div>
-        <div class="profile-field">
-          <label class="profile-label">Email</label>
-          <div class="profile-static" id="profileEmailStatic"></div>
-        </div>
-        <div class="profile-field">
-          <label class="profile-label">Bio</label>
-          <div class="profile-static" id="profileBioStatic" style="white-space:pre-wrap;"></div>
-          <textarea class="profile-input profile-textarea edit-shown" id="profileBio" placeholder="A few words about yourself…" style="display:none;"></textarea>
-        </div>
+        <div class="profile-field"><label class="profile-label">Display Name</label><div class="profile-static" id="profileNameStatic"></div><input class="profile-input edit-shown" type="text" id="profileName" placeholder="Your name" style="display:none;"></div>
+        <div class="profile-field"><label class="profile-label">Username</label><div class="profile-static" id="profileUsernameStatic"></div></div>
+        <div class="profile-field"><label class="profile-label">Email</label><div class="profile-static" id="profileEmailStatic"></div></div>
+        <div class="profile-field"><label class="profile-label">Bio</label><div class="profile-static" id="profileBioStatic" style="white-space:pre-wrap;"></div><textarea class="profile-input profile-textarea edit-shown" id="profileBio" placeholder="A few words about yourself…" style="display:none;"></textarea></div>
       </div>
       <div class="profile-section-card">
         <div class="profile-section-title">Work Details</div>
-        <div class="profile-field">
-          <label class="profile-label">Outlet</label>
-          <div class="profile-static" id="profileOutletStatic"></div>
-          <input class="profile-input edit-shown" type="text" id="profileOutlet" placeholder="e.g. Nairobi Junction Mall" style="display:none;">
-        </div>
-        <div class="profile-field">
-          <label class="profile-label">Official Names</label>
-          <div class="profile-static" id="profileOfficialNamesStatic"></div>
-          <input class="profile-input edit-shown" type="text" id="profileOfficialNames" placeholder="Full official names" style="display:none;">
-        </div>
-        <div class="profile-field">
-          <label class="profile-label">Brand</label>
-          <div class="profile-static" id="profileBrandStatic"></div>
-          <input class="profile-input edit-shown" type="text" id="profileBrand" placeholder="e.g. Samsung, Tecno…" style="display:none;">
-        </div>
-        <div class="profile-field">
-          <label class="profile-label">Branch Target</label>
-          <div class="profile-static" id="profileBranchTargetStatic"></div>
-          <input class="profile-input edit-shown" type="number" id="profileBranchTarget" placeholder="e.g. 150000" min="0" style="display:none;">
-        </div>
+        <div class="profile-field"><label class="profile-label">Outlet</label><div class="profile-static" id="profileOutletStatic"></div><input class="profile-input edit-shown" type="text" id="profileOutlet" placeholder="e.g. Nairobi Junction Mall" style="display:none;"></div>
+        <div class="profile-field"><label class="profile-label">Official Names</label><div class="profile-static" id="profileOfficialNamesStatic"></div><input class="profile-input edit-shown" type="text" id="profileOfficialNames" placeholder="Full official names" style="display:none;"></div>
+        <div class="profile-field"><label class="profile-label">Brand</label><div class="profile-static" id="profileBrandStatic"></div><input class="profile-input edit-shown" type="text" id="profileBrand" placeholder="e.g. Samsung, Tecno…" style="display:none;"></div>
+        <div class="profile-field"><label class="profile-label">Branch Target</label><div class="profile-static" id="profileBranchTargetStatic"></div><input class="profile-input edit-shown" type="number" id="profileBranchTarget" placeholder="e.g. 150000" min="0" style="display:none;"></div>
       </div>
       <div class="profile-section-card">
         <div class="profile-section-title">Reminders & Settings</div>
-        <div class="profile-field">
-          <label class="profile-label">Morning Reminder</label>
-          <div class="profile-static" id="profileMorningReminderStatic"></div>
-          <input class="profile-input edit-shown" type="time" id="profileMorningReminder" style="display:none;">
-        </div>
-        <div class="profile-field">
-          <label class="profile-label">Evening Reminder</label>
-          <div class="profile-static" id="profileEveningReminderStatic"></div>
-          <input class="profile-input edit-shown" type="time" id="profileEveningReminder" style="display:none;">
-        </div>
-        <div class="profile-field">
-          <label class="profile-label">Member Since</label>
-          <div class="profile-static" id="profileMemberSince"></div>
-        </div>
+        <div class="profile-field"><label class="profile-label">Morning Reminder</label><div class="profile-static" id="profileMorningReminderStatic"></div><input class="profile-input edit-shown" type="time" id="profileMorningReminder" style="display:none;"></div>
+        <div class="profile-field"><label class="profile-label">Evening Reminder</label><div class="profile-static" id="profileEveningReminderStatic"></div><input class="profile-input edit-shown" type="time" id="profileEveningReminder" style="display:none;"></div>
+        <div class="profile-field"><label class="profile-label">Member Since</label><div class="profile-static" id="profileMemberSince"></div></div>
       </div>
       <button class="profile-save-btn" id="profileSaveBtn" onclick="saveProfile()" style="display:none;">Save Changes</button>
       <button class="signout-profile-btn" onclick="handleLogout()">Sign Out</button>
@@ -1097,6 +1090,32 @@ const scheduledTaskNotifs = new Set();
 let archiveCached = [];
 let archiveDirty = true;
 
+// ── Playfair empty-state quotes ──
+const EMPTY_QUOTES_SALES = [
+  { text: "Every great journey begins with a single step.", attr: "Lao Tzu" },
+  { text: "The secret of getting ahead is getting started.", attr: "Mark Twain" },
+  { text: "Small daily improvements lead to stunning results.", attr: "Robin Sharma" },
+  { text: "Success is the sum of small efforts, repeated.", attr: "Robert Collier" },
+];
+const EMPTY_QUOTES_TASKS = [
+  { text: "A goal without a plan is just a wish.", attr: "Antoine de Saint-Exupéry" },
+  { text: "Focus on being productive, not just busy.", attr: "Tim Ferriss" },
+  { text: "It always seems impossible until it's done.", attr: "Nelson Mandela" },
+];
+
+function randomQuote(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function emptyStateHTML(type) {
+  const q = type === 'sales' ? randomQuote(EMPTY_QUOTES_SALES) : randomQuote(EMPTY_QUOTES_TASKS);
+  return `<div class="empty-state-quote">
+    <div class="eq-icon">${type === 'sales' ? '₭' : '○'}</div>
+    <div class="eq-text">"${q.text}"</div>
+    <div class="eq-attr">— ${q.attr}</div>
+  </div>`;
+}
+
 function todayKey() {
   const d = new Date();
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
@@ -1120,6 +1139,13 @@ function scheduleMidnightRollover() {
       archiveDirty = true;
     }
   }, msUntilMidnight);
+}
+
+// ── Time-of-day greeting ──
+function timeGreeting(name) {
+  const h = new Date().getHours();
+  const part = h < 12 ? 'morning' : h < 18 ? 'afternoon' : 'evening';
+  return `Good ${part}, ${name || 'there'}`;
 }
 
 let authResolved = false;
@@ -1256,7 +1282,8 @@ function resetFormAnim() {
 }
 
 function loadDashboard(instant) {
-  document.getElementById('greeting').innerText = 'Welcome, ' + (currentProfile.name || 'Guest');
+  // 1. Time-of-day greeting
+  document.getElementById('greeting').innerText = timeGreeting(currentProfile.name || 'Guest');
   updateAvatar(currentProfile);
   document.getElementById('portalContainer').style.display = 'none';
   document.getElementById('loadingOverlay').style.display = 'none';
@@ -1364,6 +1391,37 @@ function scheduleTaskNotifications() {
       }
     }
   });
+}
+
+// ── Week-over-week comparison ──
+async function computeWoW() {
+  if (!CU) return null;
+  const today = new Date();
+  const dayOfWeek = today.getDay(); // 0=Sun
+  // same day last week
+  const lastWeekDate = new Date(today);
+  lastWeekDate.setDate(today.getDate() - 7);
+  const lastKey = lastWeekDate.getFullYear() + '-' + String(lastWeekDate.getMonth()+1).padStart(2,'0') + '-' + String(lastWeekDate.getDate()).padStart(2,'0');
+  try {
+    const snap = await db.ref('users/' + CU + '/sales/' + lastKey).once('value');
+    const lastTotal = Object.values(snap.val() || {}).reduce((s,e) => s + ((e.price||0)*(e.qty||1)), 0);
+    const todayTotal = cachedSales.reduce((s,e) => s + (e.price * e.qty), 0);
+    if (lastTotal === 0) return null;
+    const pct = ((todayTotal - lastTotal) / lastTotal) * 100;
+    return { pct: pct.toFixed(0), positive: pct >= 0 };
+  } catch(e) { return null; }
+}
+
+// ── Monthly projection ──
+function computeMonthlyProjection() {
+  const now = new Date();
+  const dayOfMonth = now.getDate();
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  const daysLeft = daysInMonth - dayOfMonth;
+  const todayTotal = cachedSales.reduce((s,e) => s + (e.price * e.qty), 0);
+  if (todayTotal === 0 || dayOfMonth === 0) return null;
+  const projected = Math.round((todayTotal / dayOfMonth) * daysInMonth);
+  return { projected, daysLeft };
 }
 
 async function renderMonthlyHero() {
@@ -1521,7 +1579,7 @@ async function saveProfile() {
     document.getElementById('profileBranchTargetStatic').textContent  = t > 0 ? 'Ksh ' + t.toLocaleString() : '—';
     document.getElementById('profileMorningReminderStatic').textContent = currentProfile.morningReminder || '10:00';
     document.getElementById('profileEveningReminderStatic').textContent = currentProfile.eveningReminder || '18:00';
-    document.getElementById('greeting').innerText = 'Welcome, ' + currentProfile.name;
+    document.getElementById('greeting').innerText = timeGreeting(currentProfile.name);
     updateAvatar(currentProfile);
     scheduleDailyReminders();
     renderMonthlyHero();
@@ -1600,8 +1658,7 @@ function renderTasksSlide() {
   const el = document.getElementById('tasksList2');
   if (!el) return;
   if (!list.length) {
-    const msgs = { all:'No tasks yet. Add one above ↑', pending:'All caught up! ✓', done:'No completed tasks yet.' };
-    el.innerHTML = `<div style="text-align:center;opacity:.28;padding:30px 0;"><div style="font-size:30px;margin-bottom:9px;">${taskFilter==='done'?'○':'✓'}</div><p style="font-size:12px;line-height:1.6;">${msgs[taskFilter]}</p></div>`;
+    el.innerHTML = emptyStateHTML('tasks');
   } else {
     el.innerHTML = list.map(t => {
       const due = formatTaskDue(t.dueDate, t.dueTime);
@@ -1662,6 +1719,8 @@ async function addQuickTask() {
 
 async function toggleTask2(id) {
   const t = cachedTasks.find(t => t.id === id); if (!t) return;
+  // 5. Haptic feedback on task completed
+  if (!t.done && navigator.vibrate) navigator.vibrate([10, 30, 10]);
   if (t.done) { scheduledTaskNotifs.delete(id+'_exact'); scheduledTaskNotifs.delete(id+'_early'); }
   await db.ref('users/' + CU + '/tasks/' + id).update({ done: !t.done });
 }
@@ -1718,7 +1777,7 @@ function renderSalesDonut() {
     pctText = Math.round(pct) + '%';
   } else {
     pct = Math.min(cachedSales.length * 10, 100);
-    pctText = cachedSales.length > 0 ? cachedSales.length + '' : '0';
+    pctText = cachedSales.length > 0 ? cachedSales.length + '' : '0%';
   }
   if (pct >= 100)     fillColor = 'rgba(60,200,100,.9)';
   else if (pct >= 80) fillColor = '#c8a84b';
@@ -1743,7 +1802,7 @@ function renderSalesDonut() {
   }
 }
 
-function renderSalesLog() {
+async function renderSalesLog() {
   const list   = document.getElementById('salesList');
   const dateEl = document.getElementById('salesDateLabel');
   if (!list) return;
@@ -1751,7 +1810,7 @@ function renderSalesLog() {
   renderSalesDonut();
   renderSalesBarChart();
   if (!cachedSales.length) {
-    list.innerHTML = '<div style="text-align:center;opacity:.28;margin:auto;padding:18px 0;"><div style="font-size:28px;margin-bottom:8px;">₭</div><p style="font-size:12px;">No sales logged today.</p></div>';
+    list.innerHTML = emptyStateHTML('sales');
     return;
   }
   list.innerHTML = cachedSales.map((s,i) => `
@@ -1771,13 +1830,39 @@ function renderSalesLog() {
     </div>`).join('');
 }
 
-function renderOverviewSales() {
+async function renderOverviewSales() {
   const total = cachedSales.reduce((s,e) => s + (e.price * e.qty), 0);
   const count = cachedSales.length;
   const totalEl = document.getElementById('overviewSalesTotal');
   const countEl = document.getElementById('overviewSalesCount');
   if (totalEl) totalEl.textContent = 'Ksh ' + total.toLocaleString();
   if (countEl) countEl.textContent = count + ' transaction' + (count !== 1 ? 's' : '');
+
+  // 6. Week-over-week badge
+  const wowEl = document.getElementById('wowBadge');
+  if (wowEl) {
+    const wow = await computeWoW();
+    if (wow) {
+      const sign = wow.positive ? '↑' : '↓';
+      wowEl.style.display = 'inline-flex';
+      wowEl.className = 'wow-badge' + (wow.positive ? '' : ' negative');
+      wowEl.textContent = `${sign}${Math.abs(wow.pct)}% vs last week`;
+    } else {
+      wowEl.style.display = 'none';
+    }
+  }
+
+  // 7. Monthly projection
+  const projEl = document.getElementById('monthlyProjection');
+  if (projEl) {
+    const proj = computeMonthlyProjection();
+    if (proj) {
+      projEl.style.display = 'block';
+      projEl.textContent = `Projected month-end: Ksh ${proj.projected.toLocaleString()}`;
+    } else {
+      projEl.style.display = 'none';
+    }
+  }
 }
 
 async function renderSalesBarChart() {
@@ -1800,12 +1885,15 @@ async function renderSalesBarChart() {
   }));
   const maxVal = Math.max(...totals, 1);
   wrap.style.display = 'block';
+  // 4. Gold gradient for past days, green for today, grey for zero
   barsEl.innerHTML = days.map((d, i) => {
-    const pct = Math.max((totals[i] / maxVal) * 100, totals[i] > 0 ? 8 : 3);
+    const isZero = totals[i] === 0;
+    const pct = Math.max((totals[i] / maxVal) * 100, isZero ? 3 : 8);
     const valStr = totals[i] >= 1000 ? (totals[i]/1000).toFixed(1)+'k' : totals[i] > 0 ? totals[i].toLocaleString() : '';
+    const barClass = d.isToday ? 'today' : isZero ? 'zero' : '';
     return `<div class="sales-chart-col">
       <div class="sales-chart-val">${valStr}</div>
-      <div class="sales-chart-bar${d.isToday?' today':''}" style="height:${pct}%;" title="Ksh ${totals[i].toLocaleString()}"></div>
+      <div class="sales-chart-bar${barClass?' '+barClass:''}" style="height:${pct}%;" title="Ksh ${totals[i].toLocaleString()}"></div>
       <div class="sales-chart-lbl">${d.lbl}</div>
     </div>`;
   }).join('');
@@ -1891,6 +1979,8 @@ async function submitLogSale() {
     await db.ref('users/' + CU + '/salesArchiveMeta/' + key).set({ date: key, label });
     closeLogSaleSheet();
     archiveDirty = true;
+    // 5. Haptic feedback on sale logged
+    if (navigator.vibrate) navigator.vibrate([20, 50, 20]);
     showToast('Sale logged ✓');
   } catch(e) { showToast('Failed to save sale.'); }
 }
@@ -2177,6 +2267,8 @@ function moveTrack(idx) {
   document.getElementById('workspaceTrack').style.transform = `translateX(calc(-${idx*80}vw - ${idx*30}px))`;
   document.querySelectorAll('.workspace-card').forEach((c,i) => c.classList.toggle('active', i===idx));
   document.querySelectorAll('.dock-item').forEach((d,i) => d.classList.toggle('active', i===idx));
+  // 2. Update slide indicator dots
+  document.querySelectorAll('.slide-dot').forEach((d,i) => d.classList.toggle('active', i===idx));
   currentSlide = idx;
   if (idx === 2) renderSalesLog();
   if (idx === 3) renderArchiveSales();
@@ -2251,6 +2343,7 @@ function toggleDashboardTheme() {
   document.body.className = document.body.className === 'theme-login' ? 'theme-signup' : 'theme-login';
   document.querySelectorAll('.overlay-screen.open,.day-detail-overlay.open,.log-sale-sheet.open').forEach(el => applyOverlayTheme(el));
 }
+
 function applyOverlayTheme(el) {
   const light = document.body.className === 'theme-signup';
   el.style.background = light ? '#f2ede7' : '#000000';
