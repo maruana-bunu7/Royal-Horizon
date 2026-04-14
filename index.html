@@ -50,11 +50,19 @@ h1,h2,h3,.btn-main,.btn-submit,.modal-btn,.proj-detail-title{font-family:'Playfa
 .container{width:100%;max-width:420px;text-align:center;position:relative;z-index:10;}
 
 /* Wordmark / logo */
-.portal-wordmark{margin-bottom:52px;opacity:0;transform:translateY(10px);animation:wordmarkIn .9s var(--ui-curve) .2s forwards;}
-.portal-logo-icon{font-size:34px;margin-bottom:10px;display:block;line-height:1;}
+.portal-wordmark{margin-bottom:48px;opacity:0;transform:translateY(10px);animation:wordmarkIn .9s var(--ui-curve) .2s forwards;}
+.portal-logo-icon{font-size:34px;margin-bottom:14px;display:block;line-height:1;}
+.portal-logo-icon svg{display:block;margin:0 auto;}
 .portal-logo-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;letter-spacing:.5px;opacity:.88;}
 .portal-logo-sub{font-size:11px;text-transform:uppercase;letter-spacing:3px;opacity:.35;margin-top:4px;font-weight:400;}
 @keyframes wordmarkIn{to{opacity:1;transform:translateY(0);}}
+
+/* Icon theme adaptation */
+.rh-icon .rh-bg{fill:#0d0b08;transition:fill .4s;}
+body.theme-signup .rh-icon .rh-bg{fill:#1a1410;}
+@media(prefers-color-scheme:light){
+  .rh-icon .rh-bg{fill:#1a1410;}
+}
 
 .selection-screen{display:flex;flex-direction:column;align-items:center;gap:14px;transition:.3s ease,transform var(--ui-speed) var(--ui-curve);}
 .selection-screen.fade-out{opacity:0;transform:scale(.97) translateY(-6px);pointer-events:none;}
@@ -233,9 +241,14 @@ body:not(.theme-login):not(.theme-signup) .lsf-submit-btn{background:#f0f0f0;col
 .arch-cancel-sel-btn:hover{background:rgba(128,128,128,.16);}
 
 /* DOCK */
-.floating-dock{position:absolute;bottom:40px;height:70px;padding:0 20px;background:rgba(128,128,128,.1);backdrop-filter:blur(25px);border-radius:24px;border:1px solid rgba(128,128,128,.2);display:flex;align-items:center;gap:16px;box-shadow:0 20px 40px rgba(0,0,0,.15);}
-.dock-item{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.3;transition:.3s;font-size:19px;}
-.dock-item.active{opacity:1;background:rgba(128,128,128,.2);transform:translateY(-5px);}
+.floating-dock{position:absolute;bottom:36px;height:68px;padding:0 10px;background:rgba(128,128,128,.09);backdrop-filter:blur(30px);border-radius:22px;border:1px solid rgba(128,128,128,.18);display:flex;align-items:center;gap:4px;box-shadow:0 20px 50px rgba(0,0,0,.2),0 4px 12px rgba(0,0,0,.1);}
+.dock-item{width:52px;height:52px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;opacity:.28;transition:.35s cubic-bezier(0.2,0.8,0.2,1);gap:4px;position:relative;}
+.dock-item svg{transition:.35s cubic-bezier(0.2,0.8,0.2,1);}
+.dock-item .dock-lbl{font-size:9px;letter-spacing:.4px;font-weight:600;text-transform:uppercase;opacity:0;transition:.3s;margin-top:0px;}
+.dock-item.active{opacity:1;background:rgba(128,128,128,.18);transform:translateY(-4px);}
+.dock-item.active svg{filter:drop-shadow(0 0 4px rgba(212,184,122,.4));}
+.dock-item.active .dock-lbl{opacity:.6;}
+.dock-item:not(.active):hover{opacity:.55;transform:translateY(-2px);}
 
 /* OVERLAYS */
 .overlay-screen{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;transition:.4s var(--ui-curve);transform:translateY(100%);opacity:0;pointer-events:none;overflow:hidden;}
@@ -321,11 +334,31 @@ select.modal-input{cursor:pointer;}
 body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* CATEGORY TAG */
-.lsf-cat-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:2px;}
-.lsf-cat-pill{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid rgba(128,128,128,.2);background:transparent;cursor:pointer;color:inherit;transition:.2s;opacity:.45;letter-spacing:.4px;}
-.lsf-cat-pill.selected{opacity:1;background:rgba(128,128,128,.2);border-color:rgba(128,128,128,.4);}
-.sale-cat-badge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:2px 7px;border-radius:8px;background:rgba(128,128,128,.12);border:1px solid rgba(128,128,128,.18);opacity:.7;margin-left:5px;vertical-align:middle;}
+/* CATEGORY DROPDOWN */
+.lsf-cat-dropdown{position:relative;margin-top:2px;}
+.lsf-cat-trigger{width:100%;padding:11px 14px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.14);border-radius:13px;cursor:pointer;font-size:13px;color:inherit;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:space-between;gap:8px;transition:.2s;text-align:left;}
+.lsf-cat-trigger:hover{background:rgba(128,128,128,.14);}
+.lsf-cat-trigger-left{display:flex;align-items:center;gap:8px;}
+.lsf-cat-trigger-emoji{font-size:15px;line-height:1;}
+.lsf-cat-trigger-text{display:flex;flex-direction:column;gap:1px;}
+.lsf-cat-trigger-sub{font-size:9px;opacity:.38;text-transform:uppercase;letter-spacing:1.2px;}
+.lsf-cat-trigger-name{font-size:13px;font-weight:500;}
+.lsf-cat-chevron{font-size:11px;opacity:.4;transition:.25s;flex-shrink:0;}
+.lsf-cat-dropdown.open .lsf-cat-chevron{transform:rotate(180deg);opacity:.7;}
+.lsf-cat-panel{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--cat-panel-bg,#1e1c18);border:1px solid rgba(128,128,128,.2);border-radius:16px;z-index:200;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.35);display:none;max-height:260px;overflow-y:auto;}
+body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
+.lsf-cat-panel.open{display:block;animation:catPanelIn .2s cubic-bezier(0.2,0.8,0.2,1);}
+@keyframes catPanelIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
+.lsf-cat-group-header{font-size:9px;text-transform:uppercase;letter-spacing:2px;opacity:.4;padding:10px 14px 5px;font-weight:700;border-top:1px solid rgba(128,128,128,.1);}
+.lsf-cat-group-header:first-child{border-top:none;}
+.lsf-cat-option{display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;font-size:13px;transition:.15s;}
+.lsf-cat-option:hover{background:rgba(128,128,128,.12);}
+.lsf-cat-option.selected{background:rgba(128,128,128,.18);}
+.lsf-cat-option-emoji{font-size:14px;width:20px;text-align:center;flex-shrink:0;}
+.lsf-cat-option-info{flex:1;min-width:0;}
+.lsf-cat-option-name{font-size:13px;font-weight:500;}
+.lsf-cat-option-group{font-size:9px;opacity:.35;text-transform:uppercase;letter-spacing:.8px;margin-top:1px;}
+.sale-cat-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:2px 7px;border-radius:8px;background:rgba(128,128,128,.12);border:1px solid rgba(128,128,128,.18);opacity:.75;margin-left:5px;vertical-align:middle;}
 
 /* SALES BAR CHART */
 .sales-chart-wrap{flex-shrink:0;background:rgba(128,128,128,.06);border:1px solid rgba(128,128,128,.1);border-radius:18px;padding:12px 14px;margin-bottom:10px;}
@@ -351,7 +384,27 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 
 <!-- OFFLINE BANNER -->
 <div class="offline-banner" id="offlineBanner">⚡ Offline — changes will sync when reconnected</div>
-<div class="loading-overlay" id="loadingOverlay"><div class="loading-spinner">✦</div></div>
+<div class="loading-overlay" id="loadingOverlay"><div class="loading-spinner">
+  <svg width="48" height="48" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation:pulse 1.6s ease-in-out infinite;">
+    <rect width="96" height="96" rx="20" fill="#0d0b08"/>
+    <path d="M48 7 L89 48 L48 89 L7 48 Z" stroke="url(#lsq)" stroke-width="1" fill="none" opacity=".7"/>
+    <path d="M7 48 L48 89 L89 48 Z" fill="rgba(212,160,48,.05)"/>
+    <line x1="7" y1="48" x2="89" y2="48" stroke="url(#lhl)" stroke-width=".75" opacity=".35"/>
+    <path d="M22 48 A26 26 0 0 1 74 48" stroke="url(#laO)" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".7"/>
+    <path d="M31 48 A17 17 0 0 1 65 48" stroke="url(#laI)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="48" y1="7" x2="48" y2="19" stroke="#ffe898" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="35" y1="18" x2="39" y2="26" stroke="#d4b060" stroke-width="1" stroke-linecap="round" opacity=".5"/>
+    <line x1="61" y1="18" x2="57" y2="26" stroke="#d4b060" stroke-width="1" stroke-linecap="round" opacity=".5"/>
+    <path d="M48 7 L51 10 L48 13 L45 10 Z" fill="#fff8d0"/>
+    <circle cx="48" cy="48" r="5.5" fill="#d4980c"/><circle cx="48" cy="48" r="2.5" fill="#fffce0"/>
+    <defs>
+      <linearGradient id="lsq" x1="7" y1="48" x2="89" y2="48" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#d4b87a" stop-opacity=".1"/><stop offset="40%" stop-color="#f0d890" stop-opacity=".9"/><stop offset="60%" stop-color="#f0d890" stop-opacity=".9"/><stop offset="100%" stop-color="#d4b87a" stop-opacity=".1"/></linearGradient>
+      <linearGradient id="lhl" x1="7" y1="0" x2="89" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#d4b87a" stop-opacity="0"/><stop offset="40%" stop-color="#d4b87a" stop-opacity=".5"/><stop offset="60%" stop-color="#d4b87a" stop-opacity=".5"/><stop offset="100%" stop-color="#d4b87a" stop-opacity="0"/></linearGradient>
+      <linearGradient id="laO" x1="22" y1="48" x2="74" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#9a7020" stop-opacity=".6"/><stop offset="50%" stop-color="#f4e090"/><stop offset="100%" stop-color="#9a7020" stop-opacity=".6"/></linearGradient>
+      <linearGradient id="laI" x1="31" y1="48" x2="65" y2="31" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#b08030"/><stop offset="50%" stop-color="#ffe898"/><stop offset="100%" stop-color="#b08030"/></linearGradient>
+    </defs>
+  </svg>
+</div></div>
 
 <!-- PORTAL AMBIENT ORBS -->
 <div class="portal-orb portal-orb-1" id="portalOrb1"></div>
@@ -362,7 +415,27 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 <div class="container" id="portalContainer" style="display:none;">
   <div id="selectionScreen" class="selection-screen">
     <div class="portal-wordmark">
-      <span class="portal-logo-icon">✦</span>
+      <span class="portal-logo-icon">
+  <svg class="rh-icon" width="64" height="64" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect class="rh-bg" width="96" height="96" rx="20"/>
+    <path d="M48 7 L89 48 L48 89 L7 48 Z" stroke="url(#psq)" stroke-width="1" fill="none" opacity=".7"/>
+    <path d="M7 48 L48 89 L89 48 Z" fill="rgba(212,160,48,.05)"/>
+    <line x1="7" y1="48" x2="89" y2="48" stroke="url(#phl)" stroke-width=".75"/>
+    <path d="M22 48 A26 26 0 0 1 74 48" stroke="url(#paO)" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".8"/>
+    <path d="M31 48 A17 17 0 0 1 65 48" stroke="url(#paI)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="48" y1="7" x2="48" y2="19" stroke="#ffe898" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="35" y1="18" x2="39" y2="26" stroke="#d4b060" stroke-width="1" stroke-linecap="round" opacity=".5"/>
+    <line x1="61" y1="18" x2="57" y2="26" stroke="#d4b060" stroke-width="1" stroke-linecap="round" opacity=".5"/>
+    <path d="M48 7 L51 10 L48 13 L45 10 Z" fill="#fff8d0"/>
+    <circle cx="48" cy="48" r="5.5" fill="#d4980c"/><circle cx="48" cy="48" r="2.5" fill="#fffce0"/>
+    <defs>
+      <linearGradient id="psq" x1="7" y1="48" x2="89" y2="48" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#d4b87a" stop-opacity=".1"/><stop offset="30%" stop-color="#f0d890" stop-opacity=".9"/><stop offset="70%" stop-color="#f0d890" stop-opacity=".9"/><stop offset="100%" stop-color="#d4b87a" stop-opacity=".1"/></linearGradient>
+      <linearGradient id="phl" x1="7" y1="0" x2="89" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#d4b87a" stop-opacity="0"/><stop offset="35%" stop-color="#d4b87a" stop-opacity=".45"/><stop offset="65%" stop-color="#d4b87a" stop-opacity=".45"/><stop offset="100%" stop-color="#d4b87a" stop-opacity="0"/></linearGradient>
+      <linearGradient id="paO" x1="22" y1="48" x2="74" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#9a7020" stop-opacity=".6"/><stop offset="50%" stop-color="#f4e090"/><stop offset="100%" stop-color="#9a7020" stop-opacity=".6"/></linearGradient>
+      <linearGradient id="paI" x1="31" y1="48" x2="65" y2="31" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#b08030"/><stop offset="50%" stop-color="#ffe898"/><stop offset="100%" stop-color="#b08030"/></linearGradient>
+    </defs>
+  </svg>
+</span>
       <div class="portal-logo-title">Royal Horizon</div>
       <div class="portal-logo-sub">Workspace</div>
     </div>
@@ -544,10 +617,36 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
     </div>
   </div>
   <div class="floating-dock">
-    <div class="dock-item active" onclick="moveTrack(0)">✦</div>
-    <div class="dock-item" onclick="moveTrack(1)">✓</div>
-    <div class="dock-item" onclick="moveTrack(2)">₭</div>
-    <div class="dock-item" onclick="moveTrack(3)">⧉</div>
+    <!-- Overview -->
+    <div class="dock-item active" onclick="moveTrack(0)" title="Overview">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/>
+        <rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>
+      </svg>
+      <span class="dock-lbl">Overview</span>
+    </div>
+    <!-- Tasks -->
+    <div class="dock-item" onclick="moveTrack(1)" title="Tasks">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+      </svg>
+      <span class="dock-lbl">Tasks</span>
+    </div>
+    <!-- Sales -->
+    <div class="dock-item" onclick="moveTrack(2)" title="Sales Log">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/>
+      </svg>
+      <span class="dock-lbl">Sales</span>
+    </div>
+    <!-- Archive -->
+    <div class="dock-item" onclick="moveTrack(3)" title="Archive">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5" rx="1"/>
+        <line x1="10" y1="12" x2="14" y2="12"/>
+      </svg>
+      <span class="dock-lbl">Archive</span>
+    </div>
   </div>
 </div>
 
@@ -568,11 +667,95 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
       </div>
       <div>
         <label class="lsf-label">Category</label>
-        <div class="lsf-cat-row" id="lsfCatRow">
-          <button type="button" class="lsf-cat-pill selected" data-cat="Phone" onclick="selectSaleCat(this)">📱 Phone</button>
-          <button type="button" class="lsf-cat-pill" data-cat="Tablet" onclick="selectSaleCat(this)">💻 Tablet</button>
-          <button type="button" class="lsf-cat-pill" data-cat="Accessory" onclick="selectSaleCat(this)">🎧 Accessory</button>
-          <button type="button" class="lsf-cat-pill" data-cat="Other" onclick="selectSaleCat(this)">📦 Other</button>
+        <div class="lsf-cat-dropdown" id="lsfCatDropdown">
+          <button type="button" class="lsf-cat-trigger" onclick="toggleCatDropdown()" id="lsfCatTrigger">
+            <div class="lsf-cat-trigger-left">
+              <span class="lsf-cat-trigger-emoji" id="lsfCatEmoji">📱</span>
+              <div class="lsf-cat-trigger-text">
+                <span class="lsf-cat-trigger-sub" id="lsfCatGroup">Gadgets & Accessories</span>
+                <span class="lsf-cat-trigger-name" id="lsfCatName">Smartphone / Phone</span>
+              </div>
+            </div>
+            <span class="lsf-cat-chevron">▾</span>
+          </button>
+          <div class="lsf-cat-panel" id="lsfCatPanel">
+
+            <div class="lsf-cat-group-header">🏠 Appliances</div>
+            <div class="lsf-cat-option" data-cat="Refrigerator" data-group="Appliances" data-emoji="🧊" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">🧊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Refrigerator / Fridge</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Microwave" data-group="Appliances" data-emoji="📦" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">📦</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Microwave</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Washing Machine" data-group="Appliances" data-emoji="🫧" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">🫧</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Washing Machine</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Cooker / Oven" data-group="Appliances" data-emoji="🍳" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">🍳</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Cooker / Oven</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Air Conditioner" data-group="Appliances" data-emoji="❄️" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">❄️</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Air Conditioner</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Blender / Juicer" data-group="Appliances" data-emoji="🥤" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">🥤</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Blender / Juicer</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Other Appliance" data-group="Appliances" data-emoji="🔌" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">🔌</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Other Appliance</div></div>
+            </div>
+
+            <div class="lsf-cat-group-header">📺 Electronics</div>
+            <div class="lsf-cat-option" data-cat="Television" data-group="Electronics" data-emoji="📺" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">📺</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Television / Smart TV</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Sound System" data-group="Electronics" data-emoji="🔊" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">🔊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Sound System / Speaker</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Home Theatre" data-group="Electronics" data-emoji="🎬" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">🎬</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Home Theatre</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Radio / Hi-Fi" data-group="Electronics" data-emoji="📻" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">📻</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Radio / Hi-Fi</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="CCTV / Security" data-group="Electronics" data-emoji="📷" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">📷</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">CCTV / Security Camera</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Other Electronic" data-group="Electronics" data-emoji="🔋" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">🔋</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Other Electronic</div></div>
+            </div>
+
+            <div class="lsf-cat-group-header">📱 Gadgets &amp; Accessories</div>
+            <div class="lsf-cat-option selected" data-cat="Smartphone / Phone" data-group="Gadgets & Accessories" data-emoji="📱" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">📱</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Smartphone / Phone</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Tablet" data-group="Gadgets & Accessories" data-emoji="💻" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">💻</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Tablet</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Laptop" data-group="Gadgets & Accessories" data-emoji="🖥️" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">🖥️</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Laptop / Computer</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Smartwatch" data-group="Gadgets & Accessories" data-emoji="⌚" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">⌚</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Smartwatch / Wearable</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Earphones / Headphones" data-group="Gadgets & Accessories" data-emoji="🎧" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">🎧</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Earphones / Headphones</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Charger / Cable" data-group="Gadgets & Accessories" data-emoji="🔌" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">🔌</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Charger / Cable</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Power Bank" data-group="Gadgets & Accessories" data-emoji="🔋" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">🔋</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Power Bank</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Phone Case / Cover" data-group="Gadgets & Accessories" data-emoji="🛡️" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">🛡️</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Phone Case / Cover</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Memory / Storage" data-group="Gadgets & Accessories" data-emoji="💾" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">💾</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Memory Card / Storage</div></div>
+            </div>
+            <div class="lsf-cat-option" data-cat="Other Accessory" data-group="Gadgets & Accessories" data-emoji="📦" onclick="pickCat(this)">
+              <span class="lsf-cat-option-emoji">📦</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Other Accessory</div></div>
+            </div>
+
+          </div>
         </div>
       </div>
       <div class="lsf-row">
@@ -1613,7 +1796,7 @@ function openLogSaleSheet(id) {
     document.getElementById('lsfCancelEditBtn').style.display = 'none';
     document.getElementById('lsfEditingBanner').classList.remove('visible');
     document.getElementById('logSaleSheetTitle').textContent = 'Log a Sale';
-    setSelectedCat('Phone');
+    setSelectedCat('Smartphone / Phone');
     clearAllSaleErrors();
     editingSaleId = null;
   }
@@ -1621,6 +1804,12 @@ function openLogSaleSheet(id) {
 }
 
 function closeLogSaleSheet() {
+  // also close cat dropdown if open
+  _catOpen = false;
+  const dd = document.getElementById('lsfCatDropdown');
+  const panel = document.getElementById('lsfCatPanel');
+  if (dd) dd.classList.remove('open');
+  if (panel) panel.classList.remove('open');
   document.getElementById('logSaleSheet').classList.remove('open');
   if (_overlayStack[_overlayStack.length-1]==='logSale') { _overlayStack.pop(); history.back(); }
 }
@@ -2090,23 +2279,89 @@ function esc(s='') {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ── CATEGORY ──
-const SALE_CATS = ['Phone','Tablet','Accessory','Other'];
-function selectSaleCat(el) {
-  document.querySelectorAll('.lsf-cat-pill').forEach(p => p.classList.remove('selected'));
+// ── CATEGORY DROPDOWN ──
+let _catOpen = false;
+
+function toggleCatDropdown() {
+  _catOpen = !_catOpen;
+  document.getElementById('lsfCatDropdown').classList.toggle('open', _catOpen);
+  document.getElementById('lsfCatPanel').classList.toggle('open', _catOpen);
+  if (_catOpen) {
+    // close on outside tap
+    setTimeout(() => document.addEventListener('click', _closeCatOutside, {once:true}), 10);
+  }
+}
+
+function _closeCatOutside(e) {
+  const dd = document.getElementById('lsfCatDropdown');
+  if (dd && !dd.contains(e.target)) {
+    _catOpen = false;
+    dd.classList.remove('open');
+    document.getElementById('lsfCatPanel').classList.remove('open');
+  }
+}
+
+function pickCat(el) {
+  // deselect all, select this
+  document.querySelectorAll('.lsf-cat-option').forEach(o => o.classList.remove('selected'));
   el.classList.add('selected');
+  const cat   = el.dataset.cat;
+  const group = el.dataset.group;
+  const emoji = el.dataset.emoji;
+  document.getElementById('lsfCatEmoji').textContent = emoji;
+  document.getElementById('lsfCatName').textContent  = cat;
+  document.getElementById('lsfCatGroup').textContent = group;
+  // close
+  _catOpen = false;
+  document.getElementById('lsfCatDropdown').classList.remove('open');
+  document.getElementById('lsfCatPanel').classList.remove('open');
 }
+
 function getSelectedCat() {
-  const sel = document.querySelector('.lsf-cat-pill.selected');
-  return sel ? sel.dataset.cat : 'Phone';
+  const sel = document.querySelector('.lsf-cat-option.selected');
+  return sel ? sel.dataset.cat : 'Smartphone / Phone';
 }
+
 function setSelectedCat(cat) {
-  document.querySelectorAll('.lsf-cat-pill').forEach(p => {
-    p.classList.toggle('selected', p.dataset.cat === cat);
+  // find matching option
+  let found = null;
+  document.querySelectorAll('.lsf-cat-option').forEach(o => {
+    const match = o.dataset.cat === cat;
+    o.classList.toggle('selected', match);
+    if (match) found = o;
   });
+  if (found) {
+    document.getElementById('lsfCatEmoji').textContent = found.dataset.emoji || '📱';
+    document.getElementById('lsfCatName').textContent  = found.dataset.cat;
+    document.getElementById('lsfCatGroup').textContent = found.dataset.group || '';
+  } else {
+    // fallback: try to find by old cat names mapping
+    const fallback = {
+      'Phone':'Smartphone / Phone','Tablet':'Tablet','Accessory':'Earphones / Headphones','Other':'Other Accessory'
+    };
+    const mapped = fallback[cat];
+    if (mapped) setSelectedCat(mapped);
+    else {
+      document.getElementById('lsfCatEmoji').textContent = '📦';
+      document.getElementById('lsfCatName').textContent  = cat || 'Smartphone / Phone';
+      document.getElementById('lsfCatGroup').textContent = 'Gadgets & Accessories';
+    }
+  }
 }
+
 function catEmoji(cat) {
-  return {Phone:'📱',Tablet:'💻',Accessory:'🎧',Other:'📦'}[cat] || '📦';
+  const map = {
+    'Smartphone / Phone':'📱','Tablet':'💻','Laptop':'🖥️','Smartwatch':'⌚',
+    'Earphones / Headphones':'🎧','Charger / Cable':'🔌','Power Bank':'🔋',
+    'Phone Case / Cover':'🛡️','Memory / Storage':'💾','Other Accessory':'📦',
+    'Television':'📺','Sound System':'🔊','Home Theatre':'🎬','Radio / Hi-Fi':'📻',
+    'CCTV / Security':'📷','Other Electronic':'🔋',
+    'Refrigerator':'🧊','Microwave':'📦','Washing Machine':'🫧','Cooker / Oven':'🍳',
+    'Air Conditioner':'❄️','Blender / Juicer':'🥤','Other Appliance':'🔌',
+    // legacy
+    'Phone':'📱','Accessory':'🎧','Other':'📦'
+  };
+  return map[cat] || '📦';
 }
 
 // ── INLINE FIELD VALIDATION ──
