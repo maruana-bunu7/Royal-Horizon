@@ -215,28 +215,50 @@ body:not(.theme-login):not(.theme-signup) .lsf-submit-btn{background:#f0f0f0;col
 .overlay-body{flex:1;overflow-y:auto;padding:0 28px 40px;}
 
 /* PROFILE */
-.profile-avatar-large{width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;font-family:'Playfair Display';margin:0 auto 22px;border:2px solid rgba(128,128,128,.3);color:#fff;}
-.profile-section-divider{border:none;border-top:1px solid rgba(128,128,128,.15);margin:20px 0;}
-.profile-section-label{font-size:10px;text-transform:uppercase;letter-spacing:1.8px;opacity:.35;margin-bottom:14px;font-weight:600;}
-.profile-field{margin-bottom:16px;}
-.profile-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;opacity:.5;margin-bottom:7px;display:block;}
-.profile-input{width:100%;font-size:14px;padding:11px 14px;background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.12);border-radius:13px;color:inherit;transition:.2s;}
-.profile-input:focus:not([readonly]){border-color:rgba(128,128,128,.4);}
-.profile-input[readonly]{opacity:.42;cursor:default;}
-.profile-textarea{resize:none;min-height:75px;line-height:1.6;}
-.color-picker{display:flex;gap:9px;flex-wrap:wrap;}
-.color-swatch{width:32px;height:32px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:.2s;}
-.color-swatch.selected{border-color:rgba(255,255,255,.85);transform:scale(1.12);}
-body.theme-signup .color-swatch.selected{border-color:rgba(0,0,0,.5);}
+/* Identity card at top */
+.profile-id-card{display:flex;flex-direction:column;align-items:center;padding:24px 0 20px;margin-bottom:4px;}
+.profile-avatar-large{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;font-family:'Playfair Display';margin-bottom:14px;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.18);}
+.profile-id-name{font-family:'Playfair Display';font-size:22px;font-weight:700;margin-bottom:3px;}
+.profile-id-meta{font-size:12px;opacity:.4;letter-spacing:.4px;}
+
+/* Section cards */
+.profile-section-card{background:rgba(128,128,128,.06);border:1px solid rgba(128,128,128,.1);border-radius:20px;padding:18px 16px;margin-bottom:14px;}
+.profile-section-title{font-size:10px;text-transform:uppercase;letter-spacing:2px;font-weight:700;opacity:.4;margin-bottom:16px;}
+
+/* Field rows */
+.profile-field{margin-bottom:14px;}
+.profile-field:last-child{margin-bottom:0;}
+.profile-label{font-size:10px;text-transform:uppercase;letter-spacing:1.4px;opacity:.38;margin-bottom:5px;display:block;}
+
+/* Editable inputs */
+.profile-input{width:100%;font-size:14px;padding:11px 14px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.13);border-radius:12px;color:inherit;transition:.2s;font-family:'Inter',sans-serif;}
+.profile-input:focus:not([readonly]){border-color:rgba(128,128,128,.45);background:rgba(128,128,128,.12);}
+.profile-textarea{resize:none;min-height:72px;line-height:1.6;}
+
+/* Static (read-only) values — no box */
+.profile-static{font-size:14px;padding:2px 0 10px;opacity:.65;border-bottom:1px solid rgba(128,128,128,.1);word-break:break-all;}
+.profile-field:last-child .profile-static{border-bottom:none;padding-bottom:0;}
+
+/* Hidden when in read mode */
+.profile-input[readonly]{display:none;}
+.profile-static.edit-hidden{display:none;}
+.profile-input.edit-shown{display:block;}
+
 .profile-edit-btn{padding:9px 20px;background:rgba(128,128,128,.12);border:1px solid rgba(128,128,128,.2);border-radius:20px;cursor:pointer;font-size:13px;font-weight:600;color:inherit;transition:.2s;margin-left:auto;white-space:nowrap;}
 .profile-edit-btn:hover{background:rgba(128,128,128,.22);}
 .profile-edit-btn.active{background:rgba(220,100,80,.1);border-color:rgba(220,100,80,.25);color:#e05252;}
 .profile-save-btn{width:100%;padding:13px;background:rgba(90,160,120,.15);border:1px solid rgba(90,160,120,.3);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:15px;color:inherit;transition:.2s;margin-top:6px;}
 .profile-save-btn:hover{background:rgba(90,160,120,.25);}.profile-save-btn:active{transform:scale(.98);}
-.signout-profile-btn{width:100%;padding:13px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.15);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:15px;color:inherit;transition:.2s;margin-top:10px;}
-.signout-profile-btn:hover{background:rgba(128,128,128,.18);}
-.danger-zone{margin-top:12px;padding-top:22px;border-top:1px solid rgba(220,80,80,.2);}
-.danger-title{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#e05252;opacity:.7;margin-bottom:12px;}
+
+/* Sign out — quieter, text-style */
+.signout-profile-btn{display:block;width:fit-content;margin:24px auto 0;padding:8px 18px;background:none;border:1px solid rgba(128,128,128,.2);border-radius:20px;cursor:pointer;font-size:13px;color:inherit;opacity:.5;transition:.2s;}
+.signout-profile-btn:hover{opacity:1;background:rgba(128,128,128,.08);}
+
+/* Danger zone — more breathing room, warning hint */
+.danger-zone{margin-top:32px;padding:20px 0 8px;}
+.danger-zone-inner{background:rgba(220,80,80,.04);border:1px solid rgba(220,80,80,.15);border-radius:18px;padding:18px 16px;}
+.danger-title{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#e05252;opacity:.7;margin-bottom:6px;font-weight:700;}
+.danger-warning{font-size:12px;opacity:.45;margin-bottom:14px;line-height:1.5;}
 .delete-account-btn{width:100%;padding:12px;background:rgba(220,80,80,.08);border:1px solid rgba(220,80,80,.2);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:14px;color:#e05252;transition:.2s;}
 .delete-account-btn:hover{background:rgba(220,80,80,.15);}
 
@@ -546,67 +568,95 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
       <button class="profile-edit-btn" id="profileEditBtn" onclick="toggleProfileEdit()">✎ Edit</button>
     </div>
     <div class="overlay-body">
-      <div class="profile-avatar-large" id="profileAvatarLarge"></div>
-      <div class="profile-field" id="colorPickerSection" style="opacity:.35;pointer-events:none;transition:.3s;">
-        <label class="profile-label">Avatar Colour</label>
-        <div class="color-picker" id="colorPicker"></div>
+
+      <!-- Identity card -->
+      <div class="profile-id-card">
+        <div class="profile-avatar-large" id="profileAvatarLarge"></div>
+        <div class="profile-id-name" id="profileIdName"></div>
+        <div class="profile-id-meta" id="profileIdMeta"></div>
       </div>
-      <hr class="profile-section-divider">
-      <div class="profile-section-label">Personal</div>
-      <div class="profile-field">
-        <label class="profile-label">Display Name</label>
-        <input class="profile-input" type="text" id="profileName" placeholder="Your name" readonly>
+
+      <!-- Personal section -->
+      <div class="profile-section-card">
+        <div class="profile-section-title">Personal</div>
+
+        <div class="profile-field">
+          <label class="profile-label">Display Name</label>
+          <div class="profile-static" id="profileNameStatic"></div>
+          <input class="profile-input edit-shown" type="text" id="profileName" placeholder="Your name" style="display:none;">
+        </div>
+        <div class="profile-field">
+          <label class="profile-label">Username</label>
+          <div class="profile-static" id="profileUsernameStatic"></div>
+        </div>
+        <div class="profile-field">
+          <label class="profile-label">Email</label>
+          <div class="profile-static" id="profileEmailStatic"></div>
+        </div>
+        <div class="profile-field">
+          <label class="profile-label">Bio</label>
+          <div class="profile-static" id="profileBioStatic" style="white-space:pre-wrap;"></div>
+          <textarea class="profile-input profile-textarea edit-shown" id="profileBio" placeholder="A few words about yourself…" style="display:none;"></textarea>
+        </div>
       </div>
-      <div class="profile-field">
-        <label class="profile-label">Username <span style="opacity:.35;font-size:10px;">(cannot be changed)</span></label>
-        <input class="profile-input" type="text" id="profileUsername" readonly>
+
+      <!-- Work Details section -->
+      <div class="profile-section-card">
+        <div class="profile-section-title">Work Details</div>
+
+        <div class="profile-field">
+          <label class="profile-label">Outlet</label>
+          <div class="profile-static" id="profileOutletStatic"></div>
+          <input class="profile-input edit-shown" type="text" id="profileOutlet" placeholder="e.g. Nairobi Junction Mall" style="display:none;">
+        </div>
+        <div class="profile-field">
+          <label class="profile-label">Official Names</label>
+          <div class="profile-static" id="profileOfficialNamesStatic"></div>
+          <input class="profile-input edit-shown" type="text" id="profileOfficialNames" placeholder="Full official names" style="display:none;">
+        </div>
+        <div class="profile-field">
+          <label class="profile-label">Brand</label>
+          <div class="profile-static" id="profileBrandStatic"></div>
+          <input class="profile-input edit-shown" type="text" id="profileBrand" placeholder="e.g. Samsung, Tecno…" style="display:none;">
+        </div>
+        <div class="profile-field">
+          <label class="profile-label">Branch Target</label>
+          <div class="profile-static" id="profileBranchTargetStatic"></div>
+          <input class="profile-input edit-shown" type="number" id="profileBranchTarget" placeholder="e.g. 150000" min="0" style="display:none;">
+        </div>
       </div>
-      <div class="profile-field">
-        <label class="profile-label">Email <span style="opacity:.35;font-size:10px;">(cannot be changed)</span></label>
-        <input class="profile-input" type="email" id="profileEmail" readonly>
+
+      <!-- Reminders section -->
+      <div class="profile-section-card">
+        <div class="profile-section-title">Reminders & Settings</div>
+
+        <div class="profile-field">
+          <label class="profile-label">Morning Reminder</label>
+          <div class="profile-static" id="profileMorningReminderStatic"></div>
+          <input class="profile-input edit-shown" type="time" id="profileMorningReminder" style="display:none;">
+        </div>
+        <div class="profile-field">
+          <label class="profile-label">Evening Reminder</label>
+          <div class="profile-static" id="profileEveningReminderStatic"></div>
+          <input class="profile-input edit-shown" type="time" id="profileEveningReminder" style="display:none;">
+        </div>
+        <div class="profile-field">
+          <label class="profile-label">Member Since</label>
+          <div class="profile-static" id="profileMemberSince"></div>
+        </div>
       </div>
-      <div class="profile-field">
-        <label class="profile-label">Bio</label>
-        <textarea class="profile-input profile-textarea" id="profileBio" placeholder="A few words about yourself…" readonly></textarea>
-      </div>
-      <hr class="profile-section-divider">
-      <div class="profile-section-label">Work Details</div>
-      <div class="profile-field">
-        <label class="profile-label">Name of Outlet</label>
-        <input class="profile-input" type="text" id="profileOutlet" placeholder="e.g. Nairobi Junction Mall" readonly>
-      </div>
-      <div class="profile-field">
-        <label class="profile-label">Official Names</label>
-        <input class="profile-input" type="text" id="profileOfficialNames" placeholder="Full official names" readonly>
-      </div>
-      <div class="profile-field">
-        <label class="profile-label">Brand</label>
-        <input class="profile-input" type="text" id="profileBrand" placeholder="e.g. Samsung, Tecno…" readonly>
-      </div>
-      <div class="profile-field">
-        <label class="profile-label">Branch Target (Ksh)</label>
-        <input class="profile-input" type="number" id="profileBranchTarget" placeholder="e.g. 150000" min="0" readonly>
-      </div>
-      <hr class="profile-section-divider">
-      <div class="profile-section-label">Reminders & Settings</div>
-      <div class="profile-field">
-        <label class="profile-label">Morning Reminder <span style="opacity:.4;font-size:10px;">daily notification</span></label>
-        <input class="profile-input" type="time" id="profileMorningReminder" readonly>
-      </div>
-      <div class="profile-field">
-        <label class="profile-label">Evening Reminder <span style="opacity:.4;font-size:10px;">daily notification</span></label>
-        <input class="profile-input" type="time" id="profileEveningReminder" readonly>
-      </div>
-      <div class="profile-field">
-        <label class="profile-label">Member Since</label>
-        <input class="profile-input" type="text" id="profileMemberSince" readonly>
-      </div>
+
       <button class="profile-save-btn" id="profileSaveBtn" onclick="saveProfile()" style="display:none;">Save Changes</button>
       <button class="signout-profile-btn" onclick="handleLogout()">Sign Out</button>
+
       <div class="danger-zone">
-        <div class="danger-title">Danger Zone</div>
-        <button class="delete-account-btn" onclick="confirmDeleteAccount()">Delete My Account</button>
+        <div class="danger-zone-inner">
+          <div class="danger-title">Danger Zone</div>
+          <div class="danger-warning">Permanently deletes your account and all data. This cannot be undone.</div>
+          <button class="delete-account-btn" onclick="confirmDeleteAccount()">Delete My Account</button>
+        </div>
       </div>
+
     </div>
   </div>
 </div>
@@ -737,9 +787,10 @@ const authTimeout = setTimeout(() => {
 }, 5000);
 
 auth.onAuthStateChanged(async (user) => {
-  if (authResolved && !user) return;
   if (!authResolved) { authResolved = true; clearTimeout(authTimeout); }
   if (user) {
+    // Avoid re-initialising if already logged in as the same user
+    if (CU === user.uid) return;
     CU = user.uid;
     const snap = await db.ref('users/' + CU + '/profile').once('value');
     currentProfile = snap.val() || { name: 'Guest' };
@@ -1018,76 +1069,92 @@ async function renderMonthlyHero() {
 function openProfile() {
   const prof = currentProfile || {};
   profileEditMode = false;
-  document.getElementById('profileName').value           = prof.name || '';
-  document.getElementById('profileUsername').value       = prof.username || '';
-  document.getElementById('profileEmail').value          = prof.email || '';
-  document.getElementById('profileBio').value            = prof.bio || '';
-  document.getElementById('profileOutlet').value         = prof.outlet || '';
-  document.getElementById('profileOfficialNames').value  = prof.officialNames || '';
-  document.getElementById('profileBrand').value          = prof.brand || '';
-  document.getElementById('profileBranchTarget').value   = prof.branchTarget || '';
+
+  // Identity card
+  const av = document.getElementById('profileAvatarLarge');
+  av.style.background = prof.color || AVATAR_COLORS[0];
+  av.textContent = (prof.name || 'G')[0].toUpperCase();
+  document.getElementById('profileIdName').textContent = prof.name || '';
+  document.getElementById('profileIdMeta').textContent = '@' + (prof.username || '') + (prof.brand ? '  ·  ' + prof.brand : '');
+
+  // Static values
+  const fmt = (v, fallback) => v || fallback || '—';
+  document.getElementById('profileNameStatic').textContent         = fmt(prof.name);
+  document.getElementById('profileUsernameStatic').textContent     = fmt(prof.username);
+  document.getElementById('profileEmailStatic').textContent        = fmt(prof.email);
+  document.getElementById('profileBioStatic').textContent          = prof.bio || '—';
+  document.getElementById('profileOutletStatic').textContent       = fmt(prof.outlet);
+  document.getElementById('profileOfficialNamesStatic').textContent= fmt(prof.officialNames);
+  document.getElementById('profileBrandStatic').textContent        = fmt(prof.brand);
+  const target = parseFloat(prof.branchTarget);
+  document.getElementById('profileBranchTargetStatic').textContent = target > 0 ? 'Ksh ' + target.toLocaleString() : '—';
+  document.getElementById('profileMorningReminderStatic').textContent = prof.morningReminder || '10:00';
+  document.getElementById('profileEveningReminderStatic').textContent = prof.eveningReminder || '18:00';
+  document.getElementById('profileMemberSince').textContent = prof.createdAt
+    ? new Date(prof.createdAt).toLocaleDateString('en-GB', { year:'numeric', month:'long', day:'numeric' }) : '—';
+
+  // Input values (for edit mode)
+  document.getElementById('profileName').value            = prof.name || '';
+  document.getElementById('profileBio').value             = prof.bio || '';
+  document.getElementById('profileOutlet').value          = prof.outlet || '';
+  document.getElementById('profileOfficialNames').value   = prof.officialNames || '';
+  document.getElementById('profileBrand').value           = prof.brand || '';
+  document.getElementById('profileBranchTarget').value    = prof.branchTarget || '';
   document.getElementById('profileMorningReminder').value = prof.morningReminder || '10:00';
   document.getElementById('profileEveningReminder').value = prof.eveningReminder || '18:00';
-  document.getElementById('profileMemberSince').value    = prof.createdAt
-    ? new Date(prof.createdAt).toLocaleDateString('en-GB', { year:'numeric', month:'long', day:'numeric' }) : '—';
+
+  // Start in read mode
   setProfileReadOnly(true);
   const btn = document.getElementById('profileEditBtn');
   btn.textContent = '✎ Edit'; btn.classList.remove('active');
   document.getElementById('profileSaveBtn').style.display = 'none';
-  const cp = document.getElementById('colorPicker');
-  cp.innerHTML = AVATAR_COLORS.map(c =>
-    `<div class="color-swatch${c===(prof.color||AVATAR_COLORS[0])?' selected':''}" style="background:${c}" onclick="pickColor('${c}',this)"></div>`
-  ).join('');
-  const cpSection = document.getElementById('colorPickerSection');
-  cpSection.style.opacity = '.35'; cpSection.style.pointerEvents = 'none';
-  const av = document.getElementById('profileAvatarLarge');
-  av.style.background = prof.color || AVATAR_COLORS[0];
-  av.textContent = (prof.name || 'G')[0].toUpperCase();
+
   applyOverlayTheme(document.getElementById('profileOverlay'));
   document.getElementById('profileOverlay').classList.add('open');
   pushOverlayState('profile');
 }
 
 function setProfileReadOnly(readonly) {
-  const editableIds = ['profileName','profileBio','profileOutlet','profileOfficialNames',
+  // Fields that can be edited
+  const editableInputIds = ['profileName','profileBio','profileOutlet','profileOfficialNames',
     'profileBrand','profileBranchTarget','profileMorningReminder','profileEveningReminder'];
-  editableIds.forEach(id => {
+  const staticIds = ['profileNameStatic','profileBioStatic','profileOutletStatic',
+    'profileOfficialNamesStatic','profileBrandStatic','profileBranchTargetStatic',
+    'profileMorningReminderStatic','profileEveningReminderStatic'];
+
+  editableInputIds.forEach(id => {
     const el = document.getElementById(id); if (!el) return;
-    el.readOnly = readonly;
-    el.style.opacity = readonly ? '.42' : '1';
-    el.style.cursor  = readonly ? 'default' : '';
+    el.style.display = readonly ? 'none' : '';
+  });
+  staticIds.forEach(id => {
+    const el = document.getElementById(id); if (!el) return;
+    el.style.display = readonly ? '' : 'none';
   });
 }
 
 function toggleProfileEdit() {
   if (profileEditMode) {
+    // Cancel — restore from currentProfile
     profileEditMode = false;
     const prof = currentProfile || {};
-    document.getElementById('profileName').value           = prof.name || '';
-    document.getElementById('profileBio').value            = prof.bio || '';
-    document.getElementById('profileOutlet').value         = prof.outlet || '';
-    document.getElementById('profileOfficialNames').value  = prof.officialNames || '';
-    document.getElementById('profileBrand').value          = prof.brand || '';
-    document.getElementById('profileBranchTarget').value   = prof.branchTarget || '';
+    document.getElementById('profileName').value            = prof.name || '';
+    document.getElementById('profileBio').value             = prof.bio || '';
+    document.getElementById('profileOutlet').value          = prof.outlet || '';
+    document.getElementById('profileOfficialNames').value   = prof.officialNames || '';
+    document.getElementById('profileBrand').value           = prof.brand || '';
+    document.getElementById('profileBranchTarget').value    = prof.branchTarget || '';
     document.getElementById('profileMorningReminder').value = prof.morningReminder || '10:00';
     document.getElementById('profileEveningReminder').value = prof.eveningReminder || '18:00';
-    document.getElementById('colorPicker').innerHTML = AVATAR_COLORS.map(c =>
-      `<div class="color-swatch${c===(prof.color||AVATAR_COLORS[0])?' selected':''}" style="background:${c}" onclick="pickColor('${c}',this)"></div>`
-    ).join('');
     setProfileReadOnly(true);
     const btn = document.getElementById('profileEditBtn');
     btn.textContent = '✎ Edit'; btn.classList.remove('active');
     document.getElementById('profileSaveBtn').style.display = 'none';
-    const cpSection = document.getElementById('colorPickerSection');
-    cpSection.style.opacity = '.35'; cpSection.style.pointerEvents = 'none';
   } else {
     profileEditMode = true;
     setProfileReadOnly(false);
     const btn = document.getElementById('profileEditBtn');
     btn.textContent = '✕ Cancel'; btn.classList.add('active');
     document.getElementById('profileSaveBtn').style.display = 'block';
-    const cpSection = document.getElementById('colorPickerSection');
-    cpSection.style.opacity = '1'; cpSection.style.pointerEvents = '';
   }
 }
 
@@ -1103,19 +1170,12 @@ function closeProfile() {
   }
 }
 
-function pickColor(c, el) {
-  document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
-  el.classList.add('selected');
-  document.getElementById('profileAvatarLarge').style.background = c;
-}
 
 async function saveProfile() {
-  const sel = document.querySelector('.color-swatch.selected');
-  const color = sel ? sel.style.background : (currentProfile.color || AVATAR_COLORS[0]);
   const updates = {
     name: document.getElementById('profileName').value.trim() || currentProfile.name,
     bio: document.getElementById('profileBio').value.trim(),
-    color,
+    color: currentProfile.color || AVATAR_COLORS[0],
     outlet: document.getElementById('profileOutlet').value.trim(),
     officialNames: document.getElementById('profileOfficialNames').value.trim(),
     brand: document.getElementById('profileBrand').value.trim(),
@@ -1126,10 +1186,29 @@ async function saveProfile() {
   try {
     await db.ref('users/' + CU + '/profile').update(updates);
     currentProfile = { ...currentProfile, ...updates };
+
+    // Refresh identity card
+    const av = document.getElementById('profileAvatarLarge');
+    av.style.background = currentProfile.color || AVATAR_COLORS[0];
+    av.textContent = (currentProfile.name || 'G')[0].toUpperCase();
+    document.getElementById('profileIdName').textContent = currentProfile.name || '';
+    document.getElementById('profileIdMeta').textContent = '@' + (currentProfile.username || '') + (currentProfile.brand ? '  ·  ' + currentProfile.brand : '');
+
+    // Refresh static values
+    document.getElementById('profileNameStatic').textContent          = currentProfile.name || '—';
+    document.getElementById('profileBioStatic').textContent           = currentProfile.bio || '—';
+    document.getElementById('profileOutletStatic').textContent        = currentProfile.outlet || '—';
+    document.getElementById('profileOfficialNamesStatic').textContent = currentProfile.officialNames || '—';
+    document.getElementById('profileBrandStatic').textContent         = currentProfile.brand || '—';
+    const t = parseFloat(currentProfile.branchTarget);
+    document.getElementById('profileBranchTargetStatic').textContent  = t > 0 ? 'Ksh ' + t.toLocaleString() : '—';
+    document.getElementById('profileMorningReminderStatic').textContent = currentProfile.morningReminder || '10:00';
+    document.getElementById('profileEveningReminderStatic').textContent = currentProfile.eveningReminder || '18:00';
+
     document.getElementById('greeting').innerText = 'Welcome, ' + currentProfile.name;
     updateAvatar(currentProfile);
     scheduleDailyReminders();
-    renderMonthlyHero(); // refresh target hero after profile save
+    renderMonthlyHero();
     renderSalesDonut();
     showToast('Profile saved ✓');
     profileEditMode = true;
