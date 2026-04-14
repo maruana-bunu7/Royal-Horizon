@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#f4f4f4" media="(prefers-color-scheme: light)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -14,10 +14,10 @@
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
 <style>
-:root{--bg-grey:#808080;--soft-white:#f4f4f4;--soft-black:#121212;--ui-speed:0.4s;--slide-speed:0.8s;--ui-curve:cubic-bezier(0.2,0.8,0.2,1);--slide-curve:cubic-bezier(0.4,0,0.2,1);--gold:#c8a84b;--gold-dim:rgba(200,168,75,.18);--gold-glow:rgba(200,168,75,.22);--gold-border:rgba(200,168,75,.38);}
+:root{--bg-grey:#808080;--soft-white:#f4f4f4;--soft-black:#000000;--ui-speed:0.4s;--slide-speed:0.8s;--ui-curve:cubic-bezier(0.2,0.8,0.2,1);--slide-curve:cubic-bezier(0.4,0,0.2,1);--gold:#c8a84b;--gold-dim:rgba(200,168,75,.18);--gold-glow:rgba(200,168,75,.22);--gold-border:rgba(200,168,75,.38);}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:none;}
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg-grey);height:100vh;display:flex;justify-content:center;align-items:center;transition:background var(--ui-speed) var(--ui-curve);overflow:hidden;color:#222;}
-body.theme-login{background:var(--soft-black);color:#e0e0e0;}
+body.theme-login{background:#000000;color:#e0e0e0;}
 body.theme-signup{background:var(--soft-white);color:#1a1a1a;}
 h1,h2,h3,.btn-main,.btn-submit,.modal-btn,.proj-detail-title{font-family:'Playfair Display',Georgia,serif;letter-spacing:.5px;}
 ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:rgba(128,128,128,.3);border-radius:3px;}
@@ -27,16 +27,11 @@ h1,h2,h3,.btn-main,.btn-submit,.modal-btn,.proj-detail-title{font-family:'Playfa
 .offline-banner.visible{transform:translateY(0);}
 
 /* LOADING */
-.loading-overlay{position:fixed;inset:0;background:#111;z-index:2000;display:flex;align-items:center;justify-content:center;}
-.loading-spinner{font-size:38px;animation:pulse 1.6s ease-in-out infinite;}
-@keyframes pulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.2);opacity:1}}
-
-/* PORTAL AMBIENT ORBS */
-.portal-orb{position:fixed;border-radius:50%;pointer-events:none;z-index:1;filter:blur(72px);opacity:.28;animation:orbFloat 8s ease-in-out infinite;}
-.portal-orb-1{width:320px;height:320px;background:radial-gradient(circle,rgba(160,140,110,.7),transparent 70%);top:-80px;left:-100px;animation-delay:0s;}
-.portal-orb-2{width:260px;height:260px;background:radial-gradient(circle,rgba(90,130,120,.6),transparent 70%);bottom:-60px;right:-80px;animation-delay:-3.5s;}
-.portal-orb-3{width:180px;height:180px;background:radial-gradient(circle,rgba(110,100,150,.55),transparent 70%);top:40%;left:60%;animation-delay:-6s;}
-@keyframes orbFloat{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-28px) scale(1.05);}}
+.loading-overlay{position:fixed;inset:0;background:#000000;z-index:2000;display:flex;align-items:center;justify-content:center;}
+.loading-content{display:flex;flex-direction:column;align-items:center;gap:20px;}
+.loading-icon{width:72px;height:72px;border-radius:18px;animation:pulse 1.6s ease-in-out infinite;box-shadow:0 0 40px rgba(200,168,75,.25),0 0 80px rgba(200,168,75,.1);}
+.loading-wordmark{font-family:'Playfair Display',serif;font-size:12px;letter-spacing:4px;text-transform:uppercase;color:rgba(200,168,75,.55);}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.75;}50%{transform:scale(1.06);opacity:1;}}
 
 /* PORTAL AMBIENT ORBS */
 .portal-orb{position:fixed;border-radius:50%;pointer-events:none;z-index:1;filter:blur(72px);opacity:0;transition:opacity 1.2s ease;animation:orbFloat 9s ease-in-out infinite;}
@@ -49,7 +44,6 @@ h1,h2,h3,.btn-main,.btn-submit,.modal-btn,.proj-detail-title{font-family:'Playfa
 /* PORTAL */
 .container{width:100%;max-width:420px;text-align:center;position:relative;z-index:10;}
 
-/* Wordmark / logo */
 .portal-wordmark{margin-bottom:48px;opacity:0;transform:translateY(10px);animation:wordmarkIn .9s var(--ui-curve) .2s forwards;}
 .portal-logo-icon{font-size:34px;margin-bottom:14px;display:block;line-height:1;}
 .portal-logo-icon svg{display:block;margin:0 auto;}
@@ -57,25 +51,20 @@ h1,h2,h3,.btn-main,.btn-submit,.modal-btn,.proj-detail-title{font-family:'Playfa
 .portal-logo-sub{font-size:11px;text-transform:uppercase;letter-spacing:3px;opacity:.35;margin-top:4px;font-weight:400;}
 @keyframes wordmarkIn{to{opacity:1;transform:translateY(0);}}
 
-/* Icon theme adaptation */
 .rh-icon .rh-bg{fill:#0d0b08;transition:fill .4s;}
 body.theme-signup .rh-icon .rh-bg{fill:#1a1410;}
-@media(prefers-color-scheme:light){
-  .rh-icon .rh-bg{fill:#1a1410;}
-}
+@media(prefers-color-scheme:light){.rh-icon .rh-bg{fill:#1a1410;}}
 
 .selection-screen{display:flex;flex-direction:column;align-items:center;gap:14px;transition:.3s ease,transform var(--ui-speed) var(--ui-curve);}
 .selection-screen.fade-out{opacity:0;transform:scale(.97) translateY(-6px);pointer-events:none;}
 
-/* Premium pill buttons */
 .btn-main{width:100%;max-width:280px;padding:17px 40px;border:none;border-radius:16px;font-size:15px;font-weight:600;cursor:pointer;transition:.28s var(--ui-curve);letter-spacing:.3px;position:relative;overflow:hidden;}
 .btn-main::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.07);opacity:0;transition:.2s;}
 .btn-main:hover::after{opacity:1;}
 .btn-main:active{transform:scale(.97);}
-.btn-login{background:#121212;color:#f0f0f0;box-shadow:0 8px 28px rgba(0,0,0,.22),0 2px 8px rgba(0,0,0,.12);}
+.btn-login{background:#000000;color:#f0f0f0;box-shadow:0 8px 28px rgba(0,0,0,.32),0 2px 8px rgba(0,0,0,.18),0 0 0 1px rgba(200,168,75,.15);}
 .btn-signup{background:rgba(240,240,240,.92);color:#1a1a1a;box-shadow:0 8px 28px rgba(0,0,0,.1),0 2px 6px rgba(0,0,0,.07);border:1px solid rgba(200,200,200,.5);}
 
-/* Divider between buttons */
 .portal-btn-divider{font-size:10px;text-transform:uppercase;letter-spacing:2.5px;opacity:.3;margin:0;}
 .form-wrapper{position:absolute;top:50%;left:50%;transform:translate(-50%,-45%);width:90%;opacity:0;visibility:hidden;transition:.4s var(--ui-curve);}
 .form-wrapper.active{opacity:1;visibility:visible;transform:translate(-50%,-50%);}
@@ -87,21 +76,24 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .portal-input::placeholder{opacity:.3;}
 .btn-submit{width:100%;padding:14px;border-radius:12px;border:none;font-weight:600;cursor:pointer;font-size:16px;transition:.2s;}
 .btn-submit:active{transform:scale(.98);}
-.theme-login .btn-submit{background:#f4f4f4;color:#121212;}.theme-signup .btn-submit{background:#121212;color:#f4f4f4;}
+.theme-login .btn-submit{background:#f4f4f4;color:#000000;}
+.theme-signup .btn-submit{background:#000000;color:#f4f4f4;}
 .error-msg{color:#e05252;font-size:12px;margin-bottom:12px;min-height:14px;text-align:left;}
 
 /* DASHBOARD */
 .dashboard-wrapper{position:fixed;top:0;left:0;width:100vw;height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:100;opacity:0;transition:.8s var(--slide-curve);}
 .header-row{position:absolute;top:40px;width:85%;display:flex;justify-content:space-between;align-items:center;}
 .header-right{display:flex;gap:14px;align-items:center;}
-.avatar-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;border:1.5px solid var(--gold-border);font-family:'Playfair Display',serif;flex-shrink:0;color:#fff;box-shadow:0 0 0 0 var(--gold-glow);}.avatar-btn:hover{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-glow);}
-.theme-toggle{cursor:pointer;font-size:22px;opacity:.5;transition:.2s;}.theme-toggle:hover{opacity:1;}
+.avatar-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;border:1.5px solid var(--gold-border);font-family:'Playfair Display',serif;flex-shrink:0;color:#fff;box-shadow:0 0 0 0 var(--gold-glow);}
+.avatar-btn:hover{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-glow);}
+.theme-toggle{cursor:pointer;font-size:22px;opacity:.5;transition:.2s;}
+.theme-toggle:hover{opacity:1;}
 
 /* CAROUSEL */
 .carousel-container{width:100%;height:75vh;display:flex;align-items:center;overflow:visible;padding:0 10%;}
 .workspace-track{display:flex;gap:30px;transition:transform var(--slide-speed) var(--slide-curve);will-change:transform;}
 .workspace-card{min-width:80vw;height:65vh;background:rgba(128,128,128,.08);backdrop-filter:blur(15px);border:1px solid rgba(128,128,128,.15);border-radius:40px;padding:35px;opacity:.15;transform:scale(.92);transition:opacity var(--slide-speed) var(--slide-curve),transform var(--slide-speed) var(--slide-curve);display:flex;flex-direction:column;}
-.workspace-card.active{opacity:1;transform:scale(1);background:rgba(128,128,128,.12);border-color:var(--gold-border);box-shadow:0 0 0 1px var(--gold-border),0 8px 40px var(--gold-glow),0 2px 12px rgba(0,0,0,.15);}
+.workspace-card.active{opacity:1;transform:scale(1);background:rgba(0,0,0,.45);border-color:var(--gold-border);box-shadow:0 0 0 1px var(--gold-border),0 8px 40px var(--gold-glow),0 2px 12px rgba(0,0,0,.25);}
 
 /* ── OVERVIEW SLIDE ── */
 .overview-stats{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:12px;}
@@ -120,7 +112,7 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .today-sales-strip{background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.12);border-left:2px solid var(--gold-border);border-radius:16px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-shrink:0;}
 
 /* MONTHLY TARGET HERO */
-.monthly-hero{flex-shrink:0;background:rgba(128,128,128,.06);border:1px solid rgba(128,128,128,.1);border-left:2px solid var(--gold-border);border-radius:20px;padding:14px 16px;}
+.monthly-hero{flex-shrink:0;background:rgba(0,0,0,.35);border:1px solid rgba(128,128,128,.1);border-left:2px solid var(--gold-border);border-radius:20px;padding:14px 16px;}
 .monthly-hero-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
 .monthly-hero-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;}
 .monthly-hero-pct{font-family:'Playfair Display';font-size:22px;font-weight:700;line-height:1;color:var(--gold);}
@@ -162,8 +154,7 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .clear-done-btn:hover{opacity:.8;background:rgba(128,128,128,.1);}
 
 /* ── SALES LOG SLIDE ── */
-/* Today's arc / donut hero */
-.sales-hero{flex-shrink:0;display:flex;align-items:center;gap:16px;background:rgba(128,128,128,.06);border:1px solid rgba(128,128,128,.1);border-left:2px solid var(--gold-border);border-radius:20px;padding:14px 16px;margin-bottom:10px;}
+.sales-hero{flex-shrink:0;display:flex;align-items:center;gap:16px;background:rgba(0,0,0,.3);border:1px solid rgba(128,128,128,.1);border-left:2px solid var(--gold-border);border-radius:20px;padding:14px 16px;margin-bottom:10px;}
 .sales-donut-wrap{position:relative;width:64px;height:64px;flex-shrink:0;}
 .sales-donut-svg{width:64px;height:64px;transform:rotate(-90deg);}
 .sales-donut-bg{fill:none;stroke:rgba(128,128,128,.15);stroke-width:7;}
@@ -175,7 +166,6 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .sales-hero-target{font-size:11px;opacity:.5;margin-top:6px;}
 .sales-hero-target span{font-weight:600;opacity:.8;}
 
-/* Scrollable sales list */
 .sales-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:7px;min-height:0;}
 .sale-item{background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;padding:10px 12px;display:flex;align-items:flex-start;gap:9px;transition:.2s;}
 .sale-item.sale-editing{border-color:rgba(90,160,120,.4);background:rgba(90,160,120,.06);}
@@ -186,9 +176,9 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .sale-total{font-size:13px;font-weight:600;opacity:.8;white-space:nowrap;}
 .sale-edit-btn{opacity:.22;cursor:pointer;font-size:12px;background:none;border:none;color:inherit;transition:.2s;padding:2px;}
 .sale-edit-btn:hover{opacity:.85;color:rgba(90,160,120,.9);}
-.sale-del{opacity:.25;cursor:pointer;font-size:11px;background:none;border:none;color:inherit;transition:.2s;padding:2px;}.sale-del:hover{opacity:.8;color:#e05252;}
+.sale-del{opacity:.25;cursor:pointer;font-size:11px;background:none;border:none;color:inherit;transition:.2s;padding:2px;}
+.sale-del:hover{opacity:.8;color:#e05252;}
 
-/* Sales bottom bar */
 .sales-bottom-bar{display:flex;gap:9px;align-items:center;padding-top:10px;border-top:1px solid rgba(128,128,128,.1);flex-shrink:0;}
 .sales-log-btn{flex:1;padding:12px 16px;background:rgba(128,128,128,.18);border:1px solid rgba(128,128,128,.28);border-radius:14px;cursor:pointer;font-family:'Playfair Display';font-size:15px;font-weight:600;color:inherit;transition:.25s;display:flex;align-items:center;justify-content:center;gap:7px;}
 .sales-log-btn:hover{background:rgba(128,128,128,.28);}
@@ -211,9 +201,9 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .lsf-qty{max-width:80px;}
 .lsf-submit-btn{width:100%;padding:15px;border-radius:14px;border:none;font-family:'Playfair Display';font-size:16px;font-weight:600;cursor:pointer;transition:.25s;margin-top:6px;}
 .lsf-submit-btn:active{transform:scale(.98);}
-body.theme-login .lsf-submit-btn{background:#f4f4f4;color:#121212;}
-body.theme-signup .lsf-submit-btn{background:#121212;color:#f4f4f4;}
-body:not(.theme-login):not(.theme-signup) .lsf-submit-btn{background:#f0f0f0;color:#111;}
+body.theme-login .lsf-submit-btn{background:#f4f4f4;color:#000000;}
+body.theme-signup .lsf-submit-btn{background:#000000;color:#f4f4f4;}
+body:not(.theme-login):not(.theme-signup) .lsf-submit-btn{background:#f0f0f0;color:#000000;}
 .lsf-cancel-btn{width:100%;padding:12px;border-radius:14px;border:1px solid rgba(128,128,128,.2);background:transparent;font-family:'Playfair Display';font-size:14px;cursor:pointer;color:inherit;transition:.2s;margin-top:6px;}
 .lsf-cancel-btn:hover{background:rgba(128,128,128,.1);}
 .lsf-editing-banner{background:rgba(90,160,120,.1);border:1px solid rgba(90,160,120,.28);border-radius:12px;padding:9px 14px;font-size:12px;opacity:.8;display:none;}
@@ -241,11 +231,11 @@ body:not(.theme-login):not(.theme-signup) .lsf-submit-btn{background:#f0f0f0;col
 .arch-cancel-sel-btn:hover{background:rgba(128,128,128,.16);}
 
 /* DOCK */
-.floating-dock{position:absolute;bottom:36px;height:68px;padding:0 10px;background:rgba(128,128,128,.09);backdrop-filter:blur(30px);border-radius:22px;border:1px solid var(--gold-border);display:flex;align-items:center;gap:4px;box-shadow:0 20px 50px rgba(0,0,0,.2),0 4px 12px rgba(0,0,0,.1),0 0 0 1px var(--gold-dim);}
+.floating-dock{position:absolute;bottom:36px;height:68px;padding:0 10px;background:rgba(0,0,0,.65);backdrop-filter:blur(30px);border-radius:22px;border:1px solid var(--gold-border);display:flex;align-items:center;gap:4px;box-shadow:0 20px 50px rgba(0,0,0,.35),0 4px 12px rgba(0,0,0,.2),0 0 0 1px var(--gold-dim);}
 .dock-item{width:52px;height:52px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;opacity:.28;transition:.35s cubic-bezier(0.2,0.8,0.2,1);gap:4px;position:relative;}
 .dock-item svg{transition:.35s cubic-bezier(0.2,0.8,0.2,1);}
 .dock-item .dock-lbl{font-size:9px;letter-spacing:.4px;font-weight:600;text-transform:uppercase;opacity:0;transition:.3s;margin-top:0px;}
-.dock-item.active{opacity:1;background:rgba(128,128,128,.18);transform:translateY(-4px);}
+.dock-item.active{opacity:1;background:rgba(200,168,75,.08);transform:translateY(-4px);}
 .dock-item.active::after{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:14px;height:2px;border-radius:2px;background:var(--gold);opacity:.75;}
 .dock-item.active svg{filter:drop-shadow(0 0 4px rgba(212,184,122,.4));}
 .dock-item.active .dock-lbl{opacity:.6;}
@@ -262,46 +252,31 @@ body:not(.theme-login):not(.theme-signup) .lsf-submit-btn{background:#f0f0f0;col
 .overlay-body{flex:1;overflow-y:auto;padding:0 28px 40px;}
 
 /* PROFILE */
-/* Identity card at top */
 .profile-id-card{display:flex;flex-direction:column;align-items:center;padding:24px 0 20px;margin-bottom:4px;}
-.profile-avatar-large{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;font-family:'Playfair Display';margin-bottom:14px;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.18);}
+.profile-avatar-large{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;font-family:'Playfair Display';margin-bottom:14px;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.28);}
 .profile-id-name{font-family:'Playfair Display';font-size:22px;font-weight:700;margin-bottom:3px;}
 .profile-id-meta{font-size:12px;opacity:.4;letter-spacing:.4px;}
-
-/* Section cards */
 .profile-section-card{background:rgba(128,128,128,.06);border:1px solid rgba(128,128,128,.1);border-radius:20px;padding:18px 16px;margin-bottom:14px;}
 .profile-section-title{font-size:10px;text-transform:uppercase;letter-spacing:2px;font-weight:700;opacity:.4;margin-bottom:16px;}
-
-/* Field rows */
 .profile-field{margin-bottom:14px;}
 .profile-field:last-child{margin-bottom:0;}
 .profile-label{font-size:10px;text-transform:uppercase;letter-spacing:1.4px;opacity:.38;margin-bottom:5px;display:block;}
-
-/* Editable inputs */
 .profile-input{width:100%;font-size:14px;padding:11px 14px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.13);border-radius:12px;color:inherit;transition:.2s;font-family:'Inter',sans-serif;}
 .profile-input:focus:not([readonly]){border-color:var(--gold-border);background:rgba(128,128,128,.12);box-shadow:0 0 0 2px var(--gold-dim);}
 .profile-textarea{resize:none;min-height:72px;line-height:1.6;}
-
-/* Static (read-only) values — no box */
 .profile-static{font-size:14px;padding:2px 0 10px;opacity:.65;border-bottom:1px solid rgba(128,128,128,.1);word-break:break-all;}
 .profile-field:last-child .profile-static{border-bottom:none;padding-bottom:0;}
-
-/* Hidden when in read mode */
 .profile-input[readonly]{display:none;}
 .profile-static.edit-hidden{display:none;}
 .profile-input.edit-shown{display:block;}
-
 .profile-edit-btn{padding:9px 20px;background:rgba(128,128,128,.12);border:1px solid rgba(128,128,128,.2);border-radius:20px;cursor:pointer;font-size:13px;font-weight:600;color:inherit;transition:.2s;margin-left:auto;white-space:nowrap;}
 .profile-edit-btn:hover{background:rgba(128,128,128,.22);}
 .profile-edit-btn.active{background:rgba(220,100,80,.1);border-color:rgba(220,100,80,.25);color:#e05252;}
 .profile-save-btn{width:100%;padding:13px;background:rgba(90,160,120,.15);border:1px solid rgba(90,160,120,.3);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:15px;color:inherit;transition:.2s;margin-top:6px;}
-.profile-save-btn:hover{background:rgba(90,160,120,.25);}.profile-save-btn:active{transform:scale(.98);}
-
-/* Sign out — quieter, text-style */
+.profile-save-btn:hover{background:rgba(90,160,120,.25);}
+.profile-save-btn:active{transform:scale(.98);}
 .signout-profile-btn{display:block;width:fit-content;margin:24px auto 0;padding:8px 18px;background:none;border:1px solid rgba(128,128,128,.2);border-radius:20px;cursor:pointer;font-size:13px;color:inherit;opacity:.5;transition:.2s;}
 .signout-profile-btn:hover{opacity:1;background:rgba(128,128,128,.08);}
-
-/* Danger zone — more breathing room, warning hint */
 .danger-zone{margin-top:32px;padding:20px 0 8px;}
 .danger-zone-inner{background:rgba(220,80,80,.04);border:1px solid rgba(220,80,80,.15);border-radius:18px;padding:18px 16px;}
 .danger-title{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#e05252;opacity:.7;margin-bottom:6px;font-weight:700;}
@@ -310,12 +285,12 @@ body:not(.theme-login):not(.theme-signup) .lsf-submit-btn{background:#f0f0f0;col
 .delete-account-btn:hover{background:rgba(220,80,80,.15);}
 
 /* MODALS */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(10px);z-index:500;display:none;align-items:center;justify-content:center;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(10px);z-index:500;display:none;align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
 .modal-card{border-radius:22px;padding:30px;width:90%;max-width:360px;}
-body.theme-login .modal-card{background:#1c1c1c;color:#e0e0e0;border:1px solid rgba(255,255,255,.08);}
+body.theme-login .modal-card{background:#0a0a0a;color:#e0e0e0;border:1px solid rgba(255,255,255,.08);}
 body.theme-signup .modal-card{background:#f0f0f0;color:#1a1a1a;border:1px solid rgba(0,0,0,.08);}
-body:not(.theme-login):not(.theme-signup) .modal-card{background:#2a2a2a;color:#e0e0e0;border:1px solid rgba(255,255,255,.08);}
+body:not(.theme-login):not(.theme-signup) .modal-card{background:#080808;color:#e0e0e0;border:1px solid rgba(255,255,255,.08);}
 .modal-card h3{margin-bottom:20px;font-size:19px;}
 .modal-input{width:100%;padding:10px 13px;background:rgba(128,128,128,.1);border:1px solid rgba(128,128,128,.2);border-radius:11px;color:inherit;font-family:'Inter';font-size:13px;margin-bottom:9px;}
 .modal-input:focus{border-color:rgba(128,128,128,.5);}
@@ -323,7 +298,7 @@ select.modal-input{cursor:pointer;}
 .modal-actions{display:flex;gap:9px;margin-top:16px;}
 .modal-btn{flex:1;padding:11px;border-radius:11px;border:none;cursor:pointer;font-family:'Playfair Display';font-size:14px;font-weight:600;transition:.2s;}
 .modal-btn:active{transform:scale(.97);}
-.modal-btn.confirm{background:rgba(200,200,200,.9);color:#121212;}
+.modal-btn.confirm{background:rgba(200,200,200,.9);color:#000000;}
 .modal-btn.danger{background:rgba(220,80,80,.8);color:#fff;}
 .modal-btn.cancel{background:rgba(128,128,128,.15);color:inherit;}
 
@@ -331,8 +306,8 @@ select.modal-input{cursor:pointer;}
 .report-pre{font-family:'Courier New',Courier,monospace;font-size:12px;line-height:1.75;white-space:pre-wrap;background:rgba(128,128,128,.06);border:1px solid rgba(128,128,128,.12);border-radius:16px;padding:18px;overflow-x:auto;word-break:break-word;}
 
 /* TOAST */
-.toast{position:fixed;bottom:125px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(30,30,30,.95);color:#e0e0e0;padding:10px 20px;border-radius:18px;font-size:13px;opacity:0;transition:.3s;z-index:900;pointer-events:none;white-space:nowrap;}
-body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
+.toast{position:fixed;bottom:125px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(10,10,10,.96);color:#e0e0e0;padding:10px 20px;border-radius:18px;font-size:13px;opacity:0;transition:.3s;z-index:900;pointer-events:none;white-space:nowrap;border:1px solid rgba(200,168,75,.2);}
+body.theme-signup .toast{background:rgba(240,240,240,.96);color:#1a1a1a;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 /* CATEGORY DROPDOWN */
@@ -346,7 +321,7 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 .lsf-cat-trigger-name{font-size:13px;font-weight:500;}
 .lsf-cat-chevron{font-size:11px;opacity:.4;transition:.25s;flex-shrink:0;}
 .lsf-cat-dropdown.open .lsf-cat-chevron{transform:rotate(180deg);opacity:.7;}
-.lsf-cat-panel{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--cat-panel-bg,#1e1c18);border:1px solid rgba(128,128,128,.2);border-radius:16px;z-index:200;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.35);display:none;max-height:260px;overflow-y:auto;}
+.lsf-cat-panel{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--cat-panel-bg,#080808);border:1px solid rgba(200,168,75,.2);border-radius:16px;z-index:200;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.6);display:none;max-height:260px;overflow-y:auto;}
 body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
 .lsf-cat-panel.open{display:block;animation:catPanelIn .2s cubic-bezier(0.2,0.8,0.2,1);}
 @keyframes catPanelIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
@@ -362,7 +337,7 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
 .sale-cat-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:2px 7px;border-radius:8px;background:rgba(128,128,128,.12);border:1px solid rgba(128,128,128,.18);opacity:.75;margin-left:5px;vertical-align:middle;}
 
 /* SALES BAR CHART */
-.sales-chart-wrap{flex-shrink:0;background:rgba(128,128,128,.06);border:1px solid rgba(128,128,128,.1);border-radius:18px;padding:12px 14px;margin-bottom:10px;}
+.sales-chart-wrap{flex-shrink:0;background:rgba(0,0,0,.3);border:1px solid rgba(128,128,128,.1);border-radius:18px;padding:12px 14px;margin-bottom:10px;}
 .sales-chart-title{font-size:10px;text-transform:uppercase;letter-spacing:1.4px;opacity:.4;margin-bottom:10px;}
 .sales-chart-bars{display:flex;align-items:flex-end;gap:5px;height:60px;}
 .sales-chart-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
@@ -385,27 +360,14 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
 
 <!-- OFFLINE BANNER -->
 <div class="offline-banner" id="offlineBanner">⚡ Offline — changes will sync when reconnected</div>
-<div class="loading-overlay" id="loadingOverlay"><div class="loading-spinner">
-  <svg width="48" height="48" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation:pulse 1.6s ease-in-out infinite;">
-    <rect width="96" height="96" rx="20" fill="#0d0b08"/>
-    <path d="M48 7 L89 48 L48 89 L7 48 Z" stroke="url(#lsq)" stroke-width="1" fill="none" opacity=".7"/>
-    <path d="M7 48 L48 89 L89 48 Z" fill="rgba(212,160,48,.05)"/>
-    <line x1="7" y1="48" x2="89" y2="48" stroke="url(#lhl)" stroke-width=".75" opacity=".35"/>
-    <path d="M22 48 A26 26 0 0 1 74 48" stroke="url(#laO)" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".7"/>
-    <path d="M31 48 A17 17 0 0 1 65 48" stroke="url(#laI)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-    <line x1="48" y1="7" x2="48" y2="19" stroke="#ffe898" stroke-width="1.2" stroke-linecap="round"/>
-    <line x1="35" y1="18" x2="39" y2="26" stroke="#d4b060" stroke-width="1" stroke-linecap="round" opacity=".5"/>
-    <line x1="61" y1="18" x2="57" y2="26" stroke="#d4b060" stroke-width="1" stroke-linecap="round" opacity=".5"/>
-    <path d="M48 7 L51 10 L48 13 L45 10 Z" fill="#fff8d0"/>
-    <circle cx="48" cy="48" r="5.5" fill="#d4980c"/><circle cx="48" cy="48" r="2.5" fill="#fffce0"/>
-    <defs>
-      <linearGradient id="lsq" x1="7" y1="48" x2="89" y2="48" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#d4b87a" stop-opacity=".1"/><stop offset="40%" stop-color="#f0d890" stop-opacity=".9"/><stop offset="60%" stop-color="#f0d890" stop-opacity=".9"/><stop offset="100%" stop-color="#d4b87a" stop-opacity=".1"/></linearGradient>
-      <linearGradient id="lhl" x1="7" y1="0" x2="89" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#d4b87a" stop-opacity="0"/><stop offset="40%" stop-color="#d4b87a" stop-opacity=".5"/><stop offset="60%" stop-color="#d4b87a" stop-opacity=".5"/><stop offset="100%" stop-color="#d4b87a" stop-opacity="0"/></linearGradient>
-      <linearGradient id="laO" x1="22" y1="48" x2="74" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#9a7020" stop-opacity=".6"/><stop offset="50%" stop-color="#f4e090"/><stop offset="100%" stop-color="#9a7020" stop-opacity=".6"/></linearGradient>
-      <linearGradient id="laI" x1="31" y1="48" x2="65" y2="31" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#b08030"/><stop offset="50%" stop-color="#ffe898"/><stop offset="100%" stop-color="#b08030"/></linearGradient>
-    </defs>
-  </svg>
-</div></div>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-content">
+    <img src="icon-192.png" class="loading-icon" alt="Royal Horizon" width="72" height="72">
+    <div class="loading-wordmark">Royal Horizon</div>
+  </div>
+</div>
 
 <!-- PORTAL AMBIENT ORBS -->
 <div class="portal-orb portal-orb-1" id="portalOrb1"></div>
@@ -570,18 +532,12 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
       <!-- SLIDE 0: OVERVIEW -->
       <div class="workspace-card active">
         <h2 style="margin-bottom:12px;">Overview</h2>
-
-        <!-- Stats -->
         <div class="overview-stats">
           <div class="stat-box"><div class="stat-number" id="statTotal">0</div><div class="stat-label">Total Tasks</div></div>
           <div class="stat-box"><div class="stat-number" id="statActive">0</div><div class="stat-label">Pending</div></div>
         </div>
-
-        <!-- Recent Tasks -->
         <div class="section-lbl">Recent Tasks</div>
         <div id="recentList" style="margin-bottom:12px;"></div>
-
-        <!-- Today's Sales Horizon Strip -->
         <div class="today-sales-strip">
           <div>
             <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;">Today's Revenue</div>
@@ -589,8 +545,6 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
           </div>
           <div style="font-family:'Playfair Display';font-size:20px;font-weight:700;" id="overviewSalesTotal">Ksh 0</div>
         </div>
-
-        <!-- Monthly Target Hero -->
         <div class="monthly-hero" id="monthlyHero" style="display:none;">
           <div class="monthly-hero-top">
             <div>
@@ -643,8 +597,6 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
           <h2>Sales Log</h2>
           <div style="font-size:10px;opacity:.4;text-transform:uppercase;letter-spacing:1px;" id="salesDateLabel"></div>
         </div>
-
-        <!-- Donut Hero -->
         <div class="sales-hero" id="salesHero">
           <div class="sales-donut-wrap">
             <svg class="sales-donut-svg" viewBox="0 0 64 64">
@@ -660,17 +612,11 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
             <div class="sales-hero-target" id="salesHeroTarget" style="display:none;">of <span id="salesHeroTargetVal">—</span> daily target</div>
           </div>
         </div>
-
-        <!-- Sales Bar Chart -->
         <div class="sales-chart-wrap" id="salesChartWrap" style="display:none;">
           <div class="sales-chart-title">Last 7 Days</div>
           <div class="sales-chart-bars" id="salesChartBars"></div>
         </div>
-
-        <!-- Scrollable Sales List -->
         <div class="sales-list" id="salesList"></div>
-
-        <!-- Bottom Bar -->
         <div class="sales-bottom-bar">
           <button class="sales-log-btn" onclick="openLogSaleSheet()">
             <span style="font-size:18px;line-height:1;">+</span> Log Sale
@@ -699,7 +645,6 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
     </div>
   </div>
   <div class="floating-dock">
-    <!-- Overview -->
     <div class="dock-item active" onclick="moveTrack(0)" title="Overview">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/>
@@ -707,21 +652,18 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
       </svg>
       <span class="dock-lbl">Overview</span>
     </div>
-    <!-- Tasks -->
     <div class="dock-item" onclick="moveTrack(1)" title="Tasks">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
       </svg>
       <span class="dock-lbl">Tasks</span>
     </div>
-    <!-- Sales -->
     <div class="dock-item" onclick="moveTrack(2)" title="Sales Log">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/>
       </svg>
       <span class="dock-lbl">Sales</span>
     </div>
-    <!-- Archive -->
     <div class="dock-item" onclick="moveTrack(3)" title="Archive">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5" rx="1"/>
@@ -741,7 +683,6 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
     </div>
     <div class="log-sale-body">
       <div class="lsf-editing-banner" id="lsfEditingBanner">✎ Editing existing sale — tap Update to save changes.</div>
-
       <div>
         <label class="lsf-label">Item Name</label>
         <input class="lsf-input" id="lsfItem" placeholder="e.g. Samsung Galaxy S25 Ultra" autocomplete="off" oninput="clearFieldErr('lsfItem','lsfItemErr')">
@@ -761,82 +702,32 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
             <span class="lsf-cat-chevron">▾</span>
           </button>
           <div class="lsf-cat-panel" id="lsfCatPanel">
-
             <div class="lsf-cat-group-header">🏠 Appliances</div>
-            <div class="lsf-cat-option" data-cat="Refrigerator" data-group="Appliances" data-emoji="🧊" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">🧊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Refrigerator / Fridge</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Microwave" data-group="Appliances" data-emoji="📦" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">📦</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Microwave</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Washing Machine" data-group="Appliances" data-emoji="🫧" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">🫧</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Washing Machine</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Cooker / Oven" data-group="Appliances" data-emoji="🍳" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">🍳</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Cooker / Oven</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Air Conditioner" data-group="Appliances" data-emoji="❄️" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">❄️</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Air Conditioner</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Blender / Juicer" data-group="Appliances" data-emoji="🥤" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">🥤</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Blender / Juicer</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Other Appliance" data-group="Appliances" data-emoji="🔌" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">🔌</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Other Appliance</div></div>
-            </div>
-
+            <div class="lsf-cat-option" data-cat="Refrigerator" data-group="Appliances" data-emoji="🧊" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🧊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Refrigerator / Fridge</div></div></div>
+            <div class="lsf-cat-option" data-cat="Microwave" data-group="Appliances" data-emoji="📦" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📦</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Microwave</div></div></div>
+            <div class="lsf-cat-option" data-cat="Washing Machine" data-group="Appliances" data-emoji="🫧" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🫧</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Washing Machine</div></div></div>
+            <div class="lsf-cat-option" data-cat="Cooker / Oven" data-group="Appliances" data-emoji="🍳" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🍳</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Cooker / Oven</div></div></div>
+            <div class="lsf-cat-option" data-cat="Air Conditioner" data-group="Appliances" data-emoji="❄️" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">❄️</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Air Conditioner</div></div></div>
+            <div class="lsf-cat-option" data-cat="Blender / Juicer" data-group="Appliances" data-emoji="🥤" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🥤</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Blender / Juicer</div></div></div>
+            <div class="lsf-cat-option" data-cat="Other Appliance" data-group="Appliances" data-emoji="🔌" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🔌</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Other Appliance</div></div></div>
             <div class="lsf-cat-group-header">📺 Electronics</div>
-            <div class="lsf-cat-option" data-cat="Television" data-group="Electronics" data-emoji="📺" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">📺</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Television / Smart TV</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Sound System" data-group="Electronics" data-emoji="🔊" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">🔊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Sound System / Speaker</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Home Theatre" data-group="Electronics" data-emoji="🎬" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">🎬</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Home Theatre</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Radio / Hi-Fi" data-group="Electronics" data-emoji="📻" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">📻</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Radio / Hi-Fi</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="CCTV / Security" data-group="Electronics" data-emoji="📷" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">📷</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">CCTV / Security Camera</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Other Electronic" data-group="Electronics" data-emoji="🔋" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">🔋</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Other Electronic</div></div>
-            </div>
-
+            <div class="lsf-cat-option" data-cat="Television" data-group="Electronics" data-emoji="📺" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📺</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Television / Smart TV</div></div></div>
+            <div class="lsf-cat-option" data-cat="Sound System" data-group="Electronics" data-emoji="🔊" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🔊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Sound System / Speaker</div></div></div>
+            <div class="lsf-cat-option" data-cat="Home Theatre" data-group="Electronics" data-emoji="🎬" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🎬</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Home Theatre</div></div></div>
+            <div class="lsf-cat-option" data-cat="Radio / Hi-Fi" data-group="Electronics" data-emoji="📻" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📻</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Radio / Hi-Fi</div></div></div>
+            <div class="lsf-cat-option" data-cat="CCTV / Security" data-group="Electronics" data-emoji="📷" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📷</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">CCTV / Security Camera</div></div></div>
+            <div class="lsf-cat-option" data-cat="Other Electronic" data-group="Electronics" data-emoji="🔋" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🔋</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Other Electronic</div></div></div>
             <div class="lsf-cat-group-header">📱 Gadgets &amp; Accessories</div>
-            <div class="lsf-cat-option selected" data-cat="Smartphone / Phone" data-group="Gadgets & Accessories" data-emoji="📱" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">📱</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Smartphone / Phone</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Tablet" data-group="Gadgets & Accessories" data-emoji="💻" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">💻</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Tablet</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Laptop" data-group="Gadgets & Accessories" data-emoji="🖥️" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">🖥️</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Laptop / Computer</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Smartwatch" data-group="Gadgets & Accessories" data-emoji="⌚" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">⌚</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Smartwatch / Wearable</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Earphones / Headphones" data-group="Gadgets & Accessories" data-emoji="🎧" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">🎧</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Earphones / Headphones</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Charger / Cable" data-group="Gadgets & Accessories" data-emoji="🔌" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">🔌</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Charger / Cable</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Power Bank" data-group="Gadgets & Accessories" data-emoji="🔋" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">🔋</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Power Bank</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Phone Case / Cover" data-group="Gadgets & Accessories" data-emoji="🛡️" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">🛡️</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Phone Case / Cover</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Memory / Storage" data-group="Gadgets & Accessories" data-emoji="💾" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">💾</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Memory Card / Storage</div></div>
-            </div>
-            <div class="lsf-cat-option" data-cat="Other Accessory" data-group="Gadgets & Accessories" data-emoji="📦" onclick="pickCat(this)">
-              <span class="lsf-cat-option-emoji">📦</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Other Accessory</div></div>
-            </div>
-
+            <div class="lsf-cat-option selected" data-cat="Smartphone / Phone" data-group="Gadgets & Accessories" data-emoji="📱" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📱</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Smartphone / Phone</div></div></div>
+            <div class="lsf-cat-option" data-cat="Tablet" data-group="Gadgets & Accessories" data-emoji="💻" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">💻</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Tablet</div></div></div>
+            <div class="lsf-cat-option" data-cat="Laptop" data-group="Gadgets & Accessories" data-emoji="🖥️" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🖥️</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Laptop / Computer</div></div></div>
+            <div class="lsf-cat-option" data-cat="Smartwatch" data-group="Gadgets & Accessories" data-emoji="⌚" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">⌚</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Smartwatch / Wearable</div></div></div>
+            <div class="lsf-cat-option" data-cat="Earphones / Headphones" data-group="Gadgets & Accessories" data-emoji="🎧" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🎧</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Earphones / Headphones</div></div></div>
+            <div class="lsf-cat-option" data-cat="Charger / Cable" data-group="Gadgets & Accessories" data-emoji="🔌" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🔌</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Charger / Cable</div></div></div>
+            <div class="lsf-cat-option" data-cat="Power Bank" data-group="Gadgets & Accessories" data-emoji="🔋" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🔋</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Power Bank</div></div></div>
+            <div class="lsf-cat-option" data-cat="Phone Case / Cover" data-group="Gadgets & Accessories" data-emoji="🛡️" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🛡️</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Phone Case / Cover</div></div></div>
+            <div class="lsf-cat-option" data-cat="Memory / Storage" data-group="Gadgets & Accessories" data-emoji="💾" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">💾</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Memory Card / Storage</div></div></div>
+            <div class="lsf-cat-option" data-cat="Other Accessory" data-group="Gadgets & Accessories" data-emoji="📦" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📦</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Other Accessory</div></div></div>
           </div>
         </div>
       </div>
@@ -861,7 +752,6 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
           <input class="lsf-input lsf-qty" id="lsfQty" type="number" min="1" value="1" placeholder="1" autocomplete="off">
         </div>
       </div>
-
       <button class="lsf-submit-btn" id="lsfSubmitBtn" onclick="submitLogSale()">Log Sale</button>
       <button class="lsf-cancel-btn" id="lsfCancelEditBtn" onclick="cancelEditSale()" style="display:none;">✕ Cancel Edit</button>
     </div>
@@ -877,18 +767,13 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
       <button class="profile-edit-btn" id="profileEditBtn" onclick="toggleProfileEdit()">✎ Edit</button>
     </div>
     <div class="overlay-body">
-
-      <!-- Identity card -->
       <div class="profile-id-card">
         <div class="profile-avatar-large" id="profileAvatarLarge"></div>
         <div class="profile-id-name" id="profileIdName"></div>
         <div class="profile-id-meta" id="profileIdMeta"></div>
       </div>
-
-      <!-- Personal section -->
       <div class="profile-section-card">
         <div class="profile-section-title">Personal</div>
-
         <div class="profile-field">
           <label class="profile-label">Display Name</label>
           <div class="profile-static" id="profileNameStatic"></div>
@@ -908,11 +793,8 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
           <textarea class="profile-input profile-textarea edit-shown" id="profileBio" placeholder="A few words about yourself…" style="display:none;"></textarea>
         </div>
       </div>
-
-      <!-- Work Details section -->
       <div class="profile-section-card">
         <div class="profile-section-title">Work Details</div>
-
         <div class="profile-field">
           <label class="profile-label">Outlet</label>
           <div class="profile-static" id="profileOutletStatic"></div>
@@ -934,11 +816,8 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
           <input class="profile-input edit-shown" type="number" id="profileBranchTarget" placeholder="e.g. 150000" min="0" style="display:none;">
         </div>
       </div>
-
-      <!-- Reminders section -->
       <div class="profile-section-card">
         <div class="profile-section-title">Reminders & Settings</div>
-
         <div class="profile-field">
           <label class="profile-label">Morning Reminder</label>
           <div class="profile-static" id="profileMorningReminderStatic"></div>
@@ -954,10 +833,8 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
           <div class="profile-static" id="profileMemberSince"></div>
         </div>
       </div>
-
       <button class="profile-save-btn" id="profileSaveBtn" onclick="saveProfile()" style="display:none;">Save Changes</button>
       <button class="signout-profile-btn" onclick="handleLogout()">Sign Out</button>
-
       <div class="danger-zone">
         <div class="danger-zone-inner">
           <div class="danger-title">Danger Zone</div>
@@ -965,7 +842,6 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
           <button class="delete-account-btn" onclick="confirmDeleteAccount()">Delete My Account</button>
         </div>
       </div>
-
     </div>
   </div>
 </div>
@@ -1042,7 +918,6 @@ const auth      = firebase.auth();
 const db        = firebase.database();
 const messaging = firebase.messaging();
 
-// ── SESSION-ONLY persistence: clears when the tab is fully closed ──
 auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).catch(() => {});
 
 const AVATAR_COLORS = ['#8B7355','#6B8E7F','#7B6B8E','#8E7B6B','#5E8E8E','#8E6B7B','#6B7B8E','#7B8E6B'];
@@ -1060,7 +935,6 @@ let dailyReminderTimeouts = [];
 let reminderDayTimer = null;
 const scheduledTaskNotifs = new Set();
 
-// ── Archive dirty-flag cache ──
 let archiveCached = [];
 let archiveDirty = true;
 
@@ -1074,7 +948,6 @@ function currentMonthPrefix() {
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
 }
 
-// ---- MIDNIGHT ROLLOVER ----
 function scheduleMidnightRollover() {
   if (reminderDayTimer) clearTimeout(reminderDayTimer);
   const now = new Date();
@@ -1085,12 +958,11 @@ function scheduleMidnightRollover() {
       initSalesListener();
       scheduleDailyReminders();
       scheduleMidnightRollover();
-      archiveDirty = true; // new day = archive needs refresh
+      archiveDirty = true;
     }
   }, msUntilMidnight);
 }
 
-// ---- AUTH ----
 let authResolved = false;
 const authTimeout = setTimeout(() => {
   if (!authResolved) {
@@ -1103,7 +975,6 @@ const authTimeout = setTimeout(() => {
 auth.onAuthStateChanged(async (user) => {
   if (!authResolved) { authResolved = true; clearTimeout(authTimeout); }
   if (user) {
-    // Avoid re-initialising if already logged in as the same user
     if (CU === user.uid) return;
     CU = user.uid;
     const snap = await db.ref('users/' + CU + '/profile').once('value');
@@ -1126,7 +997,6 @@ function showPortal() {
   document.getElementById('portalContainer').style.display = '';
   const dash = document.getElementById('dashboard');
   dash.style.display = 'none'; dash.style.opacity = '0';
-  // Show ambient orbs
   ['portalOrb1','portalOrb2','portalOrb3'].forEach(id => {
     const el = document.getElementById(id); if (el) el.classList.add('visible');
   });
@@ -1231,7 +1101,6 @@ function loadDashboard(instant) {
   updateAvatar(currentProfile);
   document.getElementById('portalContainer').style.display = 'none';
   document.getElementById('loadingOverlay').style.display = 'none';
-  // Hide ambient orbs
   ['portalOrb1','portalOrb2','portalOrb3'].forEach(id => {
     const el = document.getElementById(id); if (el) el.classList.remove('visible');
   });
@@ -1265,37 +1134,21 @@ const FCM_VAPID = 'BDzzPL-tl97fTBSWoq--8pQB9CnM70847GLRR8xlvdaqY2UtIQmFWs94tHKMz
 async function requestNotificationPermission() {
   if (!('Notification' in window)) return;
   let permission = Notification.permission;
-  if (permission === 'default') {
-    permission = await Notification.requestPermission();
-  }
+  if (permission === 'default') permission = await Notification.requestPermission();
   if (permission !== 'granted') return;
-
-  // Schedule in-tab reminders regardless
   scheduleDailyReminders();
-
-  // FCM token — requires service worker
   try {
     const reg = await navigator.serviceWorker.ready;
     const token = await messaging.getToken({ vapidKey: FCM_VAPID, serviceWorkerRegistration: reg });
     if (token && CU) {
-      // Save token under user — keyed by token so multiple devices are supported
       await db.ref('users/' + CU + '/fcmTokens/' + btoa(token).replace(/[+/=]/g,'')).set({
-        token,
-        updatedAt: Date.now(),
-        userAgent: navigator.userAgent.slice(0, 120)
+        token, updatedAt: Date.now(), userAgent: navigator.userAgent.slice(0, 120)
       });
     }
-  } catch(e) {
-    // FCM not yet enabled or SW not registered — silent fail, in-tab notifs still work
-    console.warn('FCM token error:', e.message);
-  }
-
-  // Handle foreground FCM messages (app is open)
+  } catch(e) { console.warn('FCM token error:', e.message); }
   messaging.onMessage(payload => {
     const { title, body } = payload.notification || payload.data || {};
-    if (title) {
-      try { new Notification(title, { body: body || '', icon: '/icon-192.png' }); } catch(e) {}
-    }
+    if (title) { try { new Notification(title, { body: body || '', icon: '/icon-192.png' }); } catch(e) {} }
   });
 }
 
@@ -1327,46 +1180,37 @@ function scheduleTaskNotifications() {
   if (!('Notification' in window) || Notification.permission !== 'granted') return;
   const today = todayKey();
   const now = new Date();
-  cachedTasks
-    .filter(t => !t.done && t.dueDate === today && t.dueTime)
-    .forEach(t => {
-      const [h, m] = t.dueTime.split(':').map(Number);
-
-      // On-time notification
-      const exactKey = t.id + '_exact';
-      if (!scheduledTaskNotifs.has(exactKey)) {
-        const target = new Date(); target.setHours(h, m, 0, 0);
-        if (target > now) {
-          scheduledTaskNotifs.add(exactKey);
-          setTimeout(() => {
-            if (cachedTasks.find(x => x.id === t.id && !x.done))
-              try { new Notification('⏰ Task Due — Royal Horizon', { body: t.title, icon: '/icon-192.png' }); } catch(e) {}
-          }, target - now);
-        }
+  cachedTasks.filter(t => !t.done && t.dueDate === today && t.dueTime).forEach(t => {
+    const [h, m] = t.dueTime.split(':').map(Number);
+    const exactKey = t.id + '_exact';
+    if (!scheduledTaskNotifs.has(exactKey)) {
+      const target = new Date(); target.setHours(h, m, 0, 0);
+      if (target > now) {
+        scheduledTaskNotifs.add(exactKey);
+        setTimeout(() => {
+          if (cachedTasks.find(x => x.id === t.id && !x.done))
+            try { new Notification('⏰ Task Due — Royal Horizon', { body: t.title, icon: '/icon-192.png' }); } catch(e) {}
+        }, target - now);
       }
-
-      // 5-minute early warning
-      const earlyKey = t.id + '_early';
-      if (!scheduledTaskNotifs.has(earlyKey)) {
-        const early = new Date(); early.setHours(h, m - 5, 0, 0);
-        if (m < 5) { early.setHours(h - 1, 55 + m, 0, 0); }
-        if (early > now) {
-          scheduledTaskNotifs.add(earlyKey);
-          setTimeout(() => {
-            if (cachedTasks.find(x => x.id === t.id && !x.done))
-              try { new Notification('⏳ Due in 5 min — Royal Horizon', { body: t.title, icon: '/icon-192.png' }); } catch(e) {}
-          }, early - now);
-        }
+    }
+    const earlyKey = t.id + '_early';
+    if (!scheduledTaskNotifs.has(earlyKey)) {
+      const early = new Date(); early.setHours(h, m < 5 ? h-1 : h, m < 5 ? 55+m : m-5, 0, 0);
+      if (early > now) {
+        scheduledTaskNotifs.add(earlyKey);
+        setTimeout(() => {
+          if (cachedTasks.find(x => x.id === t.id && !x.done))
+            try { new Notification('⏳ Due in 5 min — Royal Horizon', { body: t.title, icon: '/icon-192.png' }); } catch(e) {}
+        }, early - now);
       }
-    });
+    }
+  });
 }
 
-// ── MONTHLY TARGET HERO ──
 async function renderMonthlyHero() {
   const hero      = document.getElementById('monthlyHero');
   const noTarget  = document.getElementById('monthlyNoTarget');
   const target    = parseFloat((currentProfile || {}).branchTarget) || 0;
-
   if (!target) {
     if (hero)     hero.style.display = 'none';
     if (noTarget) noTarget.style.display = 'block';
@@ -1374,39 +1218,27 @@ async function renderMonthlyHero() {
   }
   if (hero)     hero.style.display = 'block';
   if (noTarget) noTarget.style.display = 'none';
-
-  // Sum all archive days this month + today's live sales
   const prefix = currentMonthPrefix();
-  let monthTotal = cachedSales.reduce((s, e) => s + (e.price * e.qty), 0); // today
-
+  let monthTotal = cachedSales.reduce((s, e) => s + (e.price * e.qty), 0);
   try {
     const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
     const meta = metaSnap.val() || {};
     const today = todayKey();
     const monthDays = Object.keys(meta).filter(k => k.startsWith(prefix) && k !== today);
-
     if (monthDays.length) {
-      const snaps = await Promise.all(
-        monthDays.map(d => db.ref('users/' + CU + '/sales/' + d).once('value'))
-      );
-      snaps.forEach(snap => {
-        Object.values(snap.val() || {}).forEach(e => { monthTotal += (e.price * e.qty); });
-      });
+      const snaps = await Promise.all(monthDays.map(d => db.ref('users/' + CU + '/sales/' + d).once('value')));
+      snaps.forEach(snap => { Object.values(snap.val() || {}).forEach(e => { monthTotal += (e.price * e.qty); }); });
     }
-  } catch(e) { /* use today-only total on error */ }
-
+  } catch(e) {}
   const rawPct  = (monthTotal / target) * 100;
   const pct     = Math.min(rawPct, 100);
   const pctText = rawPct.toFixed(1) + '%';
-
-  // Color thresholds
   let fillColor, statusText;
   if (rawPct >= 100)     { fillColor = 'rgba(60,200,100,.85)';  statusText = '🎯 Target reached!'; }
   else if (rawPct >= 80) { fillColor = 'rgba(90,190,130,.8)';   statusText = '🔥 Almost there'; }
   else if (rawPct >= 50) { fillColor = 'rgba(200,170,50,.85)';  statusText = '📈 On track'; }
   else if (rawPct >= 25) { fillColor = 'rgba(210,130,50,.8)';   statusText = '⚡ Keep going'; }
   else                   { fillColor = 'rgba(200,80,80,.7)';    statusText = '🚀 Just started'; }
-
   document.getElementById('monthlyFill').style.width      = pct + '%';
   document.getElementById('monthlyFill').style.background = fillColor;
   document.getElementById('monthlyHeroPct').textContent   = pctText;
@@ -1416,19 +1248,14 @@ async function renderMonthlyHero() {
   document.getElementById('monthlyHeroSub').textContent   = 'of Ksh ' + target.toLocaleString() + ' this month';
 }
 
-// ── PROFILE ──
 function openProfile() {
   const prof = currentProfile || {};
   profileEditMode = false;
-
-  // Identity card
   const av = document.getElementById('profileAvatarLarge');
   av.style.background = prof.color || AVATAR_COLORS[0];
   av.textContent = (prof.name || 'G')[0].toUpperCase();
   document.getElementById('profileIdName').textContent = prof.name || '';
   document.getElementById('profileIdMeta').textContent = '@' + (prof.username || '') + (prof.brand ? '  ·  ' + prof.brand : '');
-
-  // Static values
   const fmt = (v, fallback) => v || fallback || '—';
   document.getElementById('profileNameStatic').textContent         = fmt(prof.name);
   document.getElementById('profileUsernameStatic').textContent     = fmt(prof.username);
@@ -1443,8 +1270,6 @@ function openProfile() {
   document.getElementById('profileEveningReminderStatic').textContent = prof.eveningReminder || '18:00';
   document.getElementById('profileMemberSince').textContent = prof.createdAt
     ? new Date(prof.createdAt).toLocaleDateString('en-GB', { year:'numeric', month:'long', day:'numeric' }) : '—';
-
-  // Input values (for edit mode)
   document.getElementById('profileName').value            = prof.name || '';
   document.getElementById('profileBio').value             = prof.bio || '';
   document.getElementById('profileOutlet').value          = prof.outlet || '';
@@ -1453,39 +1278,27 @@ function openProfile() {
   document.getElementById('profileBranchTarget').value    = prof.branchTarget || '';
   document.getElementById('profileMorningReminder').value = prof.morningReminder || '10:00';
   document.getElementById('profileEveningReminder').value = prof.eveningReminder || '18:00';
-
-  // Start in read mode
   setProfileReadOnly(true);
   const btn = document.getElementById('profileEditBtn');
   btn.textContent = '✎ Edit'; btn.classList.remove('active');
   document.getElementById('profileSaveBtn').style.display = 'none';
-
   applyOverlayTheme(document.getElementById('profileOverlay'));
   document.getElementById('profileOverlay').classList.add('open');
   pushOverlayState('profile');
 }
 
 function setProfileReadOnly(readonly) {
-  // Fields that can be edited
   const editableInputIds = ['profileName','profileBio','profileOutlet','profileOfficialNames',
     'profileBrand','profileBranchTarget','profileMorningReminder','profileEveningReminder'];
   const staticIds = ['profileNameStatic','profileBioStatic','profileOutletStatic',
     'profileOfficialNamesStatic','profileBrandStatic','profileBranchTargetStatic',
     'profileMorningReminderStatic','profileEveningReminderStatic'];
-
-  editableInputIds.forEach(id => {
-    const el = document.getElementById(id); if (!el) return;
-    el.style.display = readonly ? 'none' : '';
-  });
-  staticIds.forEach(id => {
-    const el = document.getElementById(id); if (!el) return;
-    el.style.display = readonly ? '' : 'none';
-  });
+  editableInputIds.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = readonly ? 'none' : ''; });
+  staticIds.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = readonly ? '' : 'none'; });
 }
 
 function toggleProfileEdit() {
   if (profileEditMode) {
-    // Cancel — restore from currentProfile
     profileEditMode = false;
     const prof = currentProfile || {};
     document.getElementById('profileName').value            = prof.name || '';
@@ -1513,14 +1326,12 @@ function closeProfile() {
   document.getElementById('profileOverlay').classList.remove('open');
   if (_overlayStack[_overlayStack.length-1]==='profile') { _overlayStack.pop(); history.back(); }
   if (profileEditMode) {
-    profileEditMode = false;
-    setProfileReadOnly(true);
+    profileEditMode = false; setProfileReadOnly(true);
     document.getElementById('profileEditBtn').textContent = '✎ Edit';
     document.getElementById('profileEditBtn').classList.remove('active');
     document.getElementById('profileSaveBtn').style.display = 'none';
   }
 }
-
 
 async function saveProfile() {
   const updates = {
@@ -1537,15 +1348,11 @@ async function saveProfile() {
   try {
     await db.ref('users/' + CU + '/profile').update(updates);
     currentProfile = { ...currentProfile, ...updates };
-
-    // Refresh identity card
     const av = document.getElementById('profileAvatarLarge');
     av.style.background = currentProfile.color || AVATAR_COLORS[0];
     av.textContent = (currentProfile.name || 'G')[0].toUpperCase();
     document.getElementById('profileIdName').textContent = currentProfile.name || '';
     document.getElementById('profileIdMeta').textContent = '@' + (currentProfile.username || '') + (currentProfile.brand ? '  ·  ' + currentProfile.brand : '');
-
-    // Refresh static values
     document.getElementById('profileNameStatic').textContent          = currentProfile.name || '—';
     document.getElementById('profileBioStatic').textContent           = currentProfile.bio || '—';
     document.getElementById('profileOutletStatic').textContent        = currentProfile.outlet || '—';
@@ -1555,7 +1362,6 @@ async function saveProfile() {
     document.getElementById('profileBranchTargetStatic').textContent  = t > 0 ? 'Ksh ' + t.toLocaleString() : '—';
     document.getElementById('profileMorningReminderStatic').textContent = currentProfile.morningReminder || '10:00';
     document.getElementById('profileEveningReminderStatic').textContent = currentProfile.eveningReminder || '18:00';
-
     document.getElementById('greeting').innerText = 'Welcome, ' + currentProfile.name;
     updateAvatar(currentProfile);
     scheduleDailyReminders();
@@ -1581,7 +1387,6 @@ function confirmDeleteAccount() {
   }, 'Delete');
 }
 
-// ── TASKS ──
 function startTasksListener() {
   stopTasksListener();
   if (!CU) return;
@@ -1724,7 +1529,6 @@ async function clearDoneTasks() {
   }, 'Clear');
 }
 
-// ── SALES LISTENER ──
 function stopSalesListener() {
   if (salesListenerRef) { salesListenerRef.off(); salesListenerRef = null; currentSalesDateKey = null; }
 }
@@ -1744,14 +1548,10 @@ function initSalesListener() {
   });
 }
 
-// ── SALES DONUT HERO ──
 function renderSalesDonut() {
-  const target   = parseFloat((currentProfile || {}).branchTarget) || 0;
-  const total    = cachedSales.reduce((s, e) => s + (e.price * e.qty), 0);
-  const circumf  = 169.6; // 2π × 27
-
-  // Decide what the donut represents: if target set, use daily fraction (target/30 days)
-  // else just show a visual fill based on number of sales (max 10)
+  const target  = parseFloat((currentProfile || {}).branchTarget) || 0;
+  const total   = cachedSales.reduce((s, e) => s + (e.price * e.qty), 0);
+  const circumf = 169.6;
   let pct, pctText, fillColor;
   if (target > 0) {
     const dailyTarget = target / 30;
@@ -1761,20 +1561,16 @@ function renderSalesDonut() {
     pct = Math.min(cachedSales.length * 10, 100);
     pctText = cachedSales.length > 0 ? cachedSales.length + '' : '0';
   }
-
   if (pct >= 100)     fillColor = 'rgba(60,200,100,.9)';
   else if (pct >= 80) fillColor = '#c8a84b';
   else if (pct >= 50) fillColor = '#b08030';
   else if (pct >= 25) fillColor = 'rgba(200,160,50,.75)';
   else                fillColor = 'rgba(200,160,50,.4)';
-
   const offset = circumf - (pct / 100) * circumf;
   const fill   = document.getElementById('donutFill');
   const pctEl  = document.getElementById('donutPct');
   if (fill) { fill.style.strokeDashoffset = offset; fill.style.stroke = fillColor; }
   if (pctEl) pctEl.textContent = pctText;
-
-  // Hero text
   const heroTotal  = document.getElementById('salesHeroTotal');
   const heroTarget = document.getElementById('salesHeroTarget');
   const heroTVal   = document.getElementById('salesHeroTargetVal');
@@ -1789,14 +1585,12 @@ function renderSalesDonut() {
 }
 
 function renderSalesLog() {
-  const list    = document.getElementById('salesList');
-  const dateEl  = document.getElementById('salesDateLabel');
+  const list   = document.getElementById('salesList');
+  const dateEl = document.getElementById('salesDateLabel');
   if (!list) return;
   dateEl.textContent = new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
-
   renderSalesDonut();
   renderSalesBarChart();
-
   if (!cachedSales.length) {
     list.innerHTML = '<div style="text-align:center;opacity:.28;margin:auto;padding:18px 0;"><div style="font-size:28px;margin-bottom:8px;">₭</div><p style="font-size:12px;">No sales logged today.</p></div>';
     return;
@@ -1827,13 +1621,10 @@ function renderOverviewSales() {
   if (countEl) countEl.textContent = count + ' transaction' + (count !== 1 ? 's' : '');
 }
 
-// ── SALES BAR CHART (last 7 days from archive + today) ──
 async function renderSalesBarChart() {
-  const wrap = document.getElementById('salesChartWrap');
+  const wrap   = document.getElementById('salesChartWrap');
   const barsEl = document.getElementById('salesChartBars');
   if (!wrap || !barsEl || !CU) return;
-
-  // Build day keys for the last 7 days (oldest→newest)
   const days = [];
   for (let i = 6; i >= 0; i--) {
     const d = new Date(); d.setDate(d.getDate() - i);
@@ -1841,17 +1632,13 @@ async function renderSalesBarChart() {
     const lbl = i === 0 ? 'Today' : d.toLocaleDateString('en-GB',{weekday:'short'});
     days.push({ key, lbl, isToday: i === 0 });
   }
-
-  // Fetch totals — today from cachedSales, past days from Firebase
   const totals = await Promise.all(days.map(async d => {
     if (d.isToday) return cachedSales.reduce((s,e) => s + (e.price * e.qty), 0);
     try {
       const snap = await db.ref('users/' + CU + '/sales/' + d.key).once('value');
-      const entries = Object.values(snap.val() || {});
-      return entries.reduce((s,e) => s + ((e.price||0) * (e.qty||1)), 0);
+      return Object.values(snap.val() || {}).reduce((s,e) => s + ((e.price||0) * (e.qty||1)), 0);
     } catch(e) { return 0; }
   }));
-
   const maxVal = Math.max(...totals, 1);
   wrap.style.display = 'block';
   barsEl.innerHTML = days.map((d, i) => {
@@ -1865,13 +1652,11 @@ async function renderSalesBarChart() {
   }).join('');
 }
 
-// ── LOG SALE SHEET ──
 function openLogSaleSheet(id) {
   applyOverlayTheme(document.getElementById('logSaleSheet'));
   document.getElementById('logSaleSheet').classList.add('open');
   pushOverlayState('logSale');
   if (!id) {
-    // New sale — clear fields
     ['lsfItem','lsfModel','lsfSerial','lsfPrice'].forEach(i => { document.getElementById(i).value = ''; });
     document.getElementById('lsfQty').value = '1';
     document.getElementById('lsfSubmitBtn').textContent = 'Log Sale';
@@ -1886,9 +1671,8 @@ function openLogSaleSheet(id) {
 }
 
 function closeLogSaleSheet() {
-  // also close cat dropdown if open
   _catOpen = false;
-  const dd = document.getElementById('lsfCatDropdown');
+  const dd    = document.getElementById('lsfCatDropdown');
   const panel = document.getElementById('lsfCatPanel');
   if (dd) dd.classList.remove('open');
   if (panel) panel.classList.remove('open');
@@ -1911,7 +1695,7 @@ function editSale(id) {
   document.getElementById('lsfCancelEditBtn').style.display = 'block';
   document.getElementById('lsfEditingBanner').classList.add('visible');
   document.getElementById('logSaleSheetTitle').textContent = 'Edit Sale';
-  renderSalesLog(); // highlight editing item
+  renderSalesLog();
 }
 
 function cancelEditSale() {
@@ -1920,7 +1704,6 @@ function cancelEditSale() {
   renderSalesLog();
 }
 
-// FIX #2: Validation applied to both new and update paths
 async function submitLogSale() {
   const item     = document.getElementById('lsfItem').value.trim();
   const model    = document.getElementById('lsfModel').value.trim();
@@ -1928,15 +1711,11 @@ async function submitLogSale() {
   const price    = parseFloat(document.getElementById('lsfPrice').value);
   const qty      = parseInt(document.getElementById('lsfQty').value) || 1;
   const category = getSelectedCat();
-
-  // ── INLINE VALIDATION ──
   let valid = true;
   if (!item) { showFieldErr('lsfItem','lsfItemErr'); valid = false; }
   if (isNaN(price) || price <= 0) { showFieldErr('lsfPrice','lsfPriceErr'); valid = false; }
   if (!valid) return;
-
   if (editingSaleId) {
-    // UPDATE
     try {
       await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + editingSaleId).update({ item, model, serial, price, qty, category });
       editingSaleId = null;
@@ -1946,8 +1725,6 @@ async function submitLogSale() {
     } catch(e) { showToast('Update failed.'); }
     return;
   }
-
-  // NEW SALE
   const key   = todayKey();
   const label = new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
   try {
@@ -1972,7 +1749,6 @@ async function deleteSale(id) {
   }, 'Delete');
 }
 
-// ── REPORT ──
 function generateSalesReport() {
   const prof   = currentProfile || {};
   const date   = new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
@@ -1987,24 +1763,17 @@ function generateSalesReport() {
   r += `Brand    : ${prof.brand || '(not set)'}\n`;
   if (target > 0) r += `Target   : Ksh ${target.toLocaleString()}\n`;
   r += `${line}\n\n`;
-  if (!cachedSales.length) {
-    r += `No transactions recorded today.\n\n`;
-  } else {
+  if (!cachedSales.length) { r += `No transactions recorded today.\n\n`; }
+  else {
     r += `TRANSACTIONS (${cachedSales.length})\n\n`;
     cachedSales.forEach((s, i) => {
-      r += `${i+1}. ${s.item}\n`;
-      r += `   Model : ${s.model || '—'}\n`;
-      r += `   S/N   : ${s.serial || '—'}\n`;
-      r += `   Qty   : ${s.qty}  ×  Ksh ${Number(s.price).toLocaleString()}\n`;
-      r += `   Total : Ksh ${(s.price * s.qty).toLocaleString()}\n`;
+      r += `${i+1}. ${s.item}\n   Model : ${s.model || '—'}\n   S/N   : ${s.serial || '—'}\n   Qty   : ${s.qty}  ×  Ksh ${Number(s.price).toLocaleString()}\n   Total : Ksh ${(s.price * s.qty).toLocaleString()}\n`;
       if (i < cachedSales.length - 1) r += '\n';
     });
     r += '\n';
   }
-  r += `${line}\n`;
-  r += `DAILY TOTAL  : Ksh ${total.toLocaleString()}\n`;
-  r += `TRANSACTIONS : ${cachedSales.length}\n`;
-  if (target > 0) { r += `TARGET       : Ksh ${target.toLocaleString()}\n`; r += `ACHIEVEMENT  : ${pct}%\n`; }
+  r += `${line}\nDAILY TOTAL  : Ksh ${total.toLocaleString()}\nTRANSACTIONS : ${cachedSales.length}\n`;
+  if (target > 0) { r += `TARGET       : Ksh ${target.toLocaleString()}\nACHIEVEMENT  : ${pct}%\n`; }
   r += `${line}\nRoyal Horizon Workspace`;
   currentReportText = r;
   const missing = [];
@@ -2030,9 +1799,7 @@ function copyReport() {
     navigator.clipboard.writeText(currentReportText)
       .then(() => showToast('Copied to clipboard ✓'))
       .catch(() => showToast('Clipboard access denied. Try the Share button.'));
-  } else {
-    showToast('Clipboard not available. Try the Share button.');
-  }
+  } else { showToast('Clipboard not available. Try the Share button.'); }
 }
 
 async function shareReport() {
@@ -2042,7 +1809,6 @@ async function shareReport() {
   } else { copyReport(); showToast('Copied — paste to share.'); }
 }
 
-// ── ARCHIVE (with dirty-flag cache) ──
 let archiveSelectMode = false;
 let selectedArchiveDays = new Set();
 let currentDayDetailKey = null;
@@ -2120,39 +1886,26 @@ async function confirmClearArchive() {
   }, 'Clear All');
 }
 
-// FIX #3: dirty-flag — only re-fetch from Firebase when data has changed
 async function renderArchiveSales() {
   const scroll = document.getElementById('archSalesScroll');
   if (!scroll || !CU) return;
-
-  if (!archiveDirty && archiveCached.length >= 0) {
-    // Use cache — just re-render HTML
-    paintArchiveHTML(scroll);
-    return;
-  }
-
+  if (!archiveDirty && archiveCached.length >= 0) { paintArchiveHTML(scroll); return; }
   scroll.innerHTML = '<div style="opacity:.3;font-size:12px;padding:10px 0;">Loading…</div>';
   try {
     const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
     const meta = metaSnap.val() || {};
     const today = todayKey();
     const days = Object.values(meta).filter(d => d.date !== today).sort((a,b) => b.date.localeCompare(a.date));
-
     const totals = await Promise.all(
-      days.map(d =>
-        db.ref('users/' + CU + '/sales/' + d.date).once('value').then(snap => {
-          const entries = Object.values(snap.val() || {});
-          return { total: entries.reduce((s,e) => s + (e.price * e.qty), 0), count: entries.length };
-        })
-      )
+      days.map(d => db.ref('users/' + CU + '/sales/' + d.date).once('value').then(snap => {
+        const entries = Object.values(snap.val() || {});
+        return { total: entries.reduce((s,e) => s + (e.price * e.qty), 0), count: entries.length };
+      }))
     );
-
     archiveCached = days.map((d, i) => ({ ...d, ...totals[i] }));
     archiveDirty = false;
     paintArchiveHTML(scroll);
-  } catch(e) {
-    scroll.innerHTML = '<div style="opacity:.3;font-size:12px;padding:10px 0;">Could not load history.</div>';
-  }
+  } catch(e) { scroll.innerHTML = '<div style="opacity:.3;font-size:12px;padding:10px 0;">Could not load history.</div>'; }
 }
 
 function paintArchiveHTML(scroll) {
@@ -2164,9 +1917,7 @@ function paintArchiveHTML(scroll) {
     const isSel = selectedArchiveDays.has(d.date);
     const safeLabel = esc(d.label).replace(/'/g, '&#39;');
     return `<div class="arch-day-card${isSel?' arch-selected':''}" data-key="${d.date}"
-        onclick="${archiveSelectMode
-          ? `toggleArchiveDaySelect('${d.date}')`
-          : `openDayDetail('${d.date}','${safeLabel}')`}">
+        onclick="${archiveSelectMode ? `toggleArchiveDaySelect('${d.date}')` : `openDayDetail('${d.date}','${safeLabel}')`}">
       ${archiveSelectMode ? `<div class="arch-checkbox">${isSel?'✓':''}</div>` : ''}
       <div class="arch-day-info">
         <div class="arch-day-date">${esc(d.label)}</div>
@@ -2263,7 +2014,6 @@ async function shareArchiveDayReport() {
   } catch(e) { showToast('Could not generate report.'); }
 }
 
-// ── CAROUSEL ──
 function moveTrack(idx) {
   document.getElementById('workspaceTrack').style.transform = `translateX(calc(-${idx*80}vw - ${idx*30}px))`;
   document.querySelectorAll('.workspace-card').forEach((c,i) => c.classList.toggle('active', i===idx));
@@ -2288,8 +2038,6 @@ document.getElementById('workspaceTrack').addEventListener('touchend', e => {
   }
 }, { passive: true });
 
-// ── HARDWARE BACK BUTTON (History API) ──
-// Track which overlay is currently pushed so popstate can close the right one
 let _overlayStack = [];
 
 function pushOverlayState(name) {
@@ -2298,20 +2046,18 @@ function pushOverlayState(name) {
 }
 
 function _handlePopState(e) {
-  // Called when user presses hardware/browser back
   const top = _overlayStack[_overlayStack.length - 1];
   if (!top) return;
   _overlayStack.pop();
-  if (top === 'profile')    { document.getElementById('profileOverlay').classList.remove('open'); if (profileEditMode) { profileEditMode = false; setProfileReadOnly(true); document.getElementById('profileEditBtn').textContent='✎ Edit'; document.getElementById('profileEditBtn').classList.remove('active'); document.getElementById('profileSaveBtn').style.display='none'; } }
-  if (top === 'report')     { document.getElementById('reportOverlay').classList.remove('open'); }
-  if (top === 'dayDetail')  { document.getElementById('dayDetailOverlay').classList.remove('open'); currentDayDetailKey=null; currentDayDetailLabel=null; }
-  if (top === 'logSale')    { document.getElementById('logSaleSheet').classList.remove('open'); }
-  if (top === 'confirm')    { document.getElementById('confirmModal').classList.remove('open'); }
+  if (top === 'profile')   { document.getElementById('profileOverlay').classList.remove('open'); if (profileEditMode) { profileEditMode = false; setProfileReadOnly(true); document.getElementById('profileEditBtn').textContent='✎ Edit'; document.getElementById('profileEditBtn').classList.remove('active'); document.getElementById('profileSaveBtn').style.display='none'; } }
+  if (top === 'report')    { document.getElementById('reportOverlay').classList.remove('open'); }
+  if (top === 'dayDetail') { document.getElementById('dayDetailOverlay').classList.remove('open'); currentDayDetailKey=null; currentDayDetailLabel=null; }
+  if (top === 'logSale')   { document.getElementById('logSaleSheet').classList.remove('open'); }
+  if (top === 'confirm')   { document.getElementById('confirmModal').classList.remove('open'); }
 }
 
 window.addEventListener('popstate', _handlePopState);
 
-// ── MODALS / UTILS ──
 function closeModal(id) {
   document.getElementById(id).classList.remove('open');
   if (_overlayStack[_overlayStack.length-1] === 'confirm') { _overlayStack.pop(); }
@@ -2348,7 +2094,7 @@ function toggleDashboardTheme() {
 }
 function applyOverlayTheme(el) {
   const light = document.body.className === 'theme-signup';
-  el.style.background = light ? '#f0f0f0' : '#111111';
+  el.style.background = light ? '#f0f0f0' : '#000000';
   el.style.color       = light ? '#1a1a1a' : '#e0e0e0';
 }
 
@@ -2361,17 +2107,13 @@ function esc(s='') {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ── CATEGORY DROPDOWN ──
 let _catOpen = false;
 
 function toggleCatDropdown() {
   _catOpen = !_catOpen;
   document.getElementById('lsfCatDropdown').classList.toggle('open', _catOpen);
   document.getElementById('lsfCatPanel').classList.toggle('open', _catOpen);
-  if (_catOpen) {
-    // close on outside tap
-    setTimeout(() => document.addEventListener('click', _closeCatOutside, {once:true}), 10);
-  }
+  if (_catOpen) { setTimeout(() => document.addEventListener('click', _closeCatOutside, {once:true}), 10); }
 }
 
 function _closeCatOutside(e) {
@@ -2384,7 +2126,6 @@ function _closeCatOutside(e) {
 }
 
 function pickCat(el) {
-  // deselect all, select this
   document.querySelectorAll('.lsf-cat-option').forEach(o => o.classList.remove('selected'));
   el.classList.add('selected');
   const cat   = el.dataset.cat;
@@ -2393,7 +2134,6 @@ function pickCat(el) {
   document.getElementById('lsfCatEmoji').textContent = emoji;
   document.getElementById('lsfCatName').textContent  = cat;
   document.getElementById('lsfCatGroup').textContent = group;
-  // close
   _catOpen = false;
   document.getElementById('lsfCatDropdown').classList.remove('open');
   document.getElementById('lsfCatPanel').classList.remove('open');
@@ -2405,7 +2145,6 @@ function getSelectedCat() {
 }
 
 function setSelectedCat(cat) {
-  // find matching option
   let found = null;
   document.querySelectorAll('.lsf-cat-option').forEach(o => {
     const match = o.dataset.cat === cat;
@@ -2417,10 +2156,7 @@ function setSelectedCat(cat) {
     document.getElementById('lsfCatName').textContent  = found.dataset.cat;
     document.getElementById('lsfCatGroup').textContent = found.dataset.group || '';
   } else {
-    // fallback: try to find by old cat names mapping
-    const fallback = {
-      'Phone':'Smartphone / Phone','Tablet':'Tablet','Accessory':'Earphones / Headphones','Other':'Other Accessory'
-    };
+    const fallback = { 'Phone':'Smartphone / Phone','Tablet':'Tablet','Accessory':'Earphones / Headphones','Other':'Other Accessory' };
     const mapped = fallback[cat];
     if (mapped) setSelectedCat(mapped);
     else {
@@ -2440,13 +2176,11 @@ function catEmoji(cat) {
     'CCTV / Security':'📷','Other Electronic':'🔋',
     'Refrigerator':'🧊','Microwave':'📦','Washing Machine':'🫧','Cooker / Oven':'🍳',
     'Air Conditioner':'❄️','Blender / Juicer':'🥤','Other Appliance':'🔌',
-    // legacy
     'Phone':'📱','Accessory':'🎧','Other':'📦'
   };
   return map[cat] || '📦';
 }
 
-// ── INLINE FIELD VALIDATION ──
 function clearFieldErr(inputId, errId) {
   const inp = document.getElementById(inputId);
   const err = document.getElementById(errId);
@@ -2460,14 +2194,11 @@ function showFieldErr(inputId, errId) {
   if (err) err.classList.add('visible');
 }
 function clearAllSaleErrors() {
-  ['lsfItem','lsfPrice'].forEach((id,i) => {
-    clearFieldErr(id, ['lsfItemErr','lsfPriceErr'][i]);
-  });
+  ['lsfItem','lsfPrice'].forEach((id,i) => { clearFieldErr(id, ['lsfItemErr','lsfPriceErr'][i]); });
 }
 </script>
 <script>
 if ('serviceWorker' in navigator) {
-  // Resolve SW path relative to the current page so it works on GitHub Pages subdirs
   const swPath = new URL('sw.js', window.location.href).pathname;
   navigator.serviceWorker.register(swPath)
     .then(reg => { console.log('SW registered:', reg.scope); })

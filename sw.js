@@ -17,8 +17,6 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 // ── BACKGROUND MESSAGES (app closed / tab not focused) ──
-// FCM automatically shows the notification from the `notification` payload field.
-// This handler fires for data-only payloads where we build the notification manually.
 messaging.onBackgroundMessage(payload => {
   const title = (payload.notification && payload.notification.title)
     || (payload.data && payload.data.title)
@@ -49,20 +47,18 @@ self.addEventListener('notificationclick', event => {
   const targetUrl = (event.notification.data && event.notification.data.url) || '/';
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
-      // If a tab with the app is already open, focus it
       for (const client of windowClients) {
         if (client.url.includes('Royal-Hori') && 'focus' in client) {
           return client.focus();
         }
       }
-      // Otherwise open a new tab
       if (clients.openWindow) return clients.openWindow(targetUrl);
     })
   );
 });
 
 // ── CACHE SHELL FOR OFFLINE USE ──
-const CACHE_NAME = 'rh-shell-v1';
+const CACHE_NAME = 'rh-shell-v2';
 const SHELL_ASSETS = [
   './',
   './index.html'
@@ -88,7 +84,6 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
-  // Only handle same-origin requests
   if (url.origin !== self.location.origin) return;
 
   event.respondWith(
