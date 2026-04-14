@@ -31,12 +31,44 @@ h1,h2,h3,.btn-main,.btn-submit,.modal-btn,.proj-detail-title{font-family:'Playfa
 .loading-spinner{font-size:38px;animation:pulse 1.6s ease-in-out infinite;}
 @keyframes pulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.2);opacity:1}}
 
+/* PORTAL AMBIENT ORBS */
+.portal-orb{position:fixed;border-radius:50%;pointer-events:none;z-index:1;filter:blur(72px);opacity:.28;animation:orbFloat 8s ease-in-out infinite;}
+.portal-orb-1{width:320px;height:320px;background:radial-gradient(circle,rgba(160,140,110,.7),transparent 70%);top:-80px;left:-100px;animation-delay:0s;}
+.portal-orb-2{width:260px;height:260px;background:radial-gradient(circle,rgba(90,130,120,.6),transparent 70%);bottom:-60px;right:-80px;animation-delay:-3.5s;}
+.portal-orb-3{width:180px;height:180px;background:radial-gradient(circle,rgba(110,100,150,.55),transparent 70%);top:40%;left:60%;animation-delay:-6s;}
+@keyframes orbFloat{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-28px) scale(1.05);}}
+
+/* PORTAL AMBIENT ORBS */
+.portal-orb{position:fixed;border-radius:50%;pointer-events:none;z-index:1;filter:blur(72px);opacity:0;transition:opacity 1.2s ease;animation:orbFloat 9s ease-in-out infinite;}
+.portal-orb.visible{opacity:.28;}
+.portal-orb-1{width:340px;height:340px;background:radial-gradient(circle,rgba(160,140,110,.8),transparent 70%);top:-90px;left:-110px;animation-delay:0s;}
+.portal-orb-2{width:280px;height:280px;background:radial-gradient(circle,rgba(90,130,120,.7),transparent 70%);bottom:-70px;right:-90px;animation-delay:-3.5s;}
+.portal-orb-3{width:200px;height:200px;background:radial-gradient(circle,rgba(110,100,155,.6),transparent 70%);top:45%;left:55%;animation-delay:-6.5s;}
+@keyframes orbFloat{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-30px) scale(1.06);}}
+
 /* PORTAL */
 .container{width:100%;max-width:420px;text-align:center;position:relative;z-index:10;}
-.selection-screen{display:flex;gap:20px;justify-content:center;transition:.3s ease,transform var(--ui-speed) var(--ui-curve);}
-.selection-screen.fade-out{opacity:0;transform:scale(.97);pointer-events:none;}
-.btn-main{padding:16px 40px;border:none;border-radius:50px;font-size:16px;font-weight:600;cursor:pointer;transition:.2s;box-shadow:0 10px 20px rgba(0,0,0,.1);}
-.btn-login{background:#121212;color:#fff;}.btn-signup{background:#f4f4f4;color:#1a1a1a;}
+
+/* Wordmark / logo */
+.portal-wordmark{margin-bottom:52px;opacity:0;transform:translateY(10px);animation:wordmarkIn .9s var(--ui-curve) .2s forwards;}
+.portal-logo-icon{font-size:34px;margin-bottom:10px;display:block;line-height:1;}
+.portal-logo-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;letter-spacing:.5px;opacity:.88;}
+.portal-logo-sub{font-size:11px;text-transform:uppercase;letter-spacing:3px;opacity:.35;margin-top:4px;font-weight:400;}
+@keyframes wordmarkIn{to{opacity:1;transform:translateY(0);}}
+
+.selection-screen{display:flex;flex-direction:column;align-items:center;gap:14px;transition:.3s ease,transform var(--ui-speed) var(--ui-curve);}
+.selection-screen.fade-out{opacity:0;transform:scale(.97) translateY(-6px);pointer-events:none;}
+
+/* Premium pill buttons */
+.btn-main{width:100%;max-width:280px;padding:17px 40px;border:none;border-radius:16px;font-size:15px;font-weight:600;cursor:pointer;transition:.28s var(--ui-curve);letter-spacing:.3px;position:relative;overflow:hidden;}
+.btn-main::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.07);opacity:0;transition:.2s;}
+.btn-main:hover::after{opacity:1;}
+.btn-main:active{transform:scale(.97);}
+.btn-login{background:#121212;color:#f0f0f0;box-shadow:0 8px 28px rgba(0,0,0,.22),0 2px 8px rgba(0,0,0,.12);}
+.btn-signup{background:rgba(240,240,240,.92);color:#1a1a1a;box-shadow:0 8px 28px rgba(0,0,0,.1),0 2px 6px rgba(0,0,0,.07);border:1px solid rgba(200,200,200,.5);}
+
+/* Divider between buttons */
+.portal-btn-divider{font-size:10px;text-transform:uppercase;letter-spacing:2.5px;opacity:.3;margin:0;}
 .form-wrapper{position:absolute;top:50%;left:50%;transform:translate(-50%,-45%);width:90%;opacity:0;visibility:hidden;transition:.4s var(--ui-curve);}
 .form-wrapper.active{opacity:1;visibility:visible;transform:translate(-50%,-50%);}
 .glass-card{background:rgba(128,128,128,.05);backdrop-filter:blur(25px);padding:36px;border-radius:30px;border:1px solid rgba(128,128,128,.2);}
@@ -210,8 +242,9 @@ body:not(.theme-login):not(.theme-signup) .lsf-submit-btn{background:#f0f0f0;col
 .overlay-screen.open{transform:translateY(0);opacity:1;pointer-events:all;}
 .overlay-inner{display:flex;flex-direction:column;height:100%;}
 .overlay-header{display:flex;align-items:center;gap:13px;padding:50px 28px 18px;flex-shrink:0;}
-.back-btn{width:34px;height:34px;border-radius:50%;background:rgba(128,128,128,.1);border:1px solid rgba(128,128,128,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;transition:.2s;flex-shrink:0;color:inherit;}
-.back-btn:hover{background:rgba(128,128,128,.2);}
+.back-btn{width:38px;height:38px;border-radius:14px;background:rgba(128,128,128,.1);border:1px solid rgba(128,128,128,.18);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:600;transition:.25s var(--ui-curve);flex-shrink:0;color:inherit;letter-spacing:0px;}
+.back-btn:hover{background:rgba(128,128,128,.22);transform:translateX(-2px);}
+.back-btn:active{transform:scale(.92) translateX(-2px);}
 .overlay-body{flex:1;overflow-y:auto;padding:0 28px 40px;}
 
 /* PROFILE */
@@ -320,10 +353,21 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 <div class="offline-banner" id="offlineBanner">⚡ Offline — changes will sync when reconnected</div>
 <div class="loading-overlay" id="loadingOverlay"><div class="loading-spinner">✦</div></div>
 
+<!-- PORTAL AMBIENT ORBS -->
+<div class="portal-orb portal-orb-1" id="portalOrb1"></div>
+<div class="portal-orb portal-orb-2" id="portalOrb2"></div>
+<div class="portal-orb portal-orb-3" id="portalOrb3"></div>
+
 <!-- PORTAL -->
 <div class="container" id="portalContainer" style="display:none;">
   <div id="selectionScreen" class="selection-screen">
+    <div class="portal-wordmark">
+      <span class="portal-logo-icon">✦</span>
+      <div class="portal-logo-title">Royal Horizon</div>
+      <div class="portal-logo-sub">Workspace</div>
+    </div>
     <button onclick="showPage('login')" class="btn-main btn-login">Log In</button>
+    <div class="portal-btn-divider">or</div>
     <button onclick="showPage('signup')" class="btn-main btn-signup">Sign Up</button>
   </div>
   <div id="loginPage" class="form-wrapper">
@@ -511,7 +555,7 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 <div class="log-sale-sheet" id="logSaleSheet">
   <div class="log-sale-inner">
     <div class="log-sale-header">
-      <button class="back-btn" onclick="closeLogSaleSheet()">←</button>
+      <button class="back-btn" onclick="closeLogSaleSheet()">‹ back</button>
       <h2 style="font-size:21px;" id="logSaleSheetTitle">Log a Sale</h2>
     </div>
     <div class="log-sale-body">
@@ -563,7 +607,7 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 <div class="overlay-screen" id="profileOverlay">
   <div class="overlay-inner">
     <div class="overlay-header">
-      <button class="back-btn" onclick="closeProfile()">←</button>
+      <button class="back-btn" onclick="closeProfile()">‹ back</button>
       <h2 style="font-size:21px;">My Profile</h2>
       <button class="profile-edit-btn" id="profileEditBtn" onclick="toggleProfileEdit()">✎ Edit</button>
     </div>
@@ -665,7 +709,7 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 <div class="overlay-screen" id="reportOverlay">
   <div class="overlay-inner">
     <div class="overlay-header">
-      <button class="back-btn" onclick="closeReportOverlay()">←</button>
+      <button class="back-btn" onclick="closeReportOverlay()">‹ back</button>
       <h2 style="font-size:20px;">Daily Sales Report</h2>
     </div>
     <div class="overlay-body">
@@ -682,7 +726,7 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 <div class="day-detail-overlay" id="dayDetailOverlay">
   <div style="display:flex;flex-direction:column;height:100%;">
     <div style="display:flex;align-items:center;gap:13px;padding:50px 28px 18px;flex-shrink:0;">
-      <button class="back-btn" onclick="closeDayDetail()">←</button>
+      <button class="back-btn" onclick="closeDayDetail()">‹ back</button>
       <div style="flex:1;min-width:0;">
         <div style="font-family:'Playfair Display';font-size:20px;font-weight:700;" id="dayDetailTitle"></div>
         <div style="font-size:11px;opacity:.4;margin-top:3px;" id="dayDetailSubtitle"></div>
@@ -732,6 +776,9 @@ appCheck.activate('6LdvTrUsAAAAAEcYkppU5JHvawph42rlHHzfNadO', true);
 const auth      = firebase.auth();
 const db        = firebase.database();
 const messaging = firebase.messaging();
+
+// ── SESSION-ONLY persistence: clears when the tab is fully closed ──
+auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).catch(() => {});
 
 const AVATAR_COLORS = ['#8B7355','#6B8E7F','#7B6B8E','#8E7B6B','#5E8E8E','#8E6B7B','#6B7B8E','#7B8E6B'];
 
@@ -814,6 +861,10 @@ function showPortal() {
   document.getElementById('portalContainer').style.display = '';
   const dash = document.getElementById('dashboard');
   dash.style.display = 'none'; dash.style.opacity = '0';
+  // Show ambient orbs
+  ['portalOrb1','portalOrb2','portalOrb3'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.classList.add('visible');
+  });
 }
 
 function showPage(type) {
@@ -915,6 +966,10 @@ function loadDashboard(instant) {
   updateAvatar(currentProfile);
   document.getElementById('portalContainer').style.display = 'none';
   document.getElementById('loadingOverlay').style.display = 'none';
+  // Hide ambient orbs
+  ['portalOrb1','portalOrb2','portalOrb3'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.classList.remove('visible');
+  });
   document.body.setAttribute('class', 'theme-login');
   const dash = document.getElementById('dashboard');
   dash.style.display = 'flex';
@@ -1383,9 +1438,14 @@ async function toggleTask2(id) {
 }
 
 async function deleteTask2(id) {
-  scheduledTaskNotifs.delete(id+'_exact');
-  scheduledTaskNotifs.delete(id+'_early');
-  await db.ref('users/' + CU + '/tasks/' + id).remove();
+  const task = cachedTasks.find(t => t.id === id);
+  const label = task ? '"' + task.title + '"' : 'this task';
+  showConfirm('Delete Task', 'Remove ' + label + '? This cannot be undone.', async () => {
+    scheduledTaskNotifs.delete(id+'_exact');
+    scheduledTaskNotifs.delete(id+'_early');
+    try { await db.ref('users/' + CU + '/tasks/' + id).remove(); showToast('Task deleted.'); }
+    catch(e) { showToast('Delete failed.'); }
+  }, 'Delete');
 }
 
 async function clearDoneTasks() {
@@ -1629,12 +1689,16 @@ async function submitLogSale() {
 }
 
 async function deleteSale(id) {
-  if (editingSaleId === id) { editingSaleId = null; closeLogSaleSheet(); }
-  try {
-    await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + id).remove();
-    archiveDirty = true;
-    showToast('Sale removed.');
-  } catch(e) { showToast('Delete failed.'); }
+  const sale = cachedSales.find(s => s.id === id);
+  const label = sale ? '"' + sale.item + '"' : 'this sale';
+  showConfirm('Delete Sale', 'Remove ' + label + '? This cannot be undone.', async () => {
+    if (editingSaleId === id) { editingSaleId = null; closeLogSaleSheet(); }
+    try {
+      await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + id).remove();
+      archiveDirty = true;
+      showToast('Sale removed.');
+    } catch(e) { showToast('Delete failed.'); }
+  }, 'Delete');
 }
 
 // ── REPORT ──
