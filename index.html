@@ -714,6 +714,7 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
 
 <script>
 const firebaseConfig = {
@@ -728,8 +729,9 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const appCheck = firebase.appCheck();
 appCheck.activate('6LdvTrUsAAAAAEcYkppU5JHvawph42rlHHzfNadO', true);
-const auth = firebase.auth();
-const db   = firebase.database();
+const auth      = firebase.auth();
+const db        = firebase.database();
+const messaging = firebase.messaging();
 
 const AVATAR_COLORS = ['#8B7355','#6B8E7F','#7B6B8E','#8E7B6B','#5E8E8E','#8E6B7B','#6B7B8E','#7B8E6B'];
 
@@ -938,14 +940,43 @@ function initOfflineSupport() {
   });
 }
 
+const FCM_VAPID = 'BDzzPL-tl97fTBSWoq--8pQB9CnM70847GLRR8xlvdaqY2UtIQmFWs94tHKMzW-vPGFP6aXxz3ZOg2dRmvLuwu4';
+
 async function requestNotificationPermission() {
   if (!('Notification' in window)) return;
-  if (Notification.permission === 'default') {
-    const perm = await Notification.requestPermission();
-    if (perm === 'granted') scheduleDailyReminders();
-  } else if (Notification.permission === 'granted') {
-    scheduleDailyReminders();
+  let permission = Notification.permission;
+  if (permission === 'default') {
+    permission = await Notification.requestPermission();
   }
+  if (permission !== 'granted') return;
+
+  // Schedule in-tab reminders regardless
+  scheduleDailyReminders();
+
+  // FCM token — requires service worker
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const token = await messaging.getToken({ vapidKey: FCM_VAPID, serviceWorkerRegistration: reg });
+    if (token && CU) {
+      // Save token under user — keyed by token so multiple devices are supported
+      await db.ref('users/' + CU + '/fcmTokens/' + btoa(token).replace(/[+/=]/g,'')).set({
+        token,
+        updatedAt: Date.now(),
+        userAgent: navigator.userAgent.slice(0, 120)
+      });
+    }
+  } catch(e) {
+    // FCM not yet enabled or SW not registered — silent fail, in-tab notifs still work
+    console.warn('FCM token error:', e.message);
+  }
+
+  // Handle foreground FCM messages (app is open)
+  messaging.onMessage(payload => {
+    const { title, body } = payload.notification || payload.data || {};
+    if (title) {
+      try { new Notification(title, { body: body || '', icon: '/icon-192.png' }); } catch(e) {}
+    }
+  });
 }
 
 function scheduleDailyReminders() {
@@ -2035,9 +2066,11 @@ function clearAllSaleErrors() {
 </script>
 <script>
 if ('serviceWorker' in navigator) {
-  fetch('sw.js', { method: 'HEAD' })
-    .then(res => { if (res.ok) navigator.serviceWorker.register('sw.js'); })
-    .catch(() => {});
+  // Resolve SW path relative to the current page so it works on GitHub Pages subdirs
+  const swPath = new URL('sw.js', window.location.href).pathname;
+  navigator.serviceWorker.register(swPath)
+    .then(reg => { console.log('SW registered:', reg.scope); })
+    .catch(err => { console.warn('SW registration failed:', err); });
 }
 </script>
 </body>
