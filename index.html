@@ -14,7 +14,7 @@
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
 <style>
-:root{--bg-grey:#808080;--soft-white:#f4f4f4;--soft-black:#121212;--ui-speed:0.4s;--slide-speed:0.8s;--ui-curve:cubic-bezier(0.2,0.8,0.2,1);--slide-curve:cubic-bezier(0.4,0,0.2,1);}
+:root{--bg-grey:#808080;--soft-white:#f4f4f4;--soft-black:#121212;--ui-speed:0.4s;--slide-speed:0.8s;--ui-curve:cubic-bezier(0.2,0.8,0.2,1);--slide-curve:cubic-bezier(0.4,0,0.2,1);--gold:#c8a84b;--gold-dim:rgba(200,168,75,.18);--gold-glow:rgba(200,168,75,.22);--gold-border:rgba(200,168,75,.38);}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:none;}
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg-grey);height:100vh;display:flex;justify-content:center;align-items:center;transition:background var(--ui-speed) var(--ui-curve);overflow:hidden;color:#222;}
 body.theme-login{background:var(--soft-black);color:#e0e0e0;}
@@ -83,7 +83,7 @@ body.theme-signup .rh-icon .rh-bg{fill:#1a1410;}
 label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;opacity:.5;margin-bottom:5px;text-align:left;}
 input,textarea,select{width:100%;background:transparent;border:none;color:inherit;font-family:'Inter',sans-serif;}
 .portal-input{padding:10px 0;border-bottom:1px solid rgba(128,128,128,.4);margin-bottom:18px;font-size:14px;}
-.portal-input:focus{border-bottom-color:rgba(128,128,128,.9);}
+.portal-input:focus{border-bottom-color:var(--gold);}
 .portal-input::placeholder{opacity:.3;}
 .btn-submit{width:100%;padding:14px;border-radius:12px;border:none;font-weight:600;cursor:pointer;font-size:16px;transition:.2s;}
 .btn-submit:active{transform:scale(.98);}
@@ -94,14 +94,14 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .dashboard-wrapper{position:fixed;top:0;left:0;width:100vw;height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:100;opacity:0;transition:.8s var(--slide-curve);}
 .header-row{position:absolute;top:40px;width:85%;display:flex;justify-content:space-between;align-items:center;}
 .header-right{display:flex;gap:14px;align-items:center;}
-.avatar-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;border:none;font-family:'Playfair Display',serif;flex-shrink:0;color:#fff;}
+.avatar-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;border:1.5px solid var(--gold-border);font-family:'Playfair Display',serif;flex-shrink:0;color:#fff;box-shadow:0 0 0 0 var(--gold-glow);}.avatar-btn:hover{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-glow);}
 .theme-toggle{cursor:pointer;font-size:22px;opacity:.5;transition:.2s;}.theme-toggle:hover{opacity:1;}
 
 /* CAROUSEL */
 .carousel-container{width:100%;height:75vh;display:flex;align-items:center;overflow:visible;padding:0 10%;}
 .workspace-track{display:flex;gap:30px;transition:transform var(--slide-speed) var(--slide-curve);will-change:transform;}
 .workspace-card{min-width:80vw;height:65vh;background:rgba(128,128,128,.08);backdrop-filter:blur(15px);border:1px solid rgba(128,128,128,.15);border-radius:40px;padding:35px;opacity:.15;transform:scale(.92);transition:opacity var(--slide-speed) var(--slide-curve),transform var(--slide-speed) var(--slide-curve);display:flex;flex-direction:column;}
-.workspace-card.active{opacity:1;transform:scale(1);background:rgba(128,128,128,.12);}
+.workspace-card.active{opacity:1;transform:scale(1);background:rgba(128,128,128,.12);border-color:var(--gold-border);box-shadow:0 0 0 1px var(--gold-border),0 8px 40px var(--gold-glow),0 2px 12px rgba(0,0,0,.15);}
 
 /* ── OVERVIEW SLIDE ── */
 .overview-stats{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:12px;}
@@ -117,15 +117,15 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .add-btn:hover{opacity:1;}
 
 /* TODAY'S SALES HORIZON STRIP */
-.today-sales-strip{background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.12);border-radius:16px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-shrink:0;}
+.today-sales-strip{background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.12);border-left:2px solid var(--gold-border);border-radius:16px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-shrink:0;}
 
 /* MONTHLY TARGET HERO */
-.monthly-hero{flex-shrink:0;background:rgba(128,128,128,.06);border:1px solid rgba(128,128,128,.1);border-radius:20px;padding:14px 16px;}
+.monthly-hero{flex-shrink:0;background:rgba(128,128,128,.06);border:1px solid rgba(128,128,128,.1);border-left:2px solid var(--gold-border);border-radius:20px;padding:14px 16px;}
 .monthly-hero-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
 .monthly-hero-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;}
-.monthly-hero-pct{font-family:'Playfair Display';font-size:22px;font-weight:700;line-height:1;}
+.monthly-hero-pct{font-family:'Playfair Display';font-size:22px;font-weight:700;line-height:1;color:var(--gold);}
 .monthly-track{height:8px;background:rgba(128,128,128,.15);border-radius:6px;overflow:hidden;margin-bottom:8px;}
-.monthly-fill{height:100%;border-radius:6px;transition:width .9s cubic-bezier(0.4,0,0.2,1),background .5s;}
+.monthly-fill{height:100%;border-radius:6px;transition:width .9s cubic-bezier(0.4,0,0.2,1),background .5s;background:linear-gradient(90deg,#9a7020,#c8a84b,#e8cc80);}
 .monthly-hero-bottom{display:flex;justify-content:space-between;align-items:center;}
 .monthly-earned{font-family:'Playfair Display';font-size:14px;font-weight:700;opacity:.85;}
 .monthly-target-lbl{font-size:10px;opacity:.38;letter-spacing:.3px;}
@@ -144,7 +144,7 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .task-due-input{flex:1;font-size:12px;padding:7px 10px;background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.12);border-radius:10px;color:inherit;}
 .task-filter-row{display:flex;gap:6px;margin-bottom:11px;}
 .task-filter-pill{padding:5px 13px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid rgba(128,128,128,.18);background:transparent;cursor:pointer;color:inherit;transition:.2s;opacity:.45;letter-spacing:.5px;}
-.task-filter-pill.active{opacity:1;background:rgba(128,128,128,.2);border-color:rgba(128,128,128,.35);}
+.task-filter-pill.active{opacity:1;background:var(--gold-dim);border-color:var(--gold-border);color:inherit;}
 .tasks-scroll{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:7px;}
 .task2-item{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.11);border-radius:14px;transition:.25s var(--ui-curve);}
 .task2-item.done2{opacity:.45;border-color:rgba(128,128,128,.06);}
@@ -163,7 +163,7 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 
 /* ── SALES LOG SLIDE ── */
 /* Today's arc / donut hero */
-.sales-hero{flex-shrink:0;display:flex;align-items:center;gap:16px;background:rgba(128,128,128,.06);border:1px solid rgba(128,128,128,.1);border-radius:20px;padding:14px 16px;margin-bottom:10px;}
+.sales-hero{flex-shrink:0;display:flex;align-items:center;gap:16px;background:rgba(128,128,128,.06);border:1px solid rgba(128,128,128,.1);border-left:2px solid var(--gold-border);border-radius:20px;padding:14px 16px;margin-bottom:10px;}
 .sales-donut-wrap{position:relative;width:64px;height:64px;flex-shrink:0;}
 .sales-donut-svg{width:64px;height:64px;transform:rotate(-90deg);}
 .sales-donut-bg{fill:none;stroke:rgba(128,128,128,.15);stroke-width:7;}
@@ -204,7 +204,7 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .log-sale-body{flex:1;padding:0 28px 40px;display:flex;flex-direction:column;gap:14px;}
 .lsf-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;opacity:.45;margin-bottom:6px;display:block;}
 .lsf-input{width:100%;font-size:14px;padding:12px 15px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.14);border-radius:13px;color:inherit;font-family:'Inter',sans-serif;transition:.2s;}
-.lsf-input:focus{border-color:rgba(128,128,128,.45);background:rgba(128,128,128,.12);}
+.lsf-input:focus{border-color:var(--gold-border);background:rgba(128,128,128,.12);box-shadow:0 0 0 2px var(--gold-dim);}
 .lsf-input::placeholder{opacity:.35;}
 .lsf-row{display:flex;gap:10px;}
 .lsf-row .lsf-input{flex:1;}
@@ -223,9 +223,9 @@ body:not(.theme-login):not(.theme-signup) .lsf-submit-btn{background:#f0f0f0;col
 .arch-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;}
 .arch-day-card{width:100%;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.12);border-radius:16px;padding:12px 14px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:10px;}
 .arch-day-card:hover{background:rgba(128,128,128,.16);}
-.arch-day-card.arch-selected{border-color:rgba(128,128,128,.45);background:rgba(128,128,128,.18);}
+.arch-day-card.arch-selected{border-color:var(--gold-border);background:var(--gold-dim);}
 .arch-checkbox{width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(128,128,128,.4);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;transition:.2s;}
-.arch-day-card.arch-selected .arch-checkbox{background:rgba(128,128,128,.4);border-color:transparent;}
+.arch-day-card.arch-selected .arch-checkbox{background:rgba(200,168,75,.35);border-color:var(--gold-border);}
 .arch-day-info{flex:1;min-width:0;}
 .arch-day-date{font-family:'Playfair Display';font-size:13px;font-weight:600;}
 .arch-day-total{font-size:11px;font-weight:600;opacity:.7;margin-top:2px;}
@@ -241,11 +241,12 @@ body:not(.theme-login):not(.theme-signup) .lsf-submit-btn{background:#f0f0f0;col
 .arch-cancel-sel-btn:hover{background:rgba(128,128,128,.16);}
 
 /* DOCK */
-.floating-dock{position:absolute;bottom:36px;height:68px;padding:0 10px;background:rgba(128,128,128,.09);backdrop-filter:blur(30px);border-radius:22px;border:1px solid rgba(128,128,128,.18);display:flex;align-items:center;gap:4px;box-shadow:0 20px 50px rgba(0,0,0,.2),0 4px 12px rgba(0,0,0,.1);}
+.floating-dock{position:absolute;bottom:36px;height:68px;padding:0 10px;background:rgba(128,128,128,.09);backdrop-filter:blur(30px);border-radius:22px;border:1px solid var(--gold-border);display:flex;align-items:center;gap:4px;box-shadow:0 20px 50px rgba(0,0,0,.2),0 4px 12px rgba(0,0,0,.1),0 0 0 1px var(--gold-dim);}
 .dock-item{width:52px;height:52px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;opacity:.28;transition:.35s cubic-bezier(0.2,0.8,0.2,1);gap:4px;position:relative;}
 .dock-item svg{transition:.35s cubic-bezier(0.2,0.8,0.2,1);}
 .dock-item .dock-lbl{font-size:9px;letter-spacing:.4px;font-weight:600;text-transform:uppercase;opacity:0;transition:.3s;margin-top:0px;}
 .dock-item.active{opacity:1;background:rgba(128,128,128,.18);transform:translateY(-4px);}
+.dock-item.active::after{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:14px;height:2px;border-radius:2px;background:var(--gold);opacity:.75;}
 .dock-item.active svg{filter:drop-shadow(0 0 4px rgba(212,184,122,.4));}
 .dock-item.active .dock-lbl{opacity:.6;}
 .dock-item:not(.active):hover{opacity:.55;transform:translateY(-2px);}
@@ -255,8 +256,8 @@ body:not(.theme-login):not(.theme-signup) .lsf-submit-btn{background:#f0f0f0;col
 .overlay-screen.open{transform:translateY(0);opacity:1;pointer-events:all;}
 .overlay-inner{display:flex;flex-direction:column;height:100%;}
 .overlay-header{display:flex;align-items:center;gap:13px;padding:50px 28px 18px;flex-shrink:0;}
-.back-btn{width:38px;height:38px;border-radius:14px;background:rgba(128,128,128,.1);border:1px solid rgba(128,128,128,.18);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:600;transition:.25s var(--ui-curve);flex-shrink:0;color:inherit;letter-spacing:0px;}
-.back-btn:hover{background:rgba(128,128,128,.22);transform:translateX(-2px);}
+.back-btn{width:38px;height:38px;border-radius:50%;background:transparent;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.25s var(--ui-curve);flex-shrink:0;padding:0;}
+.back-btn:hover{transform:translateX(-2px) scale(1.08);filter:drop-shadow(0 0 6px rgba(212,175,80,.35));}
 .back-btn:active{transform:scale(.92) translateX(-2px);}
 .overlay-body{flex:1;overflow-y:auto;padding:0 28px 40px;}
 
@@ -278,7 +279,7 @@ body:not(.theme-login):not(.theme-signup) .lsf-submit-btn{background:#f0f0f0;col
 
 /* Editable inputs */
 .profile-input{width:100%;font-size:14px;padding:11px 14px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.13);border-radius:12px;color:inherit;transition:.2s;font-family:'Inter',sans-serif;}
-.profile-input:focus:not([readonly]){border-color:rgba(128,128,128,.45);background:rgba(128,128,128,.12);}
+.profile-input:focus:not([readonly]){border-color:var(--gold-border);background:rgba(128,128,128,.12);box-shadow:0 0 0 2px var(--gold-dim);}
 .profile-textarea{resize:none;min-height:72px;line-height:1.6;}
 
 /* Static (read-only) values — no box */
@@ -568,7 +569,7 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
             <svg class="sales-donut-svg" viewBox="0 0 64 64">
               <circle class="sales-donut-bg" cx="32" cy="32" r="27"/>
               <circle class="sales-donut-fill" id="donutFill" cx="32" cy="32" r="27"
-                stroke-dasharray="169.6" stroke-dashoffset="169.6" stroke="rgba(128,128,128,.5)"/>
+                stroke-dasharray="169.6" stroke-dashoffset="169.6" stroke="#c8a84b"/>
             </svg>
             <div class="sales-donut-center" id="donutPct">0%</div>
           </div>
@@ -654,7 +655,7 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
 <div class="log-sale-sheet" id="logSaleSheet">
   <div class="log-sale-inner">
     <div class="log-sale-header">
-      <button class="back-btn" onclick="closeLogSaleSheet()">‹ back</button>
+      <button class="back-btn" onclick="closeLogSaleSheet()"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="19" cy="19" r="17.5" stroke="url(#bgo)" stroke-width="1.2" opacity=".7"/><circle cx="19" cy="19" r="13.5" stroke="url(#bgi)" stroke-width="1.8"/><line x1="21.5" y1="12.5" x2="14.5" y2="19" stroke="url(#bga)" stroke-width="1.8" stroke-linecap="round"/><line x1="14.5" y1="19" x2="21.5" y2="25.5" stroke="url(#bgb)" stroke-width="1.8" stroke-linecap="round"/><defs><linearGradient id="bgo" x1="1" y1="19" x2="37" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#9a7020" stop-opacity=".4"/><stop offset="50%" stop-color="#d4a83a"/><stop offset="100%" stop-color="#9a7020" stop-opacity=".4"/></linearGradient><linearGradient id="bgi" x1="5" y1="19" x2="33" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#b08030"/><stop offset="50%" stop-color="#f0cc60"/><stop offset="100%" stop-color="#b08030"/></linearGradient><linearGradient id="bga" x1="14.5" y1="12.5" x2="21.5" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffe898"/><stop offset="100%" stop-color="#c8a84b"/></linearGradient><linearGradient id="bgb" x1="14.5" y1="19" x2="21.5" y2="25.5" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#c8a84b"/><stop offset="100%" stop-color="#ffe898"/></linearGradient></defs></svg></button>
       <h2 style="font-size:21px;" id="logSaleSheetTitle">Log a Sale</h2>
     </div>
     <div class="log-sale-body">
@@ -790,7 +791,7 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
 <div class="overlay-screen" id="profileOverlay">
   <div class="overlay-inner">
     <div class="overlay-header">
-      <button class="back-btn" onclick="closeProfile()">‹ back</button>
+      <button class="back-btn" onclick="closeProfile()"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="19" cy="19" r="17.5" stroke="url(#bgo)" stroke-width="1.2" opacity=".7"/><circle cx="19" cy="19" r="13.5" stroke="url(#bgi)" stroke-width="1.8"/><line x1="21.5" y1="12.5" x2="14.5" y2="19" stroke="url(#bga)" stroke-width="1.8" stroke-linecap="round"/><line x1="14.5" y1="19" x2="21.5" y2="25.5" stroke="url(#bgb)" stroke-width="1.8" stroke-linecap="round"/><defs><linearGradient id="bgo" x1="1" y1="19" x2="37" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#9a7020" stop-opacity=".4"/><stop offset="50%" stop-color="#d4a83a"/><stop offset="100%" stop-color="#9a7020" stop-opacity=".4"/></linearGradient><linearGradient id="bgi" x1="5" y1="19" x2="33" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#b08030"/><stop offset="50%" stop-color="#f0cc60"/><stop offset="100%" stop-color="#b08030"/></linearGradient><linearGradient id="bga" x1="14.5" y1="12.5" x2="21.5" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffe898"/><stop offset="100%" stop-color="#c8a84b"/></linearGradient><linearGradient id="bgb" x1="14.5" y1="19" x2="21.5" y2="25.5" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#c8a84b"/><stop offset="100%" stop-color="#ffe898"/></linearGradient></defs></svg></button>
       <h2 style="font-size:21px;">My Profile</h2>
       <button class="profile-edit-btn" id="profileEditBtn" onclick="toggleProfileEdit()">✎ Edit</button>
     </div>
@@ -892,7 +893,7 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
 <div class="overlay-screen" id="reportOverlay">
   <div class="overlay-inner">
     <div class="overlay-header">
-      <button class="back-btn" onclick="closeReportOverlay()">‹ back</button>
+      <button class="back-btn" onclick="closeReportOverlay()"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="19" cy="19" r="17.5" stroke="url(#bgo)" stroke-width="1.2" opacity=".7"/><circle cx="19" cy="19" r="13.5" stroke="url(#bgi)" stroke-width="1.8"/><line x1="21.5" y1="12.5" x2="14.5" y2="19" stroke="url(#bga)" stroke-width="1.8" stroke-linecap="round"/><line x1="14.5" y1="19" x2="21.5" y2="25.5" stroke="url(#bgb)" stroke-width="1.8" stroke-linecap="round"/><defs><linearGradient id="bgo" x1="1" y1="19" x2="37" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#9a7020" stop-opacity=".4"/><stop offset="50%" stop-color="#d4a83a"/><stop offset="100%" stop-color="#9a7020" stop-opacity=".4"/></linearGradient><linearGradient id="bgi" x1="5" y1="19" x2="33" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#b08030"/><stop offset="50%" stop-color="#f0cc60"/><stop offset="100%" stop-color="#b08030"/></linearGradient><linearGradient id="bga" x1="14.5" y1="12.5" x2="21.5" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffe898"/><stop offset="100%" stop-color="#c8a84b"/></linearGradient><linearGradient id="bgb" x1="14.5" y1="19" x2="21.5" y2="25.5" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#c8a84b"/><stop offset="100%" stop-color="#ffe898"/></linearGradient></defs></svg></button>
       <h2 style="font-size:20px;">Daily Sales Report</h2>
     </div>
     <div class="overlay-body">
@@ -909,7 +910,7 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
 <div class="day-detail-overlay" id="dayDetailOverlay">
   <div style="display:flex;flex-direction:column;height:100%;">
     <div style="display:flex;align-items:center;gap:13px;padding:50px 28px 18px;flex-shrink:0;">
-      <button class="back-btn" onclick="closeDayDetail()">‹ back</button>
+      <button class="back-btn" onclick="closeDayDetail()"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="19" cy="19" r="17.5" stroke="url(#bgo)" stroke-width="1.2" opacity=".7"/><circle cx="19" cy="19" r="13.5" stroke="url(#bgi)" stroke-width="1.8"/><line x1="21.5" y1="12.5" x2="14.5" y2="19" stroke="url(#bga)" stroke-width="1.8" stroke-linecap="round"/><line x1="14.5" y1="19" x2="21.5" y2="25.5" stroke="url(#bgb)" stroke-width="1.8" stroke-linecap="round"/><defs><linearGradient id="bgo" x1="1" y1="19" x2="37" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#9a7020" stop-opacity=".4"/><stop offset="50%" stop-color="#d4a83a"/><stop offset="100%" stop-color="#9a7020" stop-opacity=".4"/></linearGradient><linearGradient id="bgi" x1="5" y1="19" x2="33" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#b08030"/><stop offset="50%" stop-color="#f0cc60"/><stop offset="100%" stop-color="#b08030"/></linearGradient><linearGradient id="bga" x1="14.5" y1="12.5" x2="21.5" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffe898"/><stop offset="100%" stop-color="#c8a84b"/></linearGradient><linearGradient id="bgb" x1="14.5" y1="19" x2="21.5" y2="25.5" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#c8a84b"/><stop offset="100%" stop-color="#ffe898"/></linearGradient></defs></svg></button>
       <div style="flex:1;min-width:0;">
         <div style="font-family:'Playfair Display';font-size:20px;font-weight:700;" id="dayDetailTitle"></div>
         <div style="font-size:11px;opacity:.4;margin-top:3px;" id="dayDetailSubtitle"></div>
@@ -1681,10 +1682,10 @@ function renderSalesDonut() {
   }
 
   if (pct >= 100)     fillColor = 'rgba(60,200,100,.9)';
-  else if (pct >= 80) fillColor = 'rgba(90,190,130,.85)';
-  else if (pct >= 50) fillColor = 'rgba(200,170,50,.9)';
-  else if (pct >= 25) fillColor = 'rgba(210,130,50,.85)';
-  else                fillColor = 'rgba(128,128,128,.55)';
+  else if (pct >= 80) fillColor = '#c8a84b';
+  else if (pct >= 50) fillColor = '#b08030';
+  else if (pct >= 25) fillColor = 'rgba(200,160,50,.75)';
+  else                fillColor = 'rgba(200,160,50,.4)';
 
   const offset = circumf - (pct / 100) * circumf;
   const fill   = document.getElementById('donutFill');
