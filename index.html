@@ -266,6 +266,27 @@ select.modal-input{cursor:pointer;}
 body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
+/* CATEGORY TAG */
+.lsf-cat-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:2px;}
+.lsf-cat-pill{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid rgba(128,128,128,.2);background:transparent;cursor:pointer;color:inherit;transition:.2s;opacity:.45;letter-spacing:.4px;}
+.lsf-cat-pill.selected{opacity:1;background:rgba(128,128,128,.2);border-color:rgba(128,128,128,.4);}
+.sale-cat-badge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:2px 7px;border-radius:8px;background:rgba(128,128,128,.12);border:1px solid rgba(128,128,128,.18);opacity:.7;margin-left:5px;vertical-align:middle;}
+
+/* SALES BAR CHART */
+.sales-chart-wrap{flex-shrink:0;background:rgba(128,128,128,.06);border:1px solid rgba(128,128,128,.1);border-radius:18px;padding:12px 14px;margin-bottom:10px;}
+.sales-chart-title{font-size:10px;text-transform:uppercase;letter-spacing:1.4px;opacity:.4;margin-bottom:10px;}
+.sales-chart-bars{display:flex;align-items:flex-end;gap:5px;height:60px;}
+.sales-chart-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.sales-chart-bar{width:100%;border-radius:5px 5px 0 0;transition:height .7s cubic-bezier(0.4,0,0.2,1),background .4s;min-height:3px;background:rgba(128,128,128,.35);}
+.sales-chart-bar.today{background:rgba(90,190,130,.75);}
+.sales-chart-lbl{font-size:9px;opacity:.38;letter-spacing:.3px;white-space:nowrap;}
+.sales-chart-val{font-size:9px;font-weight:600;opacity:.5;white-space:nowrap;}
+
+/* INLINE VALIDATION */
+.lsf-field-err{font-size:11px;color:#e05252;margin-top:4px;min-height:13px;display:none;}
+.lsf-field-err.visible{display:block;}
+.lsf-input.field-invalid{border-color:rgba(220,80,80,.55)!important;background:rgba(220,80,80,.04)!important;}
+
 /* DAY DETAIL */
 .day-detail-overlay{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;transition:.4s var(--ui-curve);transform:translateY(100%);opacity:0;pointer-events:none;overflow:hidden;}
 .day-detail-overlay.open{transform:translateY(0);opacity:1;pointer-events:all;}
@@ -419,6 +440,12 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
           </div>
         </div>
 
+        <!-- Sales Bar Chart -->
+        <div class="sales-chart-wrap" id="salesChartWrap" style="display:none;">
+          <div class="sales-chart-title">Last 7 Days</div>
+          <div class="sales-chart-bars" id="salesChartBars"></div>
+        </div>
+
         <!-- Scrollable Sales List -->
         <div class="sales-list" id="salesList"></div>
 
@@ -470,7 +497,17 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
 
       <div>
         <label class="lsf-label">Item Name</label>
-        <input class="lsf-input" id="lsfItem" placeholder="e.g. Samsung Galaxy S25 Ultra" autocomplete="off">
+        <input class="lsf-input" id="lsfItem" placeholder="e.g. Samsung Galaxy S25 Ultra" autocomplete="off" oninput="clearFieldErr('lsfItem','lsfItemErr')">
+        <div class="lsf-field-err" id="lsfItemErr">Item name is required.</div>
+      </div>
+      <div>
+        <label class="lsf-label">Category</label>
+        <div class="lsf-cat-row" id="lsfCatRow">
+          <button type="button" class="lsf-cat-pill selected" data-cat="Phone" onclick="selectSaleCat(this)">📱 Phone</button>
+          <button type="button" class="lsf-cat-pill" data-cat="Tablet" onclick="selectSaleCat(this)">💻 Tablet</button>
+          <button type="button" class="lsf-cat-pill" data-cat="Accessory" onclick="selectSaleCat(this)">🎧 Accessory</button>
+          <button type="button" class="lsf-cat-pill" data-cat="Other" onclick="selectSaleCat(this)">📦 Other</button>
+        </div>
       </div>
       <div class="lsf-row">
         <div style="flex:1;">
@@ -485,7 +522,8 @@ body.theme-signup .toast{background:rgba(240,240,240,.95);color:#1a1a1a;}
       <div class="lsf-row">
         <div style="flex:1;">
           <label class="lsf-label">Price (Ksh)</label>
-          <input class="lsf-input" id="lsfPrice" type="number" min="0" placeholder="e.g. 125000" autocomplete="off">
+          <input class="lsf-input" id="lsfPrice" type="number" min="0" placeholder="e.g. 125000" autocomplete="off" oninput="clearFieldErr('lsfPrice','lsfPriceErr')">
+          <div class="lsf-field-err" id="lsfPriceErr">Enter a valid price.</div>
         </div>
         <div>
           <label class="lsf-label">Qty</label>
@@ -890,15 +928,34 @@ function scheduleTaskNotifications() {
   cachedTasks
     .filter(t => !t.done && t.dueDate === today && t.dueTime)
     .forEach(t => {
-      if (scheduledTaskNotifs.has(t.id)) return;
       const [h, m] = t.dueTime.split(':').map(Number);
-      const target = new Date();
-      target.setHours(h, m, 0, 0);
-      if (target <= now) return;
-      scheduledTaskNotifs.add(t.id);
-      setTimeout(() => {
-        try { new Notification('Task Reminder — Royal Horizon', { body: t.title, icon: '/icon-192.png' }); } catch(e) {}
-      }, target - now);
+
+      // On-time notification
+      const exactKey = t.id + '_exact';
+      if (!scheduledTaskNotifs.has(exactKey)) {
+        const target = new Date(); target.setHours(h, m, 0, 0);
+        if (target > now) {
+          scheduledTaskNotifs.add(exactKey);
+          setTimeout(() => {
+            if (cachedTasks.find(x => x.id === t.id && !x.done))
+              try { new Notification('⏰ Task Due — Royal Horizon', { body: t.title, icon: '/icon-192.png' }); } catch(e) {}
+          }, target - now);
+        }
+      }
+
+      // 5-minute early warning
+      const earlyKey = t.id + '_early';
+      if (!scheduledTaskNotifs.has(earlyKey)) {
+        const early = new Date(); early.setHours(h, m - 5, 0, 0);
+        if (m < 5) { early.setHours(h - 1, 55 + m, 0, 0); }
+        if (early > now) {
+          scheduledTaskNotifs.add(earlyKey);
+          setTimeout(() => {
+            if (cachedTasks.find(x => x.id === t.id && !x.done))
+              try { new Notification('⏳ Due in 5 min — Royal Horizon', { body: t.title, icon: '/icon-192.png' }); } catch(e) {}
+          }, early - now);
+        }
+      }
     });
 }
 
@@ -988,6 +1045,7 @@ function openProfile() {
   av.textContent = (prof.name || 'G')[0].toUpperCase();
   applyOverlayTheme(document.getElementById('profileOverlay'));
   document.getElementById('profileOverlay').classList.add('open');
+  pushOverlayState('profile');
 }
 
 function setProfileReadOnly(readonly) {
@@ -1035,6 +1093,7 @@ function toggleProfileEdit() {
 
 function closeProfile() {
   document.getElementById('profileOverlay').classList.remove('open');
+  if (_overlayStack[_overlayStack.length-1]==='profile') { _overlayStack.pop(); history.back(); }
   if (profileEditMode) {
     profileEditMode = false;
     setProfileReadOnly(true);
@@ -1209,12 +1268,13 @@ async function addQuickTask() {
 
 async function toggleTask2(id) {
   const t = cachedTasks.find(t => t.id === id); if (!t) return;
-  if (t.done) scheduledTaskNotifs.delete(id);
+  if (t.done) { scheduledTaskNotifs.delete(id+'_exact'); scheduledTaskNotifs.delete(id+'_early'); }
   await db.ref('users/' + CU + '/tasks/' + id).update({ done: !t.done });
 }
 
 async function deleteTask2(id) {
-  scheduledTaskNotifs.delete(id);
+  scheduledTaskNotifs.delete(id+'_exact');
+  scheduledTaskNotifs.delete(id+'_early');
   await db.ref('users/' + CU + '/tasks/' + id).remove();
 }
 
@@ -1300,6 +1360,7 @@ function renderSalesLog() {
   dateEl.textContent = new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
 
   renderSalesDonut();
+  renderSalesBarChart();
 
   if (!cachedSales.length) {
     list.innerHTML = '<div style="text-align:center;opacity:.28;margin:auto;padding:18px 0;"><div style="font-size:28px;margin-bottom:8px;">₭</div><p style="font-size:12px;">No sales logged today.</p></div>';
@@ -1309,7 +1370,7 @@ function renderSalesLog() {
     <div class="sale-item${editingSaleId===s.id?' sale-editing':''}">
       <div class="sale-num">${i+1}</div>
       <div class="sale-info">
-        <div class="sale-name">${esc(s.item)}</div>
+        <div class="sale-name">${esc(s.item)}${s.category?`<span class="sale-cat-badge">${catEmoji(s.category)} ${esc(s.category)}</span>`:''}</div>
         <div class="sale-meta">Model: ${esc(s.model||'—')} &nbsp;·&nbsp; S/N: ${esc(s.serial||'—')} &nbsp;·&nbsp; Qty: ${s.qty}</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
@@ -1331,10 +1392,49 @@ function renderOverviewSales() {
   if (countEl) countEl.textContent = count + ' transaction' + (count !== 1 ? 's' : '');
 }
 
+// ── SALES BAR CHART (last 7 days from archive + today) ──
+async function renderSalesBarChart() {
+  const wrap = document.getElementById('salesChartWrap');
+  const barsEl = document.getElementById('salesChartBars');
+  if (!wrap || !barsEl || !CU) return;
+
+  // Build day keys for the last 7 days (oldest→newest)
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const key = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const lbl = i === 0 ? 'Today' : d.toLocaleDateString('en-GB',{weekday:'short'});
+    days.push({ key, lbl, isToday: i === 0 });
+  }
+
+  // Fetch totals — today from cachedSales, past days from Firebase
+  const totals = await Promise.all(days.map(async d => {
+    if (d.isToday) return cachedSales.reduce((s,e) => s + (e.price * e.qty), 0);
+    try {
+      const snap = await db.ref('users/' + CU + '/sales/' + d.key).once('value');
+      const entries = Object.values(snap.val() || {});
+      return entries.reduce((s,e) => s + ((e.price||0) * (e.qty||1)), 0);
+    } catch(e) { return 0; }
+  }));
+
+  const maxVal = Math.max(...totals, 1);
+  wrap.style.display = 'block';
+  barsEl.innerHTML = days.map((d, i) => {
+    const pct = Math.max((totals[i] / maxVal) * 100, totals[i] > 0 ? 8 : 3);
+    const valStr = totals[i] >= 1000 ? (totals[i]/1000).toFixed(1)+'k' : totals[i] > 0 ? totals[i].toLocaleString() : '';
+    return `<div class="sales-chart-col">
+      <div class="sales-chart-val">${valStr}</div>
+      <div class="sales-chart-bar${d.isToday?' today':''}" style="height:${pct}%;" title="Ksh ${totals[i].toLocaleString()}"></div>
+      <div class="sales-chart-lbl">${d.lbl}</div>
+    </div>`;
+  }).join('');
+}
+
 // ── LOG SALE SHEET ──
 function openLogSaleSheet(id) {
   applyOverlayTheme(document.getElementById('logSaleSheet'));
   document.getElementById('logSaleSheet').classList.add('open');
+  pushOverlayState('logSale');
   if (!id) {
     // New sale — clear fields
     ['lsfItem','lsfModel','lsfSerial','lsfPrice'].forEach(i => { document.getElementById(i).value = ''; });
@@ -1343,6 +1443,8 @@ function openLogSaleSheet(id) {
     document.getElementById('lsfCancelEditBtn').style.display = 'none';
     document.getElementById('lsfEditingBanner').classList.remove('visible');
     document.getElementById('logSaleSheetTitle').textContent = 'Log a Sale';
+    setSelectedCat('Phone');
+    clearAllSaleErrors();
     editingSaleId = null;
   }
   setTimeout(() => document.getElementById('lsfItem').focus(), 400);
@@ -1350,6 +1452,7 @@ function openLogSaleSheet(id) {
 
 function closeLogSaleSheet() {
   document.getElementById('logSaleSheet').classList.remove('open');
+  if (_overlayStack[_overlayStack.length-1]==='logSale') { _overlayStack.pop(); history.back(); }
 }
 
 function editSale(id) {
@@ -1361,6 +1464,8 @@ function editSale(id) {
   document.getElementById('lsfSerial').value = s.serial || '';
   document.getElementById('lsfPrice').value  = s.price || '';
   document.getElementById('lsfQty').value    = s.qty || 1;
+  setSelectedCat(s.category || 'Phone');
+  clearAllSaleErrors();
   document.getElementById('lsfSubmitBtn').textContent = 'Update Sale';
   document.getElementById('lsfCancelEditBtn').style.display = 'block';
   document.getElementById('lsfEditingBanner').classList.add('visible');
@@ -1376,20 +1481,23 @@ function cancelEditSale() {
 
 // FIX #2: Validation applied to both new and update paths
 async function submitLogSale() {
-  const item   = document.getElementById('lsfItem').value.trim();
-  const model  = document.getElementById('lsfModel').value.trim();
-  const serial = document.getElementById('lsfSerial').value.trim();
-  const price  = parseFloat(document.getElementById('lsfPrice').value);
-  const qty    = parseInt(document.getElementById('lsfQty').value) || 1;
+  const item     = document.getElementById('lsfItem').value.trim();
+  const model    = document.getElementById('lsfModel').value.trim();
+  const serial   = document.getElementById('lsfSerial').value.trim();
+  const price    = parseFloat(document.getElementById('lsfPrice').value);
+  const qty      = parseInt(document.getElementById('lsfQty').value) || 1;
+  const category = getSelectedCat();
 
-  // ── VALIDATION (applies to both new and update) ──
-  if (!item) { showToast('Item name is required.'); document.getElementById('lsfItem').focus(); return; }
-  if (isNaN(price) || price <= 0) { showToast('Enter a valid price greater than 0.'); document.getElementById('lsfPrice').focus(); return; }
+  // ── INLINE VALIDATION ──
+  let valid = true;
+  if (!item) { showFieldErr('lsfItem','lsfItemErr'); valid = false; }
+  if (isNaN(price) || price <= 0) { showFieldErr('lsfPrice','lsfPriceErr'); valid = false; }
+  if (!valid) return;
 
   if (editingSaleId) {
     // UPDATE
     try {
-      await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + editingSaleId).update({ item, model, serial, price, qty });
+      await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + editingSaleId).update({ item, model, serial, price, qty, category });
       editingSaleId = null;
       closeLogSaleSheet();
       archiveDirty = true;
@@ -1402,7 +1510,7 @@ async function submitLogSale() {
   const key   = todayKey();
   const label = new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
   try {
-    await db.ref('users/' + CU + '/sales/' + key).push({ item, model, serial, price, qty, order: Date.now(), createdAt: Date.now() });
+    await db.ref('users/' + CU + '/sales/' + key).push({ item, model, serial, price, qty, category, order: Date.now(), createdAt: Date.now() });
     await db.ref('users/' + CU + '/salesArchiveMeta/' + key).set({ date: key, label });
     closeLogSaleSheet();
     archiveDirty = true;
@@ -1463,9 +1571,13 @@ function generateSalesReport() {
   if (el) el.textContent = r;
   applyOverlayTheme(document.getElementById('reportOverlay'));
   document.getElementById('reportOverlay').classList.add('open');
+  pushOverlayState('report');
 }
 
-function closeReportOverlay() { document.getElementById('reportOverlay').classList.remove('open'); }
+function closeReportOverlay() {
+  document.getElementById('reportOverlay').classList.remove('open');
+  if (_overlayStack[_overlayStack.length-1]==='report') { _overlayStack.pop(); history.back(); }
+}
 
 function copyReport() {
   if (!currentReportText) return;
@@ -1632,6 +1744,7 @@ async function openDayDetail(dateKey, label) {
   body.innerHTML = '<div style="padding:20px 0;opacity:.4;font-size:13px;">Loading…</div>';
   applyOverlayTheme(overlay);
   overlay.classList.add('open');
+  pushOverlayState('dayDetail');
   try {
     const snap = await db.ref('users/' + CU + '/sales/' + dateKey).once('value');
     const entries = Object.entries(snap.val() || {}).map(([id,v]) => ({id,...v})).sort((a,b) => a.order - b.order);
@@ -1655,6 +1768,7 @@ async function openDayDetail(dateKey, label) {
 
 function closeDayDetail() {
   document.getElementById('dayDetailOverlay').classList.remove('open');
+  if (_overlayStack[_overlayStack.length-1]==='dayDetail') { _overlayStack.pop(); history.back(); }
   currentDayDetailKey = null; currentDayDetailLabel = null;
 }
 
@@ -1729,8 +1843,34 @@ document.getElementById('workspaceTrack').addEventListener('touchend', e => {
   }
 }, { passive: true });
 
+// ── HARDWARE BACK BUTTON (History API) ──
+// Track which overlay is currently pushed so popstate can close the right one
+let _overlayStack = [];
+
+function pushOverlayState(name) {
+  _overlayStack.push(name);
+  history.pushState({ overlay: name }, '');
+}
+
+function _handlePopState(e) {
+  // Called when user presses hardware/browser back
+  const top = _overlayStack[_overlayStack.length - 1];
+  if (!top) return;
+  _overlayStack.pop();
+  if (top === 'profile')    { document.getElementById('profileOverlay').classList.remove('open'); if (profileEditMode) { profileEditMode = false; setProfileReadOnly(true); document.getElementById('profileEditBtn').textContent='✎ Edit'; document.getElementById('profileEditBtn').classList.remove('active'); document.getElementById('profileSaveBtn').style.display='none'; } }
+  if (top === 'report')     { document.getElementById('reportOverlay').classList.remove('open'); }
+  if (top === 'dayDetail')  { document.getElementById('dayDetailOverlay').classList.remove('open'); currentDayDetailKey=null; currentDayDetailLabel=null; }
+  if (top === 'logSale')    { document.getElementById('logSaleSheet').classList.remove('open'); }
+  if (top === 'confirm')    { document.getElementById('confirmModal').classList.remove('open'); }
+}
+
+window.addEventListener('popstate', _handlePopState);
+
 // ── MODALS / UTILS ──
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  if (_overlayStack[_overlayStack.length-1] === 'confirm') { _overlayStack.pop(); }
+}
 document.getElementById('confirmModal').addEventListener('click', function(e) { if(e.target===this) closeModal('confirmModal'); });
 
 function showConfirm(title, msg, onOk, btnLabel='Confirm') {
@@ -1740,14 +1880,19 @@ function showConfirm(title, msg, onOk, btnLabel='Confirm') {
   btn.textContent = btnLabel;
   btn.onclick = () => { closeModal('confirmModal'); onOk(); };
   document.getElementById('confirmModal').classList.add('open');
+  pushOverlayState('confirm');
 }
 
 document.addEventListener('keydown', e => {
   if (!CU) return;
   const typing = ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName);
   if (e.key === 'Escape') {
-    closeModal('confirmModal'); closeProfile(); closeReportOverlay();
-    closeDayDetail(); closeLogSaleSheet();
+    const top = _overlayStack[_overlayStack.length - 1];
+    if (top === 'confirm')   closeModal('confirmModal');
+    else if (top === 'profile')   closeProfile();
+    else if (top === 'report')    closeReportOverlay();
+    else if (top === 'dayDetail') closeDayDetail();
+    else if (top === 'logSale')   closeLogSaleSheet();
   }
   if (e.key === 'n' && !typing && currentSlide === 1) { e.preventDefault(); document.getElementById('quickTaskInput').focus(); }
 });
@@ -1769,6 +1914,44 @@ function showToast(msg) {
 }
 function esc(s='') {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── CATEGORY ──
+const SALE_CATS = ['Phone','Tablet','Accessory','Other'];
+function selectSaleCat(el) {
+  document.querySelectorAll('.lsf-cat-pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function getSelectedCat() {
+  const sel = document.querySelector('.lsf-cat-pill.selected');
+  return sel ? sel.dataset.cat : 'Phone';
+}
+function setSelectedCat(cat) {
+  document.querySelectorAll('.lsf-cat-pill').forEach(p => {
+    p.classList.toggle('selected', p.dataset.cat === cat);
+  });
+}
+function catEmoji(cat) {
+  return {Phone:'📱',Tablet:'💻',Accessory:'🎧',Other:'📦'}[cat] || '📦';
+}
+
+// ── INLINE FIELD VALIDATION ──
+function clearFieldErr(inputId, errId) {
+  const inp = document.getElementById(inputId);
+  const err = document.getElementById(errId);
+  if (inp) inp.classList.remove('field-invalid');
+  if (err) err.classList.remove('visible');
+}
+function showFieldErr(inputId, errId) {
+  const inp = document.getElementById(inputId);
+  const err = document.getElementById(errId);
+  if (inp) { inp.classList.add('field-invalid'); inp.focus(); }
+  if (err) err.classList.add('visible');
+}
+function clearAllSaleErrors() {
+  ['lsfItem','lsfPrice'].forEach((id,i) => {
+    clearFieldErr(id, ['lsfItemErr','lsfPriceErr'][i]);
+  });
 }
 </script>
 <script>
