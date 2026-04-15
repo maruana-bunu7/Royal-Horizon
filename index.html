@@ -117,8 +117,8 @@ body.theme-signup .avatar-btn{color:#1a1a1a !important;}
 
 /* CAROUSEL */
 .carousel-container{width:100%;height:75vh;display:flex;align-items:center;overflow:visible;padding:0 10%;}
-.workspace-track{display:flex;gap:30px;transition:transform var(--slide-speed) var(--slide-curve);will-change:transform;}
-.workspace-card{min-width:80vw;height:65vh;background:rgba(128,128,128,.08);backdrop-filter:blur(15px);border:1px solid rgba(128,128,128,.15);border-radius:40px;padding:35px;opacity:.15;transform:scale(.92);transition:opacity var(--slide-speed) var(--slide-curve),transform var(--slide-speed) var(--slide-curve);display:flex;flex-direction:column;}
+.workspace-track{display:flex;gap:30px;will-change:transform;}
+.workspace-card{min-width:80vw;height:65vh;background:rgba(128,128,128,.08);backdrop-filter:blur(15px);border:1px solid rgba(128,128,128,.15);border-radius:40px;padding:35px;opacity:.15;transform:scale(.92);transition:opacity var(--slide-speed) var(--slide-curve),transform var(--slide-speed) var(--slide-curve);display:flex;flex-direction:column;overflow:hidden;}
 .workspace-card.active{opacity:1;transform:scale(1);background:rgba(0,0,0,.45);border-color:var(--gold-border);box-shadow:0 0 0 1px var(--gold-border),0 8px 40px var(--gold-glow),0 2px 12px rgba(0,0,0,.25);}
 
 /* SLIDE INDICATOR DOTS */
@@ -883,12 +883,6 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
         </div>
         <div class="task-quick-add">
           <input class="task-quick-input" id="quickTaskInput" placeholder="Add a task or note…" onkeydown="if(event.key==='Enter')addQuickTask()">
-          <select class="task-priority-select" id="taskPrioritySelect" title="Priority">
-            <option value="">— Pri</option>
-            <option value="urgent">🔴 Urgent</option>
-            <option value="medium">🟡 Medium</option>
-            <option value="low">🟢 Low</option>
-          </select>
           <button class="task-due-toggle" id="taskDueToggle" onclick="toggleTaskDueRow()" title="Set due date & reminder">📅</button>
           <button class="task-quick-btn" onclick="addQuickTask()">+</button>
         </div>
@@ -986,7 +980,7 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
     <div class="dock-item" onclick="moveTrack(1)" title="Tasks" style="position:relative;">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
       <span class="dock-lbl">Tasks</span>
-      <span class="dock-badge" id="tasksDockBadge"></span>
+
     </div>
     <div class="dock-item" onclick="moveTrack(2)" title="Sales Log">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>
@@ -1843,17 +1837,7 @@ function renderTasksSlide() {
   const done    = cachedTasks.filter(t =>  t.done).length;
   const countEl = document.getElementById('tasksFooterCount');
   if (countEl) countEl.textContent = `${pending} pending · ${done} done`;
-  // Dock badge: show when there are urgent or overdue pending tasks
-  const badge = document.getElementById('tasksDockBadge');
-  if (badge) {
-    const today = todayKey();
-    const nowTime = (() => { const n = new Date(); return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'); })();
-    const hasUrgent = cachedTasks.some(t => !t.done && (
-      t.priority === 'urgent' ||
-      (t.dueDate && (t.dueDate < today || (t.dueDate === today && t.dueTime && t.dueTime < nowTime)))
-    ));
-    badge.classList.toggle('visible', hasUrgent);
-  }
+
 }
 
 function renderOverviewTasks() {
@@ -2736,30 +2720,36 @@ function moveTrack(idx) {
   }
 }
 
-// ── GALLERY-QUALITY SWIPE ENGINE ─────────────────────────────────
+// ── SMOOTH SWIPE ENGINE ──────────────────────────────────────────
 (function () {
   const track    = document.getElementById('workspaceTrack');
-  const TOTAL    = 4;           // number of slides
-  const GAP      = 30;          // px gap between cards (matches CSS gap:30px)
-  const RESIST   = 0.18;        // edge rubber-band factor (lower = softer)
-  const VEL_SNAP = 0.3;         // px/ms velocity threshold to force a slide change
-  const DIST_SNAP= 0.28;        // fraction of slide width to force snap on slow drag
+  const TOTAL    = 4;
+  const GAP      = 30;
+  const RESIST   = 0.12;   // softer rubber-band at edges
+  const VEL_SNAP = 0.22;   // px/ms — lower = easier to flick
+  const DIST_SNAP= 0.22;   // fraction of slide width for slow-drag snap
 
-  // current rendered offset in px (kept in sync at all times)
-  let renderX = 0;
+  // Physics constants for spring
+  const STIFFNESS  = 0.88; // how strongly spring pulls (0-1, higher = snappier)
+  const DAMPING    = 0.78; // how quickly oscillation dies (0-1, higher = less bounce)
 
-  // touch state
-  let t0 = 0, x0 = 0, y0 = 0;
+  let renderX  = 0;
+  let springV  = 0;   // spring velocity (px/frame)
+
+  // Touch state
+  let x0 = 0, y0 = 0;
   let prevX = 0, prevT = 0;
-  let velocity = 0;             // px/ms, positive = finger moved right
+  let velocity = 0;
   let isHoriz  = null;
   let active   = false;
   let rafId    = null;
 
-  function slideW() { return window.innerWidth * 0.80 + GAP; }
-  function baseFor(idx) { return -(idx * slideW()); }
+  // GPU-accelerate the track
+  track.style.willChange = 'transform';
 
-  // Rubber-band: compress distance beyond boundary
+  function slideW()      { return window.innerWidth * 0.80 + GAP; }
+  function baseFor(idx)  { return -(idx * slideW()); }
+
   function rubberClamp(offset) {
     const lo = baseFor(TOTAL - 1);
     const hi = baseFor(0);
@@ -2768,20 +2758,16 @@ function moveTrack(idx) {
     return offset;
   }
 
-  // Write transform without CSS transition (raw, every frame)
   function setRaw(x) {
     renderX = x;
     track.style.transition = 'none';
-    track.style.transform  = `translateX(${x}px)`;
+    track.style.transform  = `translateX(${x}px) translateZ(0)`;
   }
 
-  // Animated snap to a target slide index
-  function snapTo(idx) {
-    idx = Math.max(0, Math.min(TOTAL - 1, idx));
-    // Update active classes immediately so dots/dock feel instant
-    document.querySelectorAll('.workspace-card').forEach((c,i)=>c.classList.toggle('active',i===idx));
-    document.querySelectorAll('.dock-item').forEach((d,i)=>d.classList.toggle('active',i===idx));
-    document.querySelectorAll('.slide-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+  function updateUI(idx) {
+    document.querySelectorAll('.workspace-card').forEach((c,i) => c.classList.toggle('active', i===idx));
+    document.querySelectorAll('.dock-item').forEach((d,i)      => d.classList.toggle('active', i===idx));
+    document.querySelectorAll('.slide-dot').forEach((d,i)      => d.classList.toggle('active', i===idx));
     currentSlide = idx;
     _syncFab(idx);
     if (idx === 2) renderSalesLog();
@@ -2789,65 +2775,72 @@ function moveTrack(idx) {
       const si = document.getElementById('archSearchInput'); if (si) si.value = '';
       renderArchiveSales();
     }
-
-    const target = baseFor(idx);
-    // Spring animation: exponential decay toward target
-    let last = performance.now();
-    let cur  = renderX;
-    const STIFFNESS = 0.014; // lower = slower/springier, higher = snappier
-
-    cancelAnimationFrame(rafId);
-    function spring(now) {
-      const dt = Math.min(now - last, 32); // cap dt so a background tab doesn't explode
-      last = now;
-      cur += (target - cur) * (1 - Math.pow(1 - STIFFNESS, dt));
-      track.style.transition = 'none';
-      track.style.transform  = `translateX(${cur}px)`;
-      renderX = cur;
-      if (Math.abs(target - cur) > 0.5) {
-        rafId = requestAnimationFrame(spring);
-      } else {
-        track.style.transform = `translateX(${target}px)`;
-        renderX = target;
-      }
-    }
-    rafId = requestAnimationFrame(spring);
   }
 
-  // ── Touch events ─────────────────────────────────────────────
+  function snapTo(idx) {
+    idx = Math.max(0, Math.min(TOTAL - 1, idx));
+    updateUI(idx);
+
+    const target = baseFor(idx);
+    cancelAnimationFrame(rafId);
+
+    // Spring physics: velocity-preserving so flicks feel continuous
+    // springV carries over from any previous gesture velocity
+    function frame() {
+      const dist  = target - renderX;
+      springV     = (springV + dist * STIFFNESS) * DAMPING;
+      const next  = renderX + springV;
+
+      // Settle check: close enough and moving slow
+      if (Math.abs(dist) < 0.4 && Math.abs(springV) < 0.4) {
+        track.style.transform = `translateX(${target}px) translateZ(0)`;
+        renderX  = target;
+        springV  = 0;
+        return;
+      }
+
+      track.style.transition = 'none';
+      track.style.transform  = `translateX(${next}px) translateZ(0)`;
+      renderX = next;
+      rafId = requestAnimationFrame(frame);
+    }
+    rafId = requestAnimationFrame(frame);
+  }
+
+  // ── Touch handlers ───────────────────────────────────────────
   track.addEventListener('touchstart', e => {
     cancelAnimationFrame(rafId);
     const touch = e.touches[0];
-    t0 = prevT = performance.now();
-    x0 = prevX = touch.clientX;
-    y0 = touch.clientY;
+    prevT    = performance.now();
+    x0       = prevX = touch.clientX;
+    y0       = touch.clientY;
     velocity = 0;
+    springV  = 0;
     isHoriz  = null;
     active   = false;
-    // Snap renderX to actual current position (may be mid-spring)
-    const m = new DOMMatrix(getComputedStyle(track).transform);
+    // Capture real position mid-spring
+    const m  = new DOMMatrix(getComputedStyle(track).transform);
     renderX  = m.m41;
   }, { passive: true });
 
   track.addEventListener('touchmove', e => {
     const touch = e.touches[0];
-    const dx = touch.clientX - x0;
-    const dy = touch.clientY - y0;
-    const now = performance.now();
+    const dx    = touch.clientX - x0;
+    const dy    = touch.clientY - y0;
+    const now   = performance.now();
 
-    // Direction lock on first move ≥ 5px
+    // Direction lock — lower threshold for snappier feel
     if (isHoriz === null) {
-      if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
-      isHoriz = Math.abs(dx) >= Math.abs(dy);
+      if (Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
+      isHoriz = Math.abs(dx) > Math.abs(dy) * 0.8; // slight horizontal bias
     }
+    if (!isHoriz) return;
+    e.preventDefault();
 
-    if (!isHoriz) return;          // vertical — don't interfere
-    e.preventDefault();            // own the horizontal gesture
-
-    // Velocity: exponential moving average (responsive yet stable)
-    const dt = now - prevT || 1;
-    const instantV = (touch.clientX - prevX) / dt;
-    velocity = velocity * 0.6 + instantV * 0.4;
+    // Velocity: weighted EMA — heavier on recent samples for responsiveness
+    const dt       = Math.max(now - prevT, 1);
+    const instant  = (touch.clientX - prevX) / dt;
+    velocity       = velocity * 0.45 + instant * 0.55;
     prevX = touch.clientX;
     prevT = now;
 
@@ -2860,22 +2853,28 @@ function moveTrack(idx) {
     if (!active || !isHoriz) { isHoriz = null; active = false; return; }
     isHoriz = null; active = false;
 
-    const dx  = (e.changedTouches ? e.changedTouches[0].clientX : 0) - x0;
-    const sw  = slideW();
-    // Decide target: fast flick overrides distance threshold
-    let target = currentSlide;
-    if (velocity < -VEL_SNAP && currentSlide < TOTAL - 1)      target = currentSlide + 1; // flick left
-    else if (velocity > VEL_SNAP && currentSlide > 0)          target = currentSlide - 1; // flick right
-    else if (dx < -sw * DIST_SNAP && currentSlide < TOTAL - 1) target = currentSlide + 1; // drag left
-    else if (dx >  sw * DIST_SNAP && currentSlide > 0)         target = currentSlide - 1; // drag right
+    const dx = (e.changedTouches ? e.changedTouches[0].clientX : 0) - x0;
+    const sw = slideW();
 
+    // Momentum projection: where would the finger land if it kept going?
+    const projected = renderX + velocity * 80; // 80ms look-ahead
+    const projIdx   = Math.round(-projected / sw);
+
+    let target = currentSlide;
+    if      (velocity < -VEL_SNAP && currentSlide < TOTAL - 1) target = currentSlide + 1;
+    else if (velocity >  VEL_SNAP && currentSlide > 0)         target = currentSlide - 1;
+    else if (dx < -sw * DIST_SNAP && currentSlide < TOTAL - 1) target = currentSlide + 1;
+    else if (dx >  sw * DIST_SNAP && currentSlide > 0)         target = currentSlide - 1;
+    else target = Math.max(0, Math.min(TOTAL - 1, projIdx)); // momentum fallback
+
+    // Carry finger velocity into the spring so snap feels continuous
+    springV = velocity * 10;
     snapTo(target);
   }
 
   track.addEventListener('touchend',    finish, { passive: true });
   track.addEventListener('touchcancel', finish, { passive: true });
 
-  // Keep moveTrack() (dock taps, dot taps) consistent with this engine
   window._swipeSnapTo = snapTo;
 })();
 
@@ -3048,4 +3047,4 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 </body>
-</html>
+  </html>
