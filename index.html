@@ -1048,10 +1048,18 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
   <div class="overlay-inner">
     <div class="overlay-header">
       <button class="back-btn" onclick="closeReportOverlay()"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="19" cy="19" r="17.5" stroke="url(#bgo)" stroke-width="1.2" opacity=".7"/><circle cx="19" cy="19" r="13.5" stroke="url(#bgi)" stroke-width="1.8"/><line x1="21.5" y1="12.5" x2="14.5" y2="19" stroke="url(#bga)" stroke-width="1.8" stroke-linecap="round"/><line x1="14.5" y1="19" x2="21.5" y2="25.5" stroke="url(#bgb)" stroke-width="1.8" stroke-linecap="round"/><defs><linearGradient id="bgo" x1="1" y1="19" x2="37" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#9a7020" stop-opacity=".4"/><stop offset="50%" stop-color="#d4a83a"/><stop offset="100%" stop-color="#9a7020" stop-opacity=".4"/></linearGradient><linearGradient id="bgi" x1="5" y1="19" x2="33" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#b08030"/><stop offset="50%" stop-color="#f0cc60"/><stop offset="100%" stop-color="#b08030"/></linearGradient><linearGradient id="bga" x1="14.5" y1="12.5" x2="21.5" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffe898"/><stop offset="100%" stop-color="#c8a84b"/></linearGradient><linearGradient id="bgb" x1="14.5" y1="19" x2="21.5" y2="25.5" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#c8a84b"/><stop offset="100%" stop-color="#ffe898"/></linearGradient></defs></svg></button>
-      <h2 style="font-size:20px;">Daily Sales Report</h2>
+      <div style="flex:1;min-width:0;">
+        <div style="font-family:'Playfair Display';font-size:20px;font-weight:700;">Sales Report</div>
+        <!-- Date selector row -->
+        <div style="display:flex;align-items:center;gap:8px;margin-top:5px;">
+          <input type="date" id="reportDatePicker" onchange="generateSalesReport()"
+            style="background:transparent;border:none;color:inherit;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;opacity:.6;cursor:pointer;padding:0;-webkit-user-select:text;user-select:text;">
+          <span id="reportDateBadge" style="font-size:10px;font-weight:600;letter-spacing:.5px;padding:2px 8px;border-radius:8px;background:rgba(200,168,75,.15);border:1px solid var(--gold-border);color:var(--gold);display:none;">Past Day</span>
+        </div>
+      </div>
     </div>
     <div class="overlay-body">
-      <pre class="report-pre" id="reportText"></pre>
+      <pre class="report-pre" id="reportText" style="min-height:60px;">Loading…</pre>
       <div style="display:flex;gap:10px;margin-top:14px;">
         <button onclick="copyReport()" style="flex:1;padding:13px;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:14px;color:inherit;transition:.2s;" onmouseover="this.style.background='rgba(128,128,128,.25)'" onmouseout="this.style.background='rgba(128,128,128,.15)'">Copy Report</button>
         <button onclick="shareReport()" style="flex:1;padding:13px;background:rgba(90,160,120,.12);border:1px solid rgba(90,160,120,.3);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:14px;color:inherit;transition:.2s;" onmouseover="this.style.background='rgba(90,160,120,.22)'" onmouseout="this.style.background='rgba(90,160,120,.12)'">Share ↗</button>
@@ -2063,48 +2071,83 @@ async function deleteSale(id) {
   }, 'Delete');
 }
 
-function generateSalesReport() {
-  const prof   = currentProfile || {};
-  const date   = new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const total  = cachedSales.reduce((s,e) => s + (e.price * e.qty), 0);
-  const target = parseFloat(prof.branchTarget) || 0;
-  const pct    = target > 0 ? ((total / target) * 100).toFixed(1) : null;
-  const line   = '─'.repeat(38);
+async function generateSalesReport() {
+  const prof    = currentProfile || {};
+  const picker  = document.getElementById('reportDatePicker');
+  const badge   = document.getElementById('reportDateBadge');
+  const today   = todayKey();
+  const dateKey = (picker && picker.value) ? picker.value : today;
+  const isToday = dateKey === today;
+  const isPast  = dateKey < today;
+
+  // Seed picker to today when first opened (no date chosen yet)
+  if (picker && !picker.value) { picker.value = today; picker.max = today; }
+  if (badge) badge.style.display = isPast ? 'inline-block' : 'none';
+
+  // Show overlay first so user sees loading state
+  const reportEl = document.getElementById('reportText');
+  if (reportEl) reportEl.textContent = 'Loading…';
+  applyOverlayTheme(document.getElementById('reportOverlay'));
+  document.getElementById('reportOverlay').classList.add('open');
+  pushOverlayState('report');
+
+  // Fetch sales for the chosen date
+  let sales = [];
+  if (isToday) {
+    sales = cachedSales; // already in memory
+  } else {
+    try {
+      const snap = await db.ref('users/' + CU + '/sales/' + dateKey).once('value');
+      sales = Object.entries(snap.val() || {}).map(([id,v]) => ({id,...v})).sort((a,b) => (a.order||0)-(b.order||0));
+    } catch(e) { if (reportEl) reportEl.textContent = 'Failed to load data for that date.'; return; }
+  }
+
+  const dateObj  = new Date(dateKey + 'T00:00:00');
+  const dateStr  = dateObj.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const total    = sales.reduce((s,e) => s + (e.price * e.qty), 0);
+  const target   = parseFloat(prof.branchTarget) || 0;
+  const pct      = target > 0 ? ((total / target) * 100).toFixed(1) : null;
+  const line     = '─'.repeat(38);
+
   let r = `DAILY SALES REPORT\n${line}\n`;
-  r += `Date     : ${date}\n`;
+  r += `Date     : ${dateStr}\n`;
   r += `Outlet   : ${prof.outlet || '(not set)'}\n`;
   r += `Officer  : ${prof.officialNames || '(not set)'}\n`;
   r += `Brand    : ${prof.brand || '(not set)'}\n`;
   if (target > 0) r += `Target   : Ksh ${target.toLocaleString()}\n`;
   r += `${line}\n\n`;
-  if (!cachedSales.length) { r += `No transactions recorded today.\n\n`; }
-  else {
-    r += `TRANSACTIONS (${cachedSales.length})\n\n`;
-    cachedSales.forEach((s, i) => {
+  if (!sales.length) {
+    r += `No transactions recorded for this day.\n\n`;
+  } else {
+    r += `TRANSACTIONS (${sales.length})\n\n`;
+    sales.forEach((s, i) => {
       r += `${i+1}. ${s.item}\n   Model : ${s.model || '—'}\n   S/N   : ${s.serial || '—'}\n   Qty   : ${s.qty}  ×  Ksh ${Number(s.price).toLocaleString()}\n   Total : Ksh ${(s.price * s.qty).toLocaleString()}\n`;
-      if (i < cachedSales.length - 1) r += '\n';
+      if (i < sales.length - 1) r += '\n';
     });
     r += '\n';
   }
-  r += `${line}\nDAILY TOTAL  : Ksh ${total.toLocaleString()}\nTRANSACTIONS : ${cachedSales.length}\n`;
+  r += `${line}\nDAILY TOTAL  : Ksh ${total.toLocaleString()}\nTRANSACTIONS : ${sales.length}\n`;
   if (target > 0) { r += `TARGET       : Ksh ${target.toLocaleString()}\nACHIEVEMENT  : ${pct}%\n`; }
   r += `${line}\nRoyal Horizon Workspace`;
+
   currentReportText = r;
+  if (reportEl) reportEl.textContent = r;
+
   const missing = [];
   if (!prof.outlet) missing.push('Outlet');
   if (!prof.officialNames) missing.push('Official Names');
   if (!prof.brand) missing.push('Brand');
-  if (missing.length) showToast(`Tip: fill in ${missing.join(', ')} in Profile.`);
-  const el = document.getElementById('reportText');
-  if (el) el.textContent = r;
-  applyOverlayTheme(document.getElementById('reportOverlay'));
-  document.getElementById('reportOverlay').classList.add('open');
-  pushOverlayState('report');
+  if (missing.length && isToday) showToast(`Tip: fill in ${missing.join(', ')} in Profile.`);
 }
 
 function closeReportOverlay() {
   document.getElementById('reportOverlay').classList.remove('open');
   if (_overlayStack[_overlayStack.length-1]==='report') { _overlayStack.pop(); history.back(); }
+  // Reset picker so next open defaults to today
+  const picker = document.getElementById('reportDatePicker');
+  if (picker) picker.value = '';
+  const badge = document.getElementById('reportDateBadge');
+  if (badge) badge.style.display = 'none';
 }
 
 function copyReport() {
@@ -2329,94 +2372,156 @@ async function shareArchiveDayReport() {
 }
 
 function moveTrack(idx) {
+  if (window._swipeSnapTo) { window._swipeSnapTo(idx); return; }
+  // Fallback before engine initialises
   const slideW = window.innerWidth * 0.80 + 30;
   document.getElementById('workspaceTrack').style.transition = 'transform var(--slide-speed) var(--slide-curve)';
   document.getElementById('workspaceTrack').style.transform = `translateX(${-(idx * slideW)}px)`;
   document.querySelectorAll('.workspace-card').forEach((c,i) => c.classList.toggle('active', i===idx));
   document.querySelectorAll('.dock-item').forEach((d,i) => d.classList.toggle('active', i===idx));
-  // 2. Update slide indicator dots
   document.querySelectorAll('.slide-dot').forEach((d,i) => d.classList.toggle('active', i===idx));
   currentSlide = idx;
   if (idx === 2) renderSalesLog();
   if (idx === 3) renderArchiveSales();
 }
 
-// ── LIVE DRAG SWIPE ──────────────────────────────────────────────
-(function() {
-  const track = document.getElementById('workspaceTrack');
-  const SLIDE_W = () => window.innerWidth * 0.80 + 30; // 80vw + 30px gap
-  const THRESHOLD = 45;   // px needed to commit a slide change
-  const RESIST   = 0.28;  // rubber-band resistance at edges
+// ── GALLERY-QUALITY SWIPE ENGINE ─────────────────────────────────
+(function () {
+  const track    = document.getElementById('workspaceTrack');
+  const TOTAL    = 4;           // number of slides
+  const GAP      = 30;          // px gap between cards (matches CSS gap:30px)
+  const RESIST   = 0.18;        // edge rubber-band factor (lower = softer)
+  const VEL_SNAP = 0.3;         // px/ms velocity threshold to force a slide change
+  const DIST_SNAP= 0.28;        // fraction of slide width to force snap on slow drag
 
-  let startX = 0, startY = 0, dragX = 0;
-  let isHoriz = null;   // null = undecided, true = horizontal, false = vertical
-  let dragging = false;
+  // current rendered offset in px (kept in sync at all times)
+  let renderX = 0;
 
-  function baseOffset() {
-    return -(currentSlide * SLIDE_W());
+  // touch state
+  let t0 = 0, x0 = 0, y0 = 0;
+  let prevX = 0, prevT = 0;
+  let velocity = 0;             // px/ms, positive = finger moved right
+  let isHoriz  = null;
+  let active   = false;
+  let rafId    = null;
+
+  function slideW() { return window.innerWidth * 0.80 + GAP; }
+  function baseFor(idx) { return -(idx * slideW()); }
+
+  // Rubber-band: compress distance beyond boundary
+  function rubberClamp(offset) {
+    const lo = baseFor(TOTAL - 1);
+    const hi = baseFor(0);
+    if (offset > hi) return hi + (offset - hi) * RESIST;
+    if (offset < lo) return lo + (offset - lo) * RESIST;
+    return offset;
   }
 
-  function applyDrag(delta) {
-    const base = baseOffset();
-    let offset = base + delta;
-    // rubber-band at edges
-    if (currentSlide === 0 && delta > 0) offset = base + delta * RESIST;
-    if (currentSlide === 3 && delta < 0) offset = base + delta * RESIST;
+  // Write transform without CSS transition (raw, every frame)
+  function setRaw(x) {
+    renderX = x;
     track.style.transition = 'none';
-    track.style.transform  = `translateX(${offset}px)`;
+    track.style.transform  = `translateX(${x}px)`;
   }
 
-  function snapBack() {
-    track.style.transition = `transform var(--slide-speed) var(--slide-curve)`;
-    track.style.transform  = `translateX(${baseOffset()}px)`;
-    // re-sync active classes without calling moveTrack (no side-effects needed)
-    document.querySelectorAll('.workspace-card').forEach((c,i)=>c.classList.toggle('active',i===currentSlide));
-    document.querySelectorAll('.dock-item').forEach((d,i)=>d.classList.toggle('active',i===currentSlide));
-    document.querySelectorAll('.slide-dot').forEach((d,i)=>d.classList.toggle('active',i===currentSlide));
+  // Animated snap to a target slide index
+  function snapTo(idx) {
+    idx = Math.max(0, Math.min(TOTAL - 1, idx));
+    // Update active classes immediately so dots/dock feel instant
+    document.querySelectorAll('.workspace-card').forEach((c,i)=>c.classList.toggle('active',i===idx));
+    document.querySelectorAll('.dock-item').forEach((d,i)=>d.classList.toggle('active',i===idx));
+    document.querySelectorAll('.slide-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+    currentSlide = idx;
+    if (idx === 2) renderSalesLog();
+    if (idx === 3) renderArchiveSales();
+
+    const target = baseFor(idx);
+    // Spring animation: exponential decay toward target
+    let last = performance.now();
+    let cur  = renderX;
+    const STIFFNESS = 0.014; // lower = slower/springier, higher = snappier
+
+    cancelAnimationFrame(rafId);
+    function spring(now) {
+      const dt = Math.min(now - last, 32); // cap dt so a background tab doesn't explode
+      last = now;
+      cur += (target - cur) * (1 - Math.pow(1 - STIFFNESS, dt));
+      track.style.transition = 'none';
+      track.style.transform  = `translateX(${cur}px)`;
+      renderX = cur;
+      if (Math.abs(target - cur) > 0.5) {
+        rafId = requestAnimationFrame(spring);
+      } else {
+        track.style.transform = `translateX(${target}px)`;
+        renderX = target;
+      }
+    }
+    rafId = requestAnimationFrame(spring);
   }
 
+  // ── Touch events ─────────────────────────────────────────────
   track.addEventListener('touchstart', e => {
-    startX  = e.touches[0].clientX;
-    startY  = e.touches[0].clientY;
-    dragX   = 0;
-    isHoriz = null;
-    dragging = false;
+    cancelAnimationFrame(rafId);
+    const touch = e.touches[0];
+    t0 = prevT = performance.now();
+    x0 = prevX = touch.clientX;
+    y0 = touch.clientY;
+    velocity = 0;
+    isHoriz  = null;
+    active   = false;
+    // Snap renderX to actual current position (may be mid-spring)
+    const m = new DOMMatrix(getComputedStyle(track).transform);
+    renderX  = m.m41;
   }, { passive: true });
 
   track.addEventListener('touchmove', e => {
-    const dx = e.touches[0].clientX - startX;
-    const dy = e.touches[0].clientY - startY;
+    const touch = e.touches[0];
+    const dx = touch.clientX - x0;
+    const dy = touch.clientY - y0;
+    const now = performance.now();
 
-    // Determine direction on first decisive movement
+    // Direction lock on first move ≥ 5px
     if (isHoriz === null) {
-      if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return; // wait for intent
-      isHoriz = Math.abs(dx) > Math.abs(dy);
+      if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
+      isHoriz = Math.abs(dx) >= Math.abs(dy);
     }
 
-    if (!isHoriz) return; // vertical scroll — let it pass through naturally
-    e.preventDefault();   // block page scroll during horizontal drag
-    dragging = true;
-    dragX = dx;
-    applyDrag(dx);
+    if (!isHoriz) return;          // vertical — don't interfere
+    e.preventDefault();            // own the horizontal gesture
+
+    // Velocity: exponential moving average (responsive yet stable)
+    const dt = now - prevT || 1;
+    const instantV = (touch.clientX - prevX) / dt;
+    velocity = velocity * 0.6 + instantV * 0.4;
+    prevX = touch.clientX;
+    prevT = now;
+
+    active = true;
+    cancelAnimationFrame(rafId);
+    setRaw(rubberClamp(baseFor(currentSlide) + dx));
   }, { passive: false });
 
-  track.addEventListener('touchend', e => {
-    if (!dragging || !isHoriz) { isHoriz = null; dragging = false; return; }
-    const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) > THRESHOLD) {
-      if (dx < 0 && currentSlide < 3) moveTrack(currentSlide + 1);
-      else if (dx > 0 && currentSlide > 0) moveTrack(currentSlide - 1);
-      else snapBack();
-    } else {
-      snapBack();
-    }
-    isHoriz = null; dragging = false; dragX = 0;
-  }, { passive: true });
+  function finish(e) {
+    if (!active || !isHoriz) { isHoriz = null; active = false; return; }
+    isHoriz = null; active = false;
 
-  track.addEventListener('touchcancel', () => {
-    snapBack();
-    isHoriz = null; dragging = false; dragX = 0;
-  }, { passive: true });
+    const dx  = (e.changedTouches ? e.changedTouches[0].clientX : 0) - x0;
+    const sw  = slideW();
+    // Decide target: fast flick overrides distance threshold
+    let target = currentSlide;
+    if (velocity < -VEL_SNAP && currentSlide < TOTAL - 1)      target = currentSlide + 1; // flick left
+    else if (velocity > VEL_SNAP && currentSlide > 0)          target = currentSlide - 1; // flick right
+    else if (dx < -sw * DIST_SNAP && currentSlide < TOTAL - 1) target = currentSlide + 1; // drag left
+    else if (dx >  sw * DIST_SNAP && currentSlide > 0)         target = currentSlide - 1; // drag right
+
+    snapTo(target);
+  }
+
+  track.addEventListener('touchend',    finish, { passive: true });
+  track.addEventListener('touchcancel', finish, { passive: true });
+
+  // Keep moveTrack() (dock taps, dot taps) consistent with this engine
+  window._swipeSnapTo = snapTo;
 })();
 
 let _overlayStack = [];
