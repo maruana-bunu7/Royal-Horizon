@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2368,6 +2367,14 @@ function _buildDualReport(allSales, dateKey, prof, activeBrand) {
   const pct      = target > 0 ? ((total / target) * 100).toFixed(1) : null;
   const line     = '─'.repeat(38);
 
+  if (activeBrand === 'Samsung') {
+    // ── SAMSUNG FORMAT: matches IAL_QUICKMART manual report style ──
+    if (reportEl) reportEl.textContent = 'Loading MTD data…';
+    _buildSamsungReport(allSales, sales, dateKey, dateStr, prof, target, pct, total, line, reportEl);
+    return;
+  }
+
+  // ── MIKA FORMAT (unchanged) ──
   let r = `${activeBrand.toUpperCase()} SALES REPORT\n${line}\n`;
   r += `Date     : ${dateStr}\n`;
   r += `Outlet   : ${prof.outlet || '(not set)'}\n`;
@@ -2380,7 +2387,6 @@ function _buildDualReport(allSales, dateKey, prof, activeBrand) {
     r += `No ${activeBrand} transactions recorded for this day.\n\n`;
   } else {
     r += `TRANSACTIONS (${sales.length})\n\n`;
-    // Compact: one line per sale
     sales.forEach((s, i) => {
       const total = (s.price * s.qty).toLocaleString();
       const model = s.model ? ` [${s.model}]` : '';
@@ -2408,6 +2414,129 @@ function _buildDualReport(allSales, dateKey, prof, activeBrand) {
     });
   }
 
+  r += `${line}\nIdeal Appliances — Royal Horizon Workspace`;
+
+  currentReportText = r;
+  if (reportEl) reportEl.textContent = r;
+}
+
+// Samsung category groups for MTD breakdown
+function _samsungCatGroup(cat) {
+  const c = (cat || '').toLowerCase();
+  if (c.includes('tv') || c.includes('soundbar'))                    return 'TVs';
+  if (c.includes('fridge') || c.includes('refrigerator'))            return 'Fridges';
+  if (c.includes('washing') || c.includes('washer'))                 return 'W.Machines';
+  if (c.includes('freezer'))                                          return 'Freezers';
+  if (c.includes('microwave'))                                        return 'Microwaves';
+  if (c.includes('phone') || c.includes('mobile'))                   return 'Phones';
+  if (c.includes('tablet'))                                           return 'Tablets';
+  if (c.includes('air') || c.includes('conditioner'))                return 'ACs';
+  return 'Other';
+}
+
+async function _buildSamsungReport(allSales, todaySales, dateKey, dateStr, prof, target, pct, dailyTotal, line, reportEl) {
+  // Samsung MTD category groups
+  const SAMSUNG_CATS = ['TVs', 'Fridges', 'W.Machines', 'Freezers', 'Microwaves'];
+
+  // Load MTD sales for Samsung
+  const prefix = dateKey.slice(0, 7); // e.g. "2026-04"
+  const today  = todayKey();
+  let mtdAllSales = [];
+
+  try {
+    // Include today's Samsung sales
+    mtdAllSales = allSales.filter(s => (s.saleBrand || 'Mika') === 'Samsung');
+
+    // Load past days this month from archive
+    const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
+    const meta = metaSnap.val() || {};
+    const pastDays = Object.keys(meta).filter(k => k.startsWith(prefix) && k !== dateKey);
+    if (pastDays.length) {
+      const snaps = await Promise.all(pastDays.map(d => db.ref('users/' + CU + '/sales/' + d).once('value')));
+      snaps.forEach(snap => {
+        Object.values(snap.val() || {}).forEach(e => {
+          if ((e.saleBrand || 'Mika') === 'Samsung') mtdAllSales.push(e);
+        });
+      });
+    }
+  } catch(e) {}
+
+  // Build MTD totals & category breakdown
+  const mtdTotal = mtdAllSales.reduce((s, e) => s + (e.price * e.qty), 0);
+  const mtdCatMap = {};
+  mtdAllSales.forEach(s => {
+    const grp = _samsungCatGroup(s.category);
+    if (!mtdCatMap[grp]) mtdCatMap[grp] = { count: 0, total: 0 };
+    mtdCatMap[grp].count += (s.qty || 1);
+    mtdCatMap[grp].total += (s.price * s.qty);
+  });
+
+  // Build today's category breakdown
+  const todayCatMap = {};
+  todaySales.forEach(s => {
+    const grp = _samsungCatGroup(s.category);
+    if (!todayCatMap[grp]) todayCatMap[grp] = { count: 0, total: 0 };
+    todayCatMap[grp].count += (s.qty || 1);
+    todayCatMap[grp].total += (s.price * s.qty);
+  });
+
+  // All category groups that appear in either MTD or today
+  const allGroups = Array.from(new Set([
+    ...SAMSUNG_CATS,
+    ...Object.keys(mtdCatMap),
+    ...Object.keys(todayCatMap)
+  ]));
+
+  // ── Build the report string ──
+  let r = `*IAL_QUICKMART DAILY SALES REPORT*\n`;
+  r += `*${dateStr.replace(/\w+,\s/, '')}*\n`; // date without weekday for header
+  r += `*Branch: ${prof.outlet || '(not set)'}*\n`;
+  r += `*OCM: ${prof.officialNames || '(not set)'}*\n`;
+  r += `*Brand: Samsung*\n`;
+  if (target > 0) r += `*Branch Target ${target.toLocaleString()}*\n`;
+
+  r += `\nMTD Performance: ${mtdTotal.toLocaleString()}/=\n`;
+  r += `MTD Breakdown:\n`;
+
+  allGroups.forEach(grp => {
+    const d = mtdCatMap[grp];
+    const pad = grp.padEnd(14, '.');
+    if (d && d.count > 0) {
+      r += `${pad} (${d.count}x) ${d.total.toLocaleString()}/=\n`;
+    } else {
+      r += `${pad} NILL\n`;
+    }
+  });
+
+  r += `\nToday's Sales:\n`;
+  allGroups.forEach(grp => {
+    const d = todayCatMap[grp];
+    if (d && d.count > 0) {
+      r += `${grp}- (${d.count}x) Ksh ${d.total.toLocaleString()}\n`;
+    } else {
+      r += `${grp}- NILL\n`;
+    }
+  });
+
+  if (todaySales.length > 0) {
+    r += `\nTRANSACTIONS (${todaySales.length})\n\n`;
+    todaySales.forEach((s, i) => {
+      const t = (s.price * s.qty).toLocaleString();
+      const model = s.model ? ` [${s.model}]` : '';
+      const qty   = s.qty > 1 ? ` ×${s.qty}` : '';
+      r += `${String(i+1).padStart(2,'0')}. ${s.item}${model}${qty} — Ksh ${t}\n`;
+    });
+  }
+
+  r += `\n${line}\n`;
+  r += `DAILY TOTAL  : Ksh ${dailyTotal.toLocaleString()}\n`;
+  r += `TRANSACTIONS : ${todaySales.length}\n`;
+  if (target > 0) {
+    r += `TARGET       : Ksh ${target.toLocaleString()}\n`;
+    r += `ACHIEVEMENT  : ${pct}%\n`;
+  }
+
+  r += `\nBRANCH SUPPORT REQUIRED; None\n`;
   r += `${line}\nIdeal Appliances — Royal Horizon Workspace`;
 
   currentReportText = r;
