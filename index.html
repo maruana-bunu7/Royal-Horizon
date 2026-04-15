@@ -289,6 +289,79 @@ body.theme-signup .lsf-date-input::-webkit-calendar-picker-indicator{filter:none
 .arch-cancel-sel-btn{background:rgba(128,128,128,.08);border-color:rgba(128,128,128,.15);color:inherit;}
 .arch-cancel-sel-btn:hover{background:rgba(128,128,128,.16);}
 
+/* ── SALES STREAK BADGE ── */
+.streak-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:12px;background:rgba(255,140,0,.1);border:1px solid rgba(255,140,0,.28);color:rgba(255,160,30,.95);letter-spacing:.3px;margin-top:6px;}
+body.theme-signup .streak-badge{background:rgba(200,100,0,.08);border-color:rgba(200,100,0,.22);color:rgba(160,80,0,.9);}
+
+/* ── TOP SELLER INSIGHT ── */
+.insight-strip{background:rgba(128,128,128,.06);border:1px solid rgba(128,128,128,.1);border-left:2px solid rgba(200,168,75,.5);border-radius:14px;padding:9px 13px;margin-top:8px;display:none;}
+.insight-strip.visible{display:flex;align-items:center;gap:9px;}
+.insight-icon{font-size:16px;flex-shrink:0;}
+.insight-text{flex:1;min-width:0;}
+.insight-label{font-size:9px;text-transform:uppercase;letter-spacing:1.4px;opacity:.4;margin-bottom:2px;}
+.insight-value{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* ── TASK PRIORITY ── */
+.task2-priority{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px;text-transform:uppercase;letter-spacing:.6px;margin-right:5px;vertical-align:middle;}
+.task2-priority.urgent{background:rgba(220,60,60,.12);border:1px solid rgba(220,60,60,.25);color:rgba(220,60,60,.9);}
+.task2-priority.medium{background:rgba(210,140,30,.1);border:1px solid rgba(210,140,30,.25);color:rgba(200,130,20,.9);}
+.task2-priority.low{background:rgba(80,160,120,.08);border:1px solid rgba(80,160,120,.2);color:rgba(70,150,110,.9);}
+body.theme-signup .task2-priority.urgent{background:rgba(180,30,30,.07);border-color:rgba(180,30,30,.18);color:rgba(160,20,20,.85);}
+body.theme-signup .task2-priority.medium{background:rgba(160,100,0,.07);border-color:rgba(160,100,0,.2);color:rgba(140,90,0,.85);}
+body.theme-signup .task2-priority.low{background:rgba(30,110,70,.06);border-color:rgba(30,110,70,.18);color:rgba(20,100,60,.85);}
+
+/* Priority select in task quick-add */
+.task-priority-select{height:34px;border-radius:11px;background:rgba(128,128,128,.1);border:1px solid rgba(128,128,128,.15);color:inherit;font-family:'Inter',sans-serif;font-size:12px;padding:0 8px;cursor:pointer;flex-shrink:0;transition:.2s;-webkit-appearance:none;appearance:none;min-width:72px;text-align:center;}
+body.theme-signup .task-priority-select{background:rgba(255,255,255,.65);border-color:rgba(180,170,155,.25);}
+
+/* ── QUICK-LOG FAB ── */
+.quick-log-fab{position:absolute;bottom:120px;right:18px;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#c8a84b,#a07818);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;box-shadow:0 4px 18px rgba(200,168,75,.45),0 2px 6px rgba(0,0,0,.25);transition:.25s var(--ui-curve);z-index:90;font-weight:300;line-height:1;}
+.quick-log-fab:active{transform:scale(.92);}
+.quick-log-fab.hidden{opacity:0;pointer-events:none;transform:scale(.8);}
+
+/* ── ARCHIVE MONTH GROUP ── */
+.arch-month-header{font-size:10px;text-transform:uppercase;letter-spacing:2px;opacity:.35;font-weight:700;padding:10px 4px 5px;flex-shrink:0;}
+
+/* ── SUBMIT LOADING STATE ── */
+.lsf-submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none !important;}
+
+/* ── ARCHIVE SEARCH ── */
+.arch-search-wrap{position:relative;margin-bottom:10px;flex-shrink:0;}
+.arch-search-input{width:100%;padding:9px 13px 9px 34px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.13);border-radius:12px;color:inherit;font-family:'Inter',sans-serif;font-size:13px;transition:.2s;-webkit-user-select:text;user-select:text;}
+.arch-search-input:focus{border-color:var(--gold-border);background:rgba(128,128,128,.13);}
+.arch-search-input::placeholder{opacity:.35;}
+.arch-search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;opacity:.35;pointer-events:none;}
+body.theme-signup .arch-search-input{background:rgba(255,255,255,.65);border-color:rgba(180,170,155,.25);color:#1a1a1a;}
+
+/* ── AVATAR COLOUR PICKER ── */
+.avatar-color-grid{display:flex;flex-wrap:wrap;gap:10px;padding:6px 0;}
+.avatar-color-swatch{width:32px;height:32px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;transition:.2s;flex-shrink:0;}
+.avatar-color-swatch.selected{border-color:#fff;box-shadow:0 0 0 2px var(--gold);}
+body.theme-signup .avatar-color-swatch.selected{border-color:#1a1a1a;}
+
+/* ── SWIPE-TO-DELETE ON SALE ITEMS ── */
+.sale-swipe-wrap{position:relative;overflow:hidden;border-radius:14px;}
+.sale-swipe-inner{transition:transform .25s cubic-bezier(0.2,0.8,0.2,1);touch-action:pan-y;}
+.sale-delete-reveal{position:absolute;right:0;top:0;bottom:0;width:72px;display:flex;align-items:center;justify-content:center;background:rgba(220,60,60,.85);border-radius:0 14px 14px 0;cursor:pointer;font-size:13px;font-weight:700;color:#fff;letter-spacing:.3px;}
+
+/* ── DOCK BADGE ── */
+.dock-badge{position:absolute;top:6px;right:6px;min-width:8px;height:8px;border-radius:4px;background:#e05252;display:none;border:1.5px solid #000;}
+.dock-badge.visible{display:block;}
+body.theme-signup .dock-badge{border-color:var(--soft-white);}
+
+/* ── PULL-TO-REFRESH ── */
+.ptr-indicator{text-align:center;font-size:11px;opacity:.4;padding:6px 0 0;flex-shrink:0;height:0;overflow:hidden;transition:height .2s;letter-spacing:.4px;}
+.ptr-indicator.visible{height:28px;}
+
+/* ── LIGHT MODE — new elements ── */
+body.theme-signup .streak-badge{background:rgba(180,90,0,.08);border-color:rgba(180,90,0,.22);color:rgba(150,80,0,.88);}
+body.theme-signup .insight-strip{background:rgba(255,255,255,.6);border-color:rgba(180,170,155,.25);border-left-color:var(--gold-border);}
+body.theme-signup .quick-log-fab{box-shadow:0 4px 18px rgba(160,120,20,.35),0 2px 6px rgba(0,0,0,.15);}
+body.theme-signup .arch-month-header{color:#5a5448;}
+body.theme-signup .task-priority-select{background:rgba(255,255,255,.65);border-color:rgba(180,170,155,.25);color:#1a1a1a;}
+body.theme-signup .sale-delete-reveal{background:rgba(200,50,50,.8);}
+body.theme-signup .dock-badge{border-color:rgba(255,255,255,.9);}
+
 /* DOCK */
 .floating-dock{position:absolute;bottom:36px;height:68px;padding:0 10px;background:rgba(0,0,0,.65);backdrop-filter:blur(30px);border-radius:22px;border:1px solid var(--gold-border);display:flex;align-items:center;gap:4px;box-shadow:0 20px 50px rgba(0,0,0,.35),0 4px 12px rgba(0,0,0,.2),0 0 0 1px var(--gold-dim);}
 .dock-item{width:52px;height:52px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;opacity:.28;transition:.35s cubic-bezier(0.2,0.8,0.2,1);gap:4px;position:relative;}
@@ -769,10 +842,18 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
             <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;">Today's Revenue</div>
             <div style="font-size:10px;opacity:.4;margin-top:2px;" id="overviewSalesCount">0 transactions</div>
             <div class="monthly-projection" id="monthlyProjection" style="display:none;"></div>
+            <div class="streak-badge" id="streakBadge" style="display:none;"></div>
           </div>
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;">
             <div style="font-family:'Playfair Display';font-size:20px;font-weight:700;" id="overviewSalesTotal">Ksh 0</div>
             <div id="wowBadge" style="display:none;"></div>
+          </div>
+        </div>
+        <div class="insight-strip" id="topSellerStrip">
+          <div class="insight-icon">🏆</div>
+          <div class="insight-text">
+            <div class="insight-label">Top Seller This Month</div>
+            <div class="insight-value" id="topSellerValue">—</div>
           </div>
         </div>
         <div class="monthly-hero" id="monthlyHero" style="display:none;">
@@ -802,6 +883,12 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
         </div>
         <div class="task-quick-add">
           <input class="task-quick-input" id="quickTaskInput" placeholder="Add a task or note…" onkeydown="if(event.key==='Enter')addQuickTask()">
+          <select class="task-priority-select" id="taskPrioritySelect" title="Priority">
+            <option value="">— Pri</option>
+            <option value="urgent">🔴 Urgent</option>
+            <option value="medium">🟡 Medium</option>
+            <option value="low">🟢 Low</option>
+          </select>
           <button class="task-due-toggle" id="taskDueToggle" onclick="toggleTaskDueRow()" title="Set due date & reminder">📅</button>
           <button class="task-quick-btn" onclick="addQuickTask()">+</button>
         </div>
@@ -865,6 +952,11 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
           </div>
         </div>
         <p style="opacity:.4;font-size:12px;margin-bottom:10px;flex-shrink:0;">Past days' sales records.</p>
+        <div class="arch-search-wrap">
+          <span class="arch-search-icon">🔍</span>
+          <input class="arch-search-input" id="archSearchInput" placeholder="Search by date…" oninput="filterArchive()" autocomplete="off">
+        </div>
+        <div class="ptr-indicator" id="ptrIndicator">↓ Pull down to refresh</div>
         <div class="arch-select-bar" id="archSelectBar">
           <button class="arch-action-btn arch-delete-sel-btn" onclick="deleteSelectedArchive()">Delete Selected</button>
           <button class="arch-action-btn arch-cancel-sel-btn" onclick="cancelArchiveSelect()">Cancel</button>
@@ -883,14 +975,18 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
     <div class="slide-dot" onclick="moveTrack(3)"></div>
   </div>
 
+  <!-- QUICK-LOG FAB (visible on Overview slide only) -->
+  <button class="quick-log-fab" id="quickLogFab" onclick="openLogSaleSheet()" title="Log a Sale">+</button>
+
   <div class="floating-dock">
     <div class="dock-item active" onclick="moveTrack(0)" title="Overview">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
       <span class="dock-lbl">Overview</span>
     </div>
-    <div class="dock-item" onclick="moveTrack(1)" title="Tasks">
+    <div class="dock-item" onclick="moveTrack(1)" title="Tasks" style="position:relative;">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
       <span class="dock-lbl">Tasks</span>
+      <span class="dock-badge" id="tasksDockBadge"></span>
     </div>
     <div class="dock-item" onclick="moveTrack(2)" title="Sales Log">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>
@@ -1013,6 +1109,10 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
       <div class="profile-section-card">
         <div class="profile-section-title">Personal</div>
         <div class="profile-field"><label class="profile-label">Display Name</label><div class="profile-static" id="profileNameStatic"></div><input class="profile-input edit-shown" type="text" id="profileName" placeholder="Your name" style="display:none;"></div>
+        <div class="profile-field edit-shown" id="avatarColorField" style="display:none;">
+          <label class="profile-label">Avatar Colour</label>
+          <div class="avatar-color-grid" id="avatarColorGrid"></div>
+        </div>
         <div class="profile-field"><label class="profile-label">Username</label><div class="profile-static" id="profileUsernameStatic"></div></div>
         <div class="profile-field"><label class="profile-label">Email</label><div class="profile-static" id="profileEmailStatic"></div></div>
         <div class="profile-field"><label class="profile-label">Bio</label><div class="profile-static" id="profileBioStatic" style="white-space:pre-wrap;"></div><textarea class="profile-input profile-textarea edit-shown" id="profileBio" placeholder="A few words about yourself…" style="display:none;"></textarea></div>
@@ -1190,6 +1290,7 @@ function scheduleMidnightRollover() {
       scheduleDailyReminders();
       scheduleMidnightRollover();
       archiveDirty = true;
+      showToast("New day started — yesterday's log archived ✓");
     }
   }, msUntilMidnight);
 }
@@ -1347,6 +1448,7 @@ function loadDashboard(instant) {
   const dash = document.getElementById('dashboard');
   dash.style.display = 'flex';
   moveTrack(0);
+  startGreetingClock();
   if (instant) dash.style.opacity = '1';
   else setTimeout(() => { dash.style.opacity = '1'; }, 50);
 }
@@ -1552,6 +1654,7 @@ function openProfile() {
   const btn = document.getElementById('profileEditBtn');
   btn.textContent = '✎ Edit'; btn.classList.remove('active');
   document.getElementById('profileSaveBtn').style.display = 'none';
+  buildColorPicker(prof.color || AVATAR_ALL_COLORS[0]);
   applyOverlayTheme(document.getElementById('profileOverlay'));
   document.getElementById('profileOverlay').classList.add('open');
   pushOverlayState('profile');
@@ -1565,6 +1668,8 @@ function setProfileReadOnly(readonly) {
     'profileMorningReminderStatic','profileEveningReminderStatic'];
   editableInputIds.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = readonly ? 'none' : ''; });
   staticIds.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = readonly ? '' : 'none'; });
+  const colorField = document.getElementById('avatarColorField');
+  if (colorField) colorField.style.display = readonly ? 'none' : 'block';
 }
 
 function toggleProfileEdit() {
@@ -1607,7 +1712,7 @@ async function saveProfile() {
   const updates = {
     name: document.getElementById('profileName').value.trim() || currentProfile.name,
     bio: document.getElementById('profileBio').value.trim(),
-    color: currentProfile.color || AVATAR_COLORS[0],
+    color: _selectedAvatarColor || currentProfile.color || AVATAR_ALL_COLORS[0],
     outlet: document.getElementById('profileOutlet').value.trim(),
     officialNames: document.getElementById('profileOfficialNames').value.trim(),
     brand: document.getElementById('profileBrand').value.trim(),
@@ -1705,9 +1810,15 @@ function formatTaskDue(dueDate, dueTime) {
 }
 
 function renderTasksSlide() {
+  const PRIO_ORDER = { urgent: 0, medium: 1, low: 2, '': 3 };
   let list = [...cachedTasks];
   if (taskFilter === 'pending') list = list.filter(t => !t.done);
   if (taskFilter === 'done')    list = list.filter(t =>  t.done);
+  // Sort: pending urgent first, then medium, then low/none; done tasks stay at bottom
+  list.sort((a, b) => {
+    if (a.done !== b.done) return a.done ? 1 : -1;
+    return (PRIO_ORDER[a.priority||''] ?? 3) - (PRIO_ORDER[b.priority||''] ?? 3);
+  });
   const el = document.getElementById('tasksList2');
   if (!el) return;
   if (!list.length) {
@@ -1715,10 +1826,13 @@ function renderTasksSlide() {
   } else {
     el.innerHTML = list.map(t => {
       const due = formatTaskDue(t.dueDate, t.dueTime);
+      const priMap = { urgent: ['urgent','🔴 Urgent'], medium: ['medium','🟡 Med'], low: ['low','🟢 Low'] };
+      const priHTML = (t.priority && priMap[t.priority] && !t.done)
+        ? `<span class="task2-priority ${priMap[t.priority][0]}">${priMap[t.priority][1]}</span>` : '';
       return `<div class="task2-item${t.done?' done2':''}">
         <div class="task2-check" onclick="toggleTask2('${t.id}')">${t.done?'✓':''}</div>
         <div style="flex:1;min-width:0;">
-          <div class="task2-text">${esc(t.title)}</div>
+          <div class="task2-text">${priHTML}${esc(t.title)}</div>
           ${due ? `<div class="task2-due${due.isPast&&!t.done?' overdue':''}">${due.isPast&&!t.done?'⚠ ':'📅 '}${due.label}</div>` : ''}
         </div>
         <button class="task2-del" onclick="deleteTask2('${t.id}')">✕</button>
@@ -1729,6 +1843,17 @@ function renderTasksSlide() {
   const done    = cachedTasks.filter(t =>  t.done).length;
   const countEl = document.getElementById('tasksFooterCount');
   if (countEl) countEl.textContent = `${pending} pending · ${done} done`;
+  // Dock badge: show when there are urgent or overdue pending tasks
+  const badge = document.getElementById('tasksDockBadge');
+  if (badge) {
+    const today = todayKey();
+    const nowTime = (() => { const n = new Date(); return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'); })();
+    const hasUrgent = cachedTasks.some(t => !t.done && (
+      t.priority === 'urgent' ||
+      (t.dueDate && (t.dueDate < today || (t.dueDate === today && t.dueTime && t.dueTime < nowTime)))
+    ));
+    badge.classList.toggle('visible', hasUrgent);
+  }
 }
 
 function renderOverviewTasks() {
@@ -1760,12 +1885,15 @@ async function addQuickTask() {
   const title = inp.value.trim(); if (!title) return;
   const dueDate = document.getElementById('taskDueDate')?.value || '';
   const dueTime = document.getElementById('taskDueTime')?.value || '';
+  const priority = document.getElementById('taskPrioritySelect')?.value || '';
   inp.value = '';
+  const sel = document.getElementById('taskPrioritySelect'); if (sel) sel.value = '';
   if (taskDueRowVisible) toggleTaskDueRow();
   try {
     const taskData = { title, done: false, createdAt: Date.now() };
-    if (dueDate) taskData.dueDate = dueDate;
-    if (dueTime) taskData.dueTime = dueTime;
+    if (dueDate)   taskData.dueDate   = dueDate;
+    if (dueTime)   taskData.dueTime   = dueTime;
+    if (priority)  taskData.priority  = priority;
     await db.ref('users/' + CU + '/tasks').push(taskData);
   } catch(e) { showToast('Could not save task.'); }
 }
@@ -1867,20 +1995,24 @@ async function renderSalesLog() {
     return;
   }
   list.innerHTML = cachedSales.map((s,i) => `
-    <div class="sale-item${editingSaleId===s.id?' sale-editing':''}">
-      <div class="sale-num">${i+1}</div>
-      <div class="sale-info">
-        <div class="sale-name">${esc(s.item)}${s.category?`<span class="sale-cat-badge">${catEmoji(s.category)} ${esc(s.category)}</span>`:''}</div>
-        <div class="sale-meta">Model: ${esc(s.model||'—')} &nbsp;·&nbsp; S/N: ${esc(s.serial||'—')} &nbsp;·&nbsp; Qty: ${s.qty}</div>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
-        <div class="sale-total">Ksh ${(s.price * s.qty).toLocaleString()}</div>
-        <div style="display:flex;gap:6px;">
-          <button class="sale-edit-btn" onclick="editSale('${s.id}')">✎</button>
-          <button class="sale-del" onclick="deleteSale('${s.id}')">✕</button>
+    <div class="sale-swipe-wrap" data-id="${s.id}">
+      <div class="sale-swipe-inner sale-item${editingSaleId===s.id?' sale-editing':''}">
+        <div class="sale-num">${i+1}</div>
+        <div class="sale-info">
+          <div class="sale-name">${esc(s.item)}${s.category?`<span class="sale-cat-badge">${catEmoji(s.category)} ${esc(s.category)}</span>`:''}</div>
+          <div class="sale-meta">Model: ${esc(s.model||'—')} &nbsp;·&nbsp; S/N: ${esc(s.serial||'—')} &nbsp;·&nbsp; Qty: ${s.qty}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+          <div class="sale-total">Ksh ${(s.price * s.qty).toLocaleString()}</div>
+          <div style="display:flex;gap:6px;">
+            <button class="sale-edit-btn" onclick="editSale('${s.id}')">✎</button>
+            <button class="sale-del" onclick="deleteSale('${s.id}')">✕</button>
+          </div>
         </div>
       </div>
+      <div class="sale-delete-reveal">Delete</div>
     </div>`).join('');
+  setTimeout(attachSaleSwipe, 50);
 }
 
 async function renderOverviewSales() {
@@ -1916,6 +2048,67 @@ async function renderOverviewSales() {
       projEl.style.display = 'none';
     }
   }
+
+  // 8. Sales streak
+  await renderSalesStreak();
+
+  // 9. Top seller this month
+  await renderTopSeller();
+}
+
+async function renderSalesStreak() {
+  const badgeEl = document.getElementById('streakBadge');
+  if (!badgeEl || !CU) return;
+  let streak = 0;
+  const today = new Date();
+  for (let i = 0; i < 60; i++) {
+    const d = new Date(today); d.setDate(today.getDate() - i);
+    const key = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    let hasSales = false;
+    if (i === 0) {
+      hasSales = cachedSales.length > 0;
+    } else {
+      try {
+        const snap = await db.ref('users/' + CU + '/sales/' + key).once('value');
+        hasSales = snap.exists() && Object.keys(snap.val() || {}).length > 0;
+      } catch(e) { break; }
+    }
+    if (hasSales) streak++;
+    else break;
+  }
+  if (streak >= 2) {
+    badgeEl.style.display = 'inline-flex';
+    badgeEl.textContent = `🔥 ${streak}-day streak`;
+  } else {
+    badgeEl.style.display = 'none';
+  }
+}
+
+async function renderTopSeller() {
+  const strip = document.getElementById('topSellerStrip');
+  const valEl = document.getElementById('topSellerValue');
+  if (!strip || !valEl || !CU) return;
+  const prefix = currentMonthPrefix();
+  const counts = {};
+  // Count from today's cached sales
+  cachedSales.forEach(s => { const k = s.item || 'Unknown'; counts[k] = (counts[k]||0) + (s.qty||1); });
+  // Count from this month's archive
+  try {
+    const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
+    const meta = metaSnap.val() || {};
+    const today = todayKey();
+    const monthDays = Object.keys(meta).filter(k => k.startsWith(prefix) && k !== today);
+    await Promise.all(monthDays.map(async day => {
+      const snap = await db.ref('users/' + CU + '/sales/' + day).once('value');
+      Object.values(snap.val() || {}).forEach(s => { const k = s.item || 'Unknown'; counts[k] = (counts[k]||0) + (s.qty||1); });
+    }));
+  } catch(e) {}
+  const entries = Object.entries(counts);
+  if (!entries.length) { strip.classList.remove('visible'); return; }
+  entries.sort((a,b) => b[1]-a[1]);
+  const [topItem, topQty] = entries[0];
+  valEl.textContent = `${topItem} (${topQty} sold)`;
+  strip.classList.add('visible');
 }
 
 async function renderSalesBarChart() {
@@ -2018,6 +2211,8 @@ function cancelEditSale() {
 }
 
 async function submitLogSale() {
+  const btn = document.getElementById('lsfSubmitBtn');
+  if (btn && btn.disabled) return;
   const item     = document.getElementById('lsfItem').value.trim();
   const model    = document.getElementById('lsfModel').value.trim();
   const serial   = document.getElementById('lsfSerial').value.trim();
@@ -2030,8 +2225,9 @@ async function submitLogSale() {
   if (!item) { showFieldErr('lsfItem','lsfItemErr'); valid = false; }
   if (isNaN(price) || price <= 0) { showFieldErr('lsfPrice','lsfPriceErr'); valid = false; }
   if (!valid) return;
+  // Disable button to prevent double-tap
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
   if (editingSaleId) {
-    // When editing, keep original date (use todayKey() as fallback for legacy sales)
     try {
       await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + editingSaleId).update({ item, model, serial, price, qty, category });
       editingSaleId = null;
@@ -2039,9 +2235,9 @@ async function submitLogSale() {
       archiveDirty = true;
       showToast('Sale updated ✓');
     } catch(e) { showToast('Update failed.'); }
+    if (btn) { btn.disabled = false; btn.textContent = 'Update Sale'; }
     return;
   }
-  // Build a readable label for the date
   const saleDateObj = new Date(saleDate + 'T00:00:00');
   const label = saleDateObj.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
   const isPastDay = saleDate !== todayKey();
@@ -2050,12 +2246,11 @@ async function submitLogSale() {
     await db.ref('users/' + CU + '/salesArchiveMeta/' + saleDate).set({ date: saleDate, label });
     closeLogSaleSheet();
     archiveDirty = true;
-    // 5. Haptic feedback on sale logged
     if (navigator.vibrate) navigator.vibrate([20, 50, 20]);
     showToast(isPastDay ? `Sale logged for ${label} ✓` : 'Sale logged ✓');
-    // If we just logged for a past day, refresh archive
     if (isPastDay) renderArchiveSales();
   } catch(e) { showToast('Failed to save sale.'); }
+  if (btn) { btn.disabled = false; btn.textContent = 'Log Sale'; }
 }
 
 async function deleteSale(id) {
@@ -2128,6 +2323,23 @@ async function generateSalesReport() {
   }
   r += `${line}\nDAILY TOTAL  : Ksh ${total.toLocaleString()}\nTRANSACTIONS : ${sales.length}\n`;
   if (target > 0) { r += `TARGET       : Ksh ${target.toLocaleString()}\nACHIEVEMENT  : ${pct}%\n`; }
+
+  // Category breakdown
+  if (sales.length > 1) {
+    const catMap = {};
+    sales.forEach(s => {
+      const cat = s.category || 'Other';
+      if (!catMap[cat]) catMap[cat] = { count: 0, total: 0 };
+      catMap[cat].count += (s.qty || 1);
+      catMap[cat].total += (s.price * s.qty);
+    });
+    const catEntries = Object.entries(catMap).sort((a,b) => b[1].total - a[1].total);
+    r += `\n${line}\nBY CATEGORY\n\n`;
+    catEntries.forEach(([cat, data]) => {
+      r += `${cat.padEnd(22)} ${data.count} item${data.count!==1?'s':''} · Ksh ${data.total.toLocaleString()}\n`;
+    });
+  }
+
   r += `${line}\nRoyal Horizon Workspace`;
 
   currentReportText = r;
@@ -2148,6 +2360,127 @@ function closeReportOverlay() {
   if (picker) picker.value = '';
   const badge = document.getElementById('reportDateBadge');
   if (badge) badge.style.display = 'none';
+}
+
+// ── ARCHIVE SEARCH ─────────────────────────────────────────────
+function filterArchive() {
+  const q = (document.getElementById('archSearchInput')?.value || '').toLowerCase().trim();
+  if (!q) { paintArchiveHTML(document.getElementById('archSalesScroll')); return; }
+  const scroll = document.getElementById('archSalesScroll');
+  if (!scroll) return;
+  const filtered = archiveCached.filter(d => (d.label || '').toLowerCase().includes(q) || (d.date || '').includes(q));
+  if (!filtered.length) {
+    scroll.innerHTML = '<div style="opacity:.3;font-size:12px;padding:14px 4px;">No results found.</div>';
+    return;
+  }
+  let lastMonth = '';
+  scroll.innerHTML = filtered.map(d => {
+    const monthKey = d.date ? d.date.slice(0,7) : '';
+    const monthLabel = monthKey ? new Date(monthKey+'-01T00:00:00').toLocaleDateString('en-GB',{month:'long',year:'numeric'}) : '';
+    let header = '';
+    if (monthKey && monthKey !== lastMonth) { header = `<div class="arch-month-header">${monthLabel}</div>`; lastMonth = monthKey; }
+    const safeLabel = esc(d.label).replace(/'/g,'&#39;');
+    return header + `<div class="arch-day-card" data-key="${d.date}" onclick="openDayDetail('${d.date}','${safeLabel}')">
+      <div class="arch-day-info">
+        <div class="arch-day-date">${esc(d.label)}</div>
+        <div class="arch-day-total">Ksh ${d.total.toLocaleString()} · ${d.count} sale${d.count!==1?'s':''}</div>
+      </div>
+      <div class="arch-card-right">
+        <button class="arch-del-btn" onclick="deleteSingleArchiveDay('${d.date}',event)">✕</button>
+        <span style="opacity:.3;font-size:14px;">›</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── PULL-TO-REFRESH ON ARCHIVE ─────────────────────────────────
+(function() {
+  let ptStartY = 0, ptDragging = false;
+  const getScroll = () => document.getElementById('archSalesScroll');
+  const getIndicator = () => document.getElementById('ptrIndicator');
+  document.addEventListener('touchstart', e => {
+    const s = getScroll(); if (!s) return;
+    if (s.scrollTop === 0 && currentSlide === 3) { ptStartY = e.touches[0].clientY; ptDragging = true; }
+  }, { passive: true });
+  document.addEventListener('touchmove', e => {
+    if (!ptDragging) return;
+    const dy = e.touches[0].clientY - ptStartY;
+    const ind = getIndicator();
+    if (dy > 30 && ind) ind.classList.add('visible');
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    if (!ptDragging) return;
+    const dy = e.changedTouches[0].clientY - ptStartY;
+    const ind = getIndicator();
+    if (ind) ind.classList.remove('visible');
+    if (dy > 60) { archiveDirty = true; renderArchiveSales(); showToast('Archive refreshed'); }
+    ptDragging = false;
+  }, { passive: true });
+})();
+
+// ── SWIPE-TO-DELETE ON SALES LIST ─────────────────────────────
+function attachSaleSwipe() {
+  document.querySelectorAll('.sale-swipe-wrap').forEach(wrap => {
+    const inner = wrap.querySelector('.sale-swipe-inner');
+    const reveal = wrap.querySelector('.sale-delete-reveal');
+    if (!inner || inner._swipeAttached) return;
+    inner._swipeAttached = true;
+    let sx = 0, swiped = false;
+    inner.addEventListener('touchstart', e => { sx = e.touches[0].clientX; swiped = false; }, { passive: true });
+    inner.addEventListener('touchmove', e => {
+      const dx = e.touches[0].clientX - sx;
+      if (dx < -10) { inner.style.transform = `translateX(${Math.max(dx, -72)}px)`; swiped = true; }
+      else if (dx > 5 && swiped) { inner.style.transform = ''; swiped = false; }
+    }, { passive: true });
+    inner.addEventListener('touchend', () => {
+      const cur = parseFloat(inner.style.transform.replace('translateX(','')) || 0;
+      if (cur < -36) inner.style.transform = 'translateX(-72px)';
+      else { inner.style.transform = ''; swiped = false; }
+    }, { passive: true });
+    if (reveal) reveal.addEventListener('click', () => {
+      const id = wrap.dataset.id;
+      if (id) { inner.style.transform = ''; deleteSale(id); }
+    });
+  });
+}
+
+// ── AVATAR COLOUR PICKER ───────────────────────────────────────
+const AVATAR_ALL_COLORS = [
+  '#8B7355','#6B8E7F','#7B6B8E','#8E7B6B','#5E8E8E','#8E6B7B','#6B7B8E','#7B8E6B',
+  '#A0522D','#4682B4','#708090','#696969','#8B4513','#2E8B57','#6A5ACD','#BC8F5F',
+  '#CD853F','#5F9EA0','#9370DB','#3CB371','#D2691E','#4169E1','#8B008B','#228B22'
+];
+let _selectedAvatarColor = '';
+
+function buildColorPicker(currentColor) {
+  _selectedAvatarColor = currentColor || AVATAR_ALL_COLORS[0];
+  const grid = document.getElementById('avatarColorGrid');
+  if (!grid) return;
+  grid.innerHTML = AVATAR_ALL_COLORS.map(c =>
+    `<div class="avatar-color-swatch${c===_selectedAvatarColor?' selected':''}"
+      style="background:${c};" onclick="selectAvatarColor('${c}')"></div>`
+  ).join('');
+}
+
+function selectAvatarColor(color) {
+  _selectedAvatarColor = color;
+  document.querySelectorAll('.avatar-color-swatch').forEach(s => s.classList.toggle('selected', s.style.background === color || s.style.backgroundColor === color));
+  // Live-preview on the large avatar and header btn
+  const av = document.getElementById('profileAvatarLarge'); if (av) av.style.background = color;
+  const btn = document.getElementById('avatarBtn'); if (btn) btn.style.background = color;
+}
+
+// ── GREETING REFRESH (re-checks every 30 min) ─────────────────
+function startGreetingClock() {
+  function tick() {
+    const el = document.getElementById('greeting');
+    if (el && currentProfile) el.innerText = timeGreeting(currentProfile.name || 'Guest');
+  }
+  tick();
+  // Align to next half-hour boundary
+  const now = new Date();
+  const msToNext = (30 - (now.getMinutes() % 30)) * 60000 - now.getSeconds() * 1000;
+  setTimeout(() => { tick(); setInterval(tick, 30 * 60000); }, msToNext);
 }
 
 function copyReport() {
@@ -2270,10 +2603,18 @@ function paintArchiveHTML(scroll) {
     scroll.innerHTML = '<div style="text-align:center;opacity:.28;padding:30px 0;"><div style="font-size:26px;margin-bottom:8px;">⧉</div><p style="font-size:12px;">No past sales yet.</p></div>';
     return;
   }
-  scroll.innerHTML = archiveCached.map(d => {
+  let lastMonth = '';
+  const rows = archiveCached.map(d => {
+    const monthKey = d.date ? d.date.slice(0, 7) : '';
+    const monthLabel = monthKey ? new Date(monthKey + '-01T00:00:00').toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }) : '';
+    let header = '';
+    if (monthKey && monthKey !== lastMonth) {
+      header = `<div class="arch-month-header">${monthLabel}</div>`;
+      lastMonth = monthKey;
+    }
     const isSel = selectedArchiveDays.has(d.date);
     const safeLabel = esc(d.label).replace(/'/g, '&#39;');
-    return `<div class="arch-day-card${isSel?' arch-selected':''}" data-key="${d.date}"
+    return header + `<div class="arch-day-card${isSel?' arch-selected':''}" data-key="${d.date}"
         onclick="${archiveSelectMode ? `toggleArchiveDaySelect('${d.date}')` : `openDayDetail('${d.date}','${safeLabel}')`}">
       ${archiveSelectMode ? `<div class="arch-checkbox">${isSel?'✓':''}</div>` : ''}
       <div class="arch-day-info">
@@ -2285,7 +2626,8 @@ function paintArchiveHTML(scroll) {
         ${!archiveSelectMode ? `<span style="opacity:.3;font-size:14px;">›</span>` : ''}
       </div>
     </div>`;
-  }).join('');
+  });
+  scroll.innerHTML = rows.join('');
 }
 
 async function openDayDetail(dateKey, label) {
@@ -2371,6 +2713,11 @@ async function shareArchiveDayReport() {
   } catch(e) { showToast('Could not generate report.'); }
 }
 
+function _syncFab(idx) {
+  const fab = document.getElementById('quickLogFab');
+  if (fab) fab.classList.toggle('hidden', idx !== 0);
+}
+
 function moveTrack(idx) {
   if (window._swipeSnapTo) { window._swipeSnapTo(idx); return; }
   // Fallback before engine initialises
@@ -2381,8 +2728,12 @@ function moveTrack(idx) {
   document.querySelectorAll('.dock-item').forEach((d,i) => d.classList.toggle('active', i===idx));
   document.querySelectorAll('.slide-dot').forEach((d,i) => d.classList.toggle('active', i===idx));
   currentSlide = idx;
+  _syncFab(idx);
   if (idx === 2) renderSalesLog();
-  if (idx === 3) renderArchiveSales();
+  if (idx === 3) {
+    const si = document.getElementById('archSearchInput'); if (si) si.value = '';
+    renderArchiveSales();
+  }
 }
 
 // ── GALLERY-QUALITY SWIPE ENGINE ─────────────────────────────────
@@ -2432,8 +2783,12 @@ function moveTrack(idx) {
     document.querySelectorAll('.dock-item').forEach((d,i)=>d.classList.toggle('active',i===idx));
     document.querySelectorAll('.slide-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
     currentSlide = idx;
+    _syncFab(idx);
     if (idx === 2) renderSalesLog();
-    if (idx === 3) renderArchiveSales();
+    if (idx === 3) {
+      const si = document.getElementById('archSearchInput'); if (si) si.value = '';
+      renderArchiveSales();
+    }
 
     const target = baseFor(idx);
     // Spring animation: exponential decay toward target
