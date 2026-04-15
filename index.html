@@ -2720,35 +2720,29 @@ function moveTrack(idx) {
   }
 }
 
-// ── SMOOTH SWIPE ENGINE ──────────────────────────────────────────
+// ── SWIPE ENGINE ─────────────────────────────────────────────────
 (function () {
-  const track    = document.getElementById('workspaceTrack');
-  const TOTAL    = 4;
-  const GAP      = 30;
-  const RESIST   = 0.12;   // softer rubber-band at edges
-  const VEL_SNAP = 0.22;   // px/ms — lower = easier to flick
-  const DIST_SNAP= 0.22;   // fraction of slide width for slow-drag snap
-
-  // Physics constants for spring
-  const STIFFNESS  = 0.88; // how strongly spring pulls (0-1, higher = snappier)
-  const DAMPING    = 0.78; // how quickly oscillation dies (0-1, higher = less bounce)
+  const track     = document.getElementById('workspaceTrack');
+  const TOTAL     = 4;
+  const GAP       = 30;
+  const RESIST    = 0.18;   // rubber-band softness at edges
+  const VEL_SNAP  = 0.28;   // px/ms flick threshold
+  const DIST_SNAP = 0.28;   // fraction of slide width for slow-drag snap
 
   let renderX  = 0;
-  let springV  = 0;   // spring velocity (px/frame)
+  let rafId    = null;
 
   // Touch state
-  let x0 = 0, y0 = 0;
+  let t0 = 0, x0 = 0, y0 = 0;
   let prevX = 0, prevT = 0;
   let velocity = 0;
   let isHoriz  = null;
   let active   = false;
-  let rafId    = null;
 
-  // GPU-accelerate the track
   track.style.willChange = 'transform';
 
-  function slideW()      { return window.innerWidth * 0.80 + GAP; }
-  function baseFor(idx)  { return -(idx * slideW()); }
+  function slideW()     { return window.innerWidth * 0.80 + GAP; }
+  function baseFor(idx) { return -(idx * slideW()); }
 
   function rubberClamp(offset) {
     const lo = baseFor(TOTAL - 1);
@@ -2761,10 +2755,12 @@ function moveTrack(idx) {
   function setRaw(x) {
     renderX = x;
     track.style.transition = 'none';
-    track.style.transform  = `translateX(${x}px) translateZ(0)`;
+    track.style.transform  = `translateX(${x}px)`;
   }
 
-  function updateUI(idx) {
+  function snapTo(idx) {
+    idx = Math.max(0, Math.min(TOTAL - 1, idx));
+
     document.querySelectorAll('.workspace-card').forEach((c,i) => c.classList.toggle('active', i===idx));
     document.querySelectorAll('.dock-item').forEach((d,i)      => d.classList.toggle('active', i===idx));
     document.querySelectorAll('.slide-dot').forEach((d,i)      => d.classList.toggle('active', i===idx));
@@ -2775,52 +2771,44 @@ function moveTrack(idx) {
       const si = document.getElementById('archSearchInput'); if (si) si.value = '';
       renderArchiveSales();
     }
-  }
-
-  function snapTo(idx) {
-    idx = Math.max(0, Math.min(TOTAL - 1, idx));
-    updateUI(idx);
 
     const target = baseFor(idx);
     cancelAnimationFrame(rafId);
 
-    // Spring physics: velocity-preserving so flicks feel continuous
-    // springV carries over from any previous gesture velocity
-    function frame() {
-      const dist  = target - renderX;
-      springV     = (springV + dist * STIFFNESS) * DAMPING;
-      const next  = renderX + springV;
+    // Smooth exponential-decay glide — gentle and fluid, no bounce
+    // Each frame closes a fixed fraction of remaining distance.
+    // EASE controls speed: ~0.09 = slow/silky, ~0.16 = quick but still smooth.
+    const EASE = 0.11;
 
-      // Settle check: close enough and moving slow
-      if (Math.abs(dist) < 0.4 && Math.abs(springV) < 0.4) {
-        track.style.transform = `translateX(${target}px) translateZ(0)`;
-        renderX  = target;
-        springV  = 0;
+    function glide() {
+      const dist = target - renderX;
+      // Settle: sub-pixel distance, stop cleanly
+      if (Math.abs(dist) < 0.35) {
+        track.style.transform = `translateX(${target}px)`;
+        renderX = target;
         return;
       }
-
+      renderX += dist * EASE;
       track.style.transition = 'none';
-      track.style.transform  = `translateX(${next}px) translateZ(0)`;
-      renderX = next;
-      rafId = requestAnimationFrame(frame);
+      track.style.transform  = `translateX(${renderX}px)`;
+      rafId = requestAnimationFrame(glide);
     }
-    rafId = requestAnimationFrame(frame);
+    rafId = requestAnimationFrame(glide);
   }
 
-  // ── Touch handlers ───────────────────────────────────────────
+  // ── Touch handlers ────────────────────────────────────────────
   track.addEventListener('touchstart', e => {
     cancelAnimationFrame(rafId);
     const touch = e.touches[0];
-    prevT    = performance.now();
-    x0       = prevX = touch.clientX;
-    y0       = touch.clientY;
-    velocity = 0;
-    springV  = 0;
-    isHoriz  = null;
-    active   = false;
-    // Capture real position mid-spring
-    const m  = new DOMMatrix(getComputedStyle(track).transform);
-    renderX  = m.m41;
+    t0 = prevT  = performance.now();
+    x0 = prevX  = touch.clientX;
+    y0           = touch.clientY;
+    velocity     = 0;
+    isHoriz      = null;
+    active       = false;
+    // Lock onto actual rendered position if interrupted mid-glide
+    const m = new DOMMatrix(getComputedStyle(track).transform);
+    renderX = m.m41;
   }, { passive: true });
 
   track.addEventListener('touchmove', e => {
@@ -2829,18 +2817,18 @@ function moveTrack(idx) {
     const dy    = touch.clientY - y0;
     const now   = performance.now();
 
-    // Direction lock — lower threshold for snappier feel
+    // Direction lock on first move ≥ 5px
     if (isHoriz === null) {
-      if (Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
-      isHoriz = Math.abs(dx) > Math.abs(dy) * 0.8; // slight horizontal bias
+      if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
+      isHoriz = Math.abs(dx) >= Math.abs(dy);
     }
     if (!isHoriz) return;
     e.preventDefault();
 
-    // Velocity: weighted EMA — heavier on recent samples for responsiveness
-    const dt       = Math.max(now - prevT, 1);
-    const instant  = (touch.clientX - prevX) / dt;
-    velocity       = velocity * 0.45 + instant * 0.55;
+    // Velocity EMA: balanced between history and instant reading
+    const dt      = Math.max(now - prevT, 1);
+    const instant = (touch.clientX - prevX) / dt;
+    velocity = velocity * 0.55 + instant * 0.45;
     prevX = touch.clientX;
     prevT = now;
 
@@ -2856,19 +2844,12 @@ function moveTrack(idx) {
     const dx = (e.changedTouches ? e.changedTouches[0].clientX : 0) - x0;
     const sw = slideW();
 
-    // Momentum projection: where would the finger land if it kept going?
-    const projected = renderX + velocity * 80; // 80ms look-ahead
-    const projIdx   = Math.round(-projected / sw);
-
     let target = currentSlide;
     if      (velocity < -VEL_SNAP && currentSlide < TOTAL - 1) target = currentSlide + 1;
     else if (velocity >  VEL_SNAP && currentSlide > 0)         target = currentSlide - 1;
     else if (dx < -sw * DIST_SNAP && currentSlide < TOTAL - 1) target = currentSlide + 1;
     else if (dx >  sw * DIST_SNAP && currentSlide > 0)         target = currentSlide - 1;
-    else target = Math.max(0, Math.min(TOTAL - 1, projIdx)); // momentum fallback
 
-    // Carry finger velocity into the spring so snap feels continuous
-    springV = velocity * 10;
     snapTo(target);
   }
 
@@ -3047,4 +3028,4 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 </body>
-  </html>
+                                                                                                                                                                       </html>
