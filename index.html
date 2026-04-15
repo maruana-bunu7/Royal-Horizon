@@ -214,7 +214,7 @@ body.theme-signup .wow-badge.negative{background:rgba(180,40,40,.08);border-colo
 .sales-hero-target{font-size:11px;opacity:.5;margin-top:6px;}
 .sales-hero-target span{font-weight:600;opacity:.8;}
 
-.sales-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:7px;min-height:0;}
+.sales-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:7px;min-height:0;max-height:100%;overscroll-behavior:contain;}
 .sale-item{background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;padding:10px 12px;display:flex;align-items:flex-start;gap:9px;transition:.2s;}
 .sale-item.sale-editing{border-color:rgba(90,160,120,.4);background:rgba(90,160,120,.06);}
 .sale-num{font-family:'Playfair Display';font-size:18px;font-weight:700;opacity:.3;min-width:22px;line-height:1.2;}
@@ -903,12 +903,12 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
       </div>
 
       <!-- SLIDE 2: SALES LOG -->
-      <div class="workspace-card">
-        <div class="card-header" style="margin-bottom:8px;">
+      <div class="workspace-card" style="display:flex;flex-direction:column;">
+        <div class="card-header" style="margin-bottom:8px;flex-shrink:0;">
           <h2>Sales Log</h2>
           <div style="font-size:10px;opacity:.4;text-transform:uppercase;letter-spacing:1px;" id="salesDateLabel"></div>
         </div>
-        <div class="sales-hero" id="salesHero">
+        <div class="sales-hero" id="salesHero" style="flex-shrink:0;">
           <div class="sales-donut-wrap">
             <svg class="sales-donut-svg" viewBox="0 0 64 64">
               <circle class="sales-donut-bg" cx="32" cy="32" r="27"/>
@@ -1060,6 +1060,7 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
             <div class="lsf-cat-option" data-cat="Water Dispenser" data-group="Mika" data-emoji="💧" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">💧</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Water Dispenser</div></div></div>
             <div class="lsf-cat-group-header">🔵 Mika — Home Comfort</div>
             <div class="lsf-cat-option" data-cat="Standing Fan" data-group="Mika" data-emoji="🌀" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🌀</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Standing / Table Fan</div></div></div>
+            <div class="lsf-cat-option" data-cat="Box Fan" data-group="Mika" data-emoji="🌀" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🌀</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Box Fan</div></div></div>
             <div class="lsf-cat-option" data-cat="Air Conditioner" data-group="Mika" data-emoji="❄️" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">❄️</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Air Conditioner</div></div></div>
             <div class="lsf-cat-option" data-cat="Room Heater" data-group="Mika" data-emoji="🔆" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🔆</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Room Heater</div></div></div>
             <div class="lsf-cat-option" data-cat="Other Mika" data-group="Mika" data-emoji="📦" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📦</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Other Mika Product</div></div></div>
@@ -1068,6 +1069,7 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
             <div class="lsf-cat-option" data-cat="Soundbar" data-group="Samsung" data-emoji="🔊" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🔊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Soundbar / Home Theatre</div></div></div>
             <div class="lsf-cat-group-header">🔴 Samsung — Home Appliances</div>
             <div class="lsf-cat-option" data-cat="Samsung Fridge" data-group="Samsung" data-emoji="🧊" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🧊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Fridge / Refrigerator</div></div></div>
+            <div class="lsf-cat-option" data-cat="Samsung Freezer" data-group="Samsung" data-emoji="🧊" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🧊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Freezer</div></div></div>
             <div class="lsf-cat-option" data-cat="Samsung Washing Machine" data-group="Samsung" data-emoji="🫧" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🫧</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Washing Machine</div></div></div>
             <div class="lsf-cat-option" data-cat="Samsung Microwave" data-group="Samsung" data-emoji="📡" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📡</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Microwave Oven</div></div></div>
             <div class="lsf-cat-option" data-cat="Samsung Cooker" data-group="Samsung" data-emoji="🍳" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🍳</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Cooker / Built-in Oven</div></div></div>
@@ -3091,10 +3093,10 @@ function catEmoji(cat) {
     'Microwave Oven':'📡','Electric Kettle':'☕','Blender / Juicer':'🥤',
     'Toaster':'🍞','Air Fryer':'🍟','Coffee Maker':'☕',
     'Fridge / Refrigerator':'🧊','Freezer':'🧊','Washing Machine':'🫧',
-    'Water Dispenser':'💧','Standing Fan':'🌀','Air Conditioner':'❄️',
+    'Water Dispenser':'💧','Standing Fan':'🌀','Box Fan':'🌀','Air Conditioner':'❄️',
     'Room Heater':'🔆','Other Mika':'📦',
     'Samsung TV':'📺','Soundbar':'🔊',
-    'Samsung Fridge':'🧊','Samsung Washing Machine':'🫧','Samsung Microwave':'📡',
+    'Samsung Fridge':'🧊','Samsung Freezer':'🧊','Samsung Washing Machine':'🫧','Samsung Microwave':'📡',
     'Samsung Cooker':'🍳','Samsung Air Conditioner':'❄️','Samsung Dishwasher':'🫧',
     'Samsung Phone':'📱','Samsung Tablet':'💻','Samsung Wearable':'⌚',
     'Other Samsung':'📦'
@@ -3127,4 +3129,4 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 </body>
-      </html>
+            </html>
