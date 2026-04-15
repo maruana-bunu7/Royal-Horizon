@@ -1012,6 +1012,19 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
         </div>
       </div>
       <div>
+        <label class="lsf-label">Brand</label>
+        <div style="display:flex;gap:8px;margin-bottom:2px;">
+          <button type="button" id="lsfBrandMika" onclick="selectSaleBrand('Mika')"
+            style="flex:1;padding:10px;border-radius:12px;border:1.5px solid rgba(128,128,128,.2);background:rgba(128,128,128,.08);color:inherit;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;">
+            🔵 Mika
+          </button>
+          <button type="button" id="lsfBrandSamsung" onclick="selectSaleBrand('Samsung')"
+            style="flex:1;padding:10px;border-radius:12px;border:1.5px solid rgba(128,128,128,.2);background:rgba(128,128,128,.08);color:inherit;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;">
+            🔴 Samsung
+          </button>
+        </div>
+      </div>
+      <div>
         <label class="lsf-label">Item Name</label>
         <input class="lsf-input" id="lsfItem" placeholder="e.g. Samsung Galaxy S25 Ultra" autocomplete="off" oninput="clearFieldErr('lsfItem','lsfItemErr')">
         <div class="lsf-field-err" id="lsfItemErr">Item name is required.</div>
@@ -1021,41 +1034,50 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
         <div class="lsf-cat-dropdown" id="lsfCatDropdown">
           <button type="button" class="lsf-cat-trigger" onclick="toggleCatDropdown()" id="lsfCatTrigger">
             <div class="lsf-cat-trigger-left">
-              <span class="lsf-cat-trigger-emoji" id="lsfCatEmoji">📱</span>
+              <span class="lsf-cat-trigger-emoji" id="lsfCatEmoji">🍳</span>
               <div class="lsf-cat-trigger-text">
-                <span class="lsf-cat-trigger-sub" id="lsfCatGroup">Gadgets & Accessories</span>
-                <span class="lsf-cat-trigger-name" id="lsfCatName">Smartphone / Phone</span>
+                <span class="lsf-cat-trigger-sub" id="lsfCatGroup">Mika</span>
+                <span class="lsf-cat-trigger-name" id="lsfCatName">Cooker / Standing Cooker</span>
               </div>
             </div>
             <span class="lsf-cat-chevron">▾</span>
           </button>
           <div class="lsf-cat-panel" id="lsfCatPanel">
-            <div class="lsf-cat-group-header">🏠 Appliances</div>
-            <div class="lsf-cat-option" data-cat="Refrigerator" data-group="Appliances" data-emoji="🧊" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🧊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Refrigerator / Fridge</div></div></div>
-            <div class="lsf-cat-option" data-cat="Microwave" data-group="Appliances" data-emoji="📦" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📦</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Microwave</div></div></div>
-            <div class="lsf-cat-option" data-cat="Washing Machine" data-group="Appliances" data-emoji="🫧" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🫧</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Washing Machine</div></div></div>
-            <div class="lsf-cat-option" data-cat="Cooker / Oven" data-group="Appliances" data-emoji="🍳" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🍳</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Cooker / Oven</div></div></div>
-            <div class="lsf-cat-option" data-cat="Air Conditioner" data-group="Appliances" data-emoji="❄️" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">❄️</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Air Conditioner</div></div></div>
-            <div class="lsf-cat-option" data-cat="Blender / Juicer" data-group="Appliances" data-emoji="🥤" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🥤</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Blender / Juicer</div></div></div>
-            <div class="lsf-cat-option" data-cat="Other Appliance" data-group="Appliances" data-emoji="🔌" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🔌</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Other Appliance</div></div></div>
-            <div class="lsf-cat-group-header">📺 Electronics</div>
-            <div class="lsf-cat-option" data-cat="Television" data-group="Electronics" data-emoji="📺" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📺</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Television / Smart TV</div></div></div>
-            <div class="lsf-cat-option" data-cat="Sound System" data-group="Electronics" data-emoji="🔊" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🔊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Sound System / Speaker</div></div></div>
-            <div class="lsf-cat-option" data-cat="Home Theatre" data-group="Electronics" data-emoji="🎬" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🎬</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Home Theatre</div></div></div>
-            <div class="lsf-cat-option" data-cat="Radio / Hi-Fi" data-group="Electronics" data-emoji="📻" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📻</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Radio / Hi-Fi</div></div></div>
-            <div class="lsf-cat-option" data-cat="CCTV / Security" data-group="Electronics" data-emoji="📷" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📷</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">CCTV / Security Camera</div></div></div>
-            <div class="lsf-cat-option" data-cat="Other Electronic" data-group="Electronics" data-emoji="🔋" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🔋</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Other Electronic</div></div></div>
-            <div class="lsf-cat-group-header">📱 Gadgets &amp; Accessories</div>
-            <div class="lsf-cat-option selected" data-cat="Smartphone / Phone" data-group="Gadgets & Accessories" data-emoji="📱" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📱</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Smartphone / Phone</div></div></div>
-            <div class="lsf-cat-option" data-cat="Tablet" data-group="Gadgets & Accessories" data-emoji="💻" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">💻</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Tablet</div></div></div>
-            <div class="lsf-cat-option" data-cat="Laptop" data-group="Gadgets & Accessories" data-emoji="🖥️" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🖥️</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Laptop / Computer</div></div></div>
-            <div class="lsf-cat-option" data-cat="Smartwatch" data-group="Gadgets & Accessories" data-emoji="⌚" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">⌚</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Smartwatch / Wearable</div></div></div>
-            <div class="lsf-cat-option" data-cat="Earphones / Headphones" data-group="Gadgets & Accessories" data-emoji="🎧" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🎧</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Earphones / Headphones</div></div></div>
-            <div class="lsf-cat-option" data-cat="Charger / Cable" data-group="Gadgets & Accessories" data-emoji="🔌" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🔌</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Charger / Cable</div></div></div>
-            <div class="lsf-cat-option" data-cat="Power Bank" data-group="Gadgets & Accessories" data-emoji="🔋" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🔋</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Power Bank</div></div></div>
-            <div class="lsf-cat-option" data-cat="Phone Case / Cover" data-group="Gadgets & Accessories" data-emoji="🛡️" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🛡️</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Phone Case / Cover</div></div></div>
-            <div class="lsf-cat-option" data-cat="Memory / Storage" data-group="Gadgets & Accessories" data-emoji="💾" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">💾</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Memory Card / Storage</div></div></div>
-            <div class="lsf-cat-option" data-cat="Other Accessory" data-group="Gadgets & Accessories" data-emoji="📦" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📦</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Other Accessory</div></div></div>
+            <div class="lsf-cat-group-header">🔵 Mika — Kitchen</div>
+            <div class="lsf-cat-option selected" data-cat="Cooker / Standing Cooker" data-group="Mika" data-emoji="🍳" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🍳</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Cooker / Standing Cooker</div></div></div>
+            <div class="lsf-cat-option" data-cat="Built-in Hob" data-group="Mika" data-emoji="🔥" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🔥</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Built-in Hob</div></div></div>
+            <div class="lsf-cat-option" data-cat="Built-in Oven" data-group="Mika" data-emoji="🫕" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🫕</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Built-in Oven</div></div></div>
+            <div class="lsf-cat-option" data-cat="Microwave Oven" data-group="Mika" data-emoji="📡" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📡</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Microwave Oven</div></div></div>
+            <div class="lsf-cat-option" data-cat="Electric Kettle" data-group="Mika" data-emoji="☕" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">☕</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Electric Kettle</div></div></div>
+            <div class="lsf-cat-option" data-cat="Blender / Juicer" data-group="Mika" data-emoji="🥤" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🥤</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Blender / Juicer</div></div></div>
+            <div class="lsf-cat-option" data-cat="Toaster" data-group="Mika" data-emoji="🍞" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🍞</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Toaster</div></div></div>
+            <div class="lsf-cat-option" data-cat="Air Fryer" data-group="Mika" data-emoji="🍟" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🍟</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Air Fryer</div></div></div>
+            <div class="lsf-cat-option" data-cat="Coffee Maker" data-group="Mika" data-emoji="☕" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">☕</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Coffee Maker</div></div></div>
+            <div class="lsf-cat-group-header">🔵 Mika — Refrigeration &amp; Laundry</div>
+            <div class="lsf-cat-option" data-cat="Fridge / Refrigerator" data-group="Mika" data-emoji="🧊" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🧊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Fridge / Refrigerator</div></div></div>
+            <div class="lsf-cat-option" data-cat="Freezer" data-group="Mika" data-emoji="🧊" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🧊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Freezer</div></div></div>
+            <div class="lsf-cat-option" data-cat="Washing Machine" data-group="Mika" data-emoji="🫧" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🫧</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Washing Machine</div></div></div>
+            <div class="lsf-cat-option" data-cat="Water Dispenser" data-group="Mika" data-emoji="💧" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">💧</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Water Dispenser</div></div></div>
+            <div class="lsf-cat-group-header">🔵 Mika — Home Comfort</div>
+            <div class="lsf-cat-option" data-cat="Standing Fan" data-group="Mika" data-emoji="🌀" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🌀</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Standing / Table Fan</div></div></div>
+            <div class="lsf-cat-option" data-cat="Air Conditioner" data-group="Mika" data-emoji="❄️" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">❄️</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Air Conditioner</div></div></div>
+            <div class="lsf-cat-option" data-cat="Room Heater" data-group="Mika" data-emoji="🔆" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🔆</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Room Heater</div></div></div>
+            <div class="lsf-cat-option" data-cat="Other Mika" data-group="Mika" data-emoji="📦" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📦</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Other Mika Product</div></div></div>
+            <div class="lsf-cat-group-header">🔴 Samsung — TVs &amp; Audio</div>
+            <div class="lsf-cat-option" data-cat="Samsung TV" data-group="Samsung" data-emoji="📺" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📺</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">TV (QLED / 4K / Smart)</div></div></div>
+            <div class="lsf-cat-option" data-cat="Soundbar" data-group="Samsung" data-emoji="🔊" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🔊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Soundbar / Home Theatre</div></div></div>
+            <div class="lsf-cat-group-header">🔴 Samsung — Home Appliances</div>
+            <div class="lsf-cat-option" data-cat="Samsung Fridge" data-group="Samsung" data-emoji="🧊" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🧊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Fridge / Refrigerator</div></div></div>
+            <div class="lsf-cat-option" data-cat="Samsung Washing Machine" data-group="Samsung" data-emoji="🫧" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🫧</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Washing Machine</div></div></div>
+            <div class="lsf-cat-option" data-cat="Samsung Microwave" data-group="Samsung" data-emoji="📡" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📡</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Microwave Oven</div></div></div>
+            <div class="lsf-cat-option" data-cat="Samsung Cooker" data-group="Samsung" data-emoji="🍳" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🍳</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Cooker / Built-in Oven</div></div></div>
+            <div class="lsf-cat-option" data-cat="Samsung Air Conditioner" data-group="Samsung" data-emoji="❄️" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">❄️</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Air Conditioner</div></div></div>
+            <div class="lsf-cat-option" data-cat="Samsung Dishwasher" data-group="Samsung" data-emoji="🫧" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🫧</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Dishwasher</div></div></div>
+            <div class="lsf-cat-group-header">🔴 Samsung — Phones &amp; Tablets</div>
+            <div class="lsf-cat-option" data-cat="Samsung Phone" data-group="Samsung" data-emoji="📱" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📱</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Samsung Phone / Galaxy</div></div></div>
+            <div class="lsf-cat-option" data-cat="Samsung Tablet" data-group="Samsung" data-emoji="💻" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">💻</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Samsung Tablet / Galaxy Tab</div></div></div>
+            <div class="lsf-cat-option" data-cat="Samsung Wearable" data-group="Samsung" data-emoji="⌚" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">⌚</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Smartwatch / Buds / Wearable</div></div></div>
+            <div class="lsf-cat-option" data-cat="Other Samsung" data-group="Samsung" data-emoji="📦" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📦</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Other Samsung Product</div></div></div>
           </div>
         </div>
       </div>
@@ -1230,6 +1252,7 @@ let profileEditMode = false;
 let currentReportText = '';
 let editingSaleId = null;
 let taskDueRowVisible = false;
+let _currentSaleBrand = 'Mika';
 let dailyReminderTimeouts = [];
 let reminderDayTimer = null;
 const scheduledTaskNotifs = new Set();
@@ -2153,7 +2176,8 @@ function openLogSaleSheet(id) {
     document.getElementById('logSaleSheetTitle').textContent = 'Log a Sale';
     const badge = document.getElementById('lsfPastBadge');
     if (badge) badge.classList.remove('visible');
-    setSelectedCat('Smartphone / Phone');
+    setSelectedCat('Cooker / Standing Cooker');
+    selectSaleBrand('Mika');
     clearAllSaleErrors();
     editingSaleId = null;
   }
@@ -2179,13 +2203,32 @@ function editSale(id) {
   document.getElementById('lsfSerial').value = s.serial || '';
   document.getElementById('lsfPrice').value  = s.price || '';
   document.getElementById('lsfQty').value    = s.qty || 1;
-  setSelectedCat(s.category || 'Phone');
+  selectSaleBrand(s.saleBrand || 'Mika');
+  setSelectedCat(s.category || 'Cooker / Standing Cooker');
   clearAllSaleErrors();
   document.getElementById('lsfSubmitBtn').textContent = 'Update Sale';
   document.getElementById('lsfCancelEditBtn').style.display = 'block';
   document.getElementById('lsfEditingBanner').classList.add('visible');
   document.getElementById('logSaleSheetTitle').textContent = 'Edit Sale';
   renderSalesLog();
+}
+
+function selectSaleBrand(brand) {
+  _currentSaleBrand = brand;
+  const mikaBtn    = document.getElementById('lsfBrandMika');
+  const samsungBtn = document.getElementById('lsfBrandSamsung');
+  const gold = 'rgba(200,168,75,.35)';
+  const goldBorder = 'rgba(200,168,75,.6)';
+  const inactive = 'rgba(128,128,128,.08)';
+  const inactiveBorder = 'rgba(128,128,128,.2)';
+  if (mikaBtn) {
+    mikaBtn.style.background   = brand === 'Mika'    ? gold    : inactive;
+    mikaBtn.style.borderColor  = brand === 'Mika'    ? goldBorder : inactiveBorder;
+  }
+  if (samsungBtn) {
+    samsungBtn.style.background  = brand === 'Samsung' ? gold    : inactive;
+    samsungBtn.style.borderColor = brand === 'Samsung' ? goldBorder : inactiveBorder;
+  }
 }
 
 function cancelEditSale() {
@@ -2203,6 +2246,7 @@ async function submitLogSale() {
   const price    = parseFloat(document.getElementById('lsfPrice').value);
   const qty      = parseInt(document.getElementById('lsfQty').value) || 1;
   const category = getSelectedCat();
+  const saleBrand= _currentSaleBrand || 'Mika';
   const dateEl   = document.getElementById('lsfSaleDate');
   const saleDate = (dateEl && dateEl.value) ? dateEl.value : todayKey();
   let valid = true;
@@ -2213,7 +2257,7 @@ async function submitLogSale() {
   if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
   if (editingSaleId) {
     try {
-      await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + editingSaleId).update({ item, model, serial, price, qty, category });
+      await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + editingSaleId).update({ item, model, serial, price, qty, category, saleBrand });
       editingSaleId = null;
       closeLogSaleSheet();
       archiveDirty = true;
@@ -2226,7 +2270,7 @@ async function submitLogSale() {
   const label = saleDateObj.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
   const isPastDay = saleDate !== todayKey();
   try {
-    await db.ref('users/' + CU + '/sales/' + saleDate).push({ item, model, serial, price, qty, category, order: Date.now(), createdAt: Date.now() });
+    await db.ref('users/' + CU + '/sales/' + saleDate).push({ item, model, serial, price, qty, category, saleBrand, order: Date.now(), createdAt: Date.now() });
     await db.ref('users/' + CU + '/salesArchiveMeta/' + saleDate).set({ date: saleDate, label });
     closeLogSaleSheet();
     archiveDirty = true;
@@ -2250,7 +2294,9 @@ async function deleteSale(id) {
   }, 'Delete');
 }
 
-async function generateSalesReport() {
+let _reportBrandFilter = 'Samsung'; // which brand report is currently showing
+
+async function generateSalesReport(brandOverride) {
   const prof    = currentProfile || {};
   const picker  = document.getElementById('reportDatePicker');
   const badge   = document.getElementById('reportDateBadge');
@@ -2259,27 +2305,61 @@ async function generateSalesReport() {
   const isToday = dateKey === today;
   const isPast  = dateKey < today;
 
-  // Seed picker to today when first opened (no date chosen yet)
   if (picker && !picker.value) { picker.value = today; picker.max = today; }
   if (badge) badge.style.display = isPast ? 'inline-block' : 'none';
 
-  // Show overlay first so user sees loading state
   const reportEl = document.getElementById('reportText');
   if (reportEl) reportEl.textContent = 'Loading…';
   applyOverlayTheme(document.getElementById('reportOverlay'));
   document.getElementById('reportOverlay').classList.add('open');
   pushOverlayState('report');
 
-  // Fetch sales for the chosen date
-  let sales = [];
+  let allSales = [];
   if (isToday) {
-    sales = cachedSales; // already in memory
+    allSales = cachedSales;
   } else {
     try {
       const snap = await db.ref('users/' + CU + '/sales/' + dateKey).once('value');
-      sales = Object.entries(snap.val() || {}).map(([id,v]) => ({id,...v})).sort((a,b) => (a.order||0)-(b.order||0));
+      allSales = Object.entries(snap.val() || {}).map(([id,v]) => ({id,...v})).sort((a,b) => (a.order||0)-(b.order||0));
     } catch(e) { if (reportEl) reportEl.textContent = 'Failed to load data for that date.'; return; }
   }
+
+  // Build both brand reports and render the active one
+  _buildDualReport(allSales, dateKey, prof, brandOverride || _reportBrandFilter);
+}
+
+function _buildDualReport(allSales, dateKey, prof, activeBrand) {
+  _reportBrandFilter = activeBrand;
+  const reportEl = document.getElementById('reportText');
+
+  // Inject brand toggle buttons above the report if not already there
+  let toggleWrap = document.getElementById('reportBrandToggle');
+  if (!toggleWrap) {
+    toggleWrap = document.createElement('div');
+    toggleWrap.id = 'reportBrandToggle';
+    toggleWrap.style.cssText = 'display:flex;gap:8px;margin-bottom:14px;';
+    toggleWrap.innerHTML = `
+      <button id="rbtMika" onclick="switchReportBrand('Mika')"
+        style="flex:1;padding:9px;border-radius:11px;border:1.5px solid;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;color:inherit;">
+        🔵 Mika Report
+      </button>
+      <button id="rbtSamsung" onclick="switchReportBrand('Samsung')"
+        style="flex:1;padding:9px;border-radius:11px;border:1.5px solid;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;color:inherit;">
+        🔴 Samsung Report
+      </button>`;
+    reportEl.parentNode.insertBefore(toggleWrap, reportEl);
+  }
+
+  // Style active/inactive toggle
+  const gold = 'rgba(200,168,75,.3)'; const goldB = 'rgba(200,168,75,.7)';
+  const off  = 'rgba(128,128,128,.08)'; const offB = 'rgba(128,128,128,.25)';
+  const rbtMika    = document.getElementById('rbtMika');
+  const rbtSamsung = document.getElementById('rbtSamsung');
+  if (rbtMika)    { rbtMika.style.background    = activeBrand==='Mika'    ? gold : off; rbtMika.style.borderColor    = activeBrand==='Mika'    ? goldB : offB; }
+  if (rbtSamsung) { rbtSamsung.style.background = activeBrand==='Samsung' ? gold : off; rbtSamsung.style.borderColor = activeBrand==='Samsung' ? goldB : offB; }
+
+  // Filter sales by brand
+  const sales = allSales.filter(s => (s.saleBrand || 'Mika') === activeBrand);
 
   const dateObj  = new Date(dateKey + 'T00:00:00');
   const dateStr  = dateObj.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
@@ -2288,27 +2368,28 @@ async function generateSalesReport() {
   const pct      = target > 0 ? ((total / target) * 100).toFixed(1) : null;
   const line     = '─'.repeat(38);
 
-  let r = `DAILY SALES REPORT\n${line}\n`;
+  let r = `${activeBrand.toUpperCase()} SALES REPORT\n${line}\n`;
   r += `Date     : ${dateStr}\n`;
   r += `Outlet   : ${prof.outlet || '(not set)'}\n`;
   r += `Officer  : ${prof.officialNames || '(not set)'}\n`;
-  r += `Brand    : ${prof.brand || '(not set)'}\n`;
+  r += `Brand    : ${activeBrand}\n`;
   if (target > 0) r += `Target   : Ksh ${target.toLocaleString()}\n`;
   r += `${line}\n\n`;
+
   if (!sales.length) {
-    r += `No transactions recorded for this day.\n\n`;
+    r += `No ${activeBrand} transactions recorded for this day.\n\n`;
   } else {
     r += `TRANSACTIONS (${sales.length})\n\n`;
     sales.forEach((s, i) => {
-      r += `${i+1}. ${s.item}\n   Model : ${s.model || '—'}\n   S/N   : ${s.serial || '—'}\n   Qty   : ${s.qty}  ×  Ksh ${Number(s.price).toLocaleString()}\n   Total : Ksh ${(s.price * s.qty).toLocaleString()}\n`;
+      r += `${i+1}. ${s.item}\n   Category : ${s.category || '—'}\n   Model : ${s.model || '—'}\n   S/N   : ${s.serial || '—'}\n   Qty   : ${s.qty}  ×  Ksh ${Number(s.price).toLocaleString()}\n   Total : Ksh ${(s.price * s.qty).toLocaleString()}\n`;
       if (i < sales.length - 1) r += '\n';
     });
     r += '\n';
   }
-  r += `${line}\nDAILY TOTAL  : Ksh ${total.toLocaleString()}\nTRANSACTIONS : ${sales.length}\n`;
-  if (target > 0) { r += `TARGET       : Ksh ${target.toLocaleString()}\nACHIEVEMENT  : ${pct}%\n`; }
 
-  // Category breakdown
+  r += `${line}\nDAILY TOTAL  : Ksh ${total.toLocaleString()}\nTRANSACTIONS : ${sales.length}\n`;
+  if (target > 0) r += `TARGET       : Ksh ${target.toLocaleString()}\nACHIEVEMENT  : ${pct}%\n`;
+
   if (sales.length > 1) {
     const catMap = {};
     sales.forEach(s => {
@@ -2320,30 +2401,45 @@ async function generateSalesReport() {
     const catEntries = Object.entries(catMap).sort((a,b) => b[1].total - a[1].total);
     r += `\n${line}\nBY CATEGORY\n\n`;
     catEntries.forEach(([cat, data]) => {
-      r += `${cat.padEnd(22)} ${data.count} item${data.count!==1?'s':''} · Ksh ${data.total.toLocaleString()}\n`;
+      r += `${cat.padEnd(26)} ${data.count} unit${data.count!==1?'s':''} · Ksh ${data.total.toLocaleString()}\n`;
     });
   }
 
-  r += `${line}\nRoyal Horizon Workspace`;
+  r += `${line}\nIdeal Appliances — Royal Horizon Workspace`;
 
   currentReportText = r;
   if (reportEl) reportEl.textContent = r;
+}
 
-  const missing = [];
-  if (!prof.outlet) missing.push('Outlet');
-  if (!prof.officialNames) missing.push('Official Names');
-  if (!prof.brand) missing.push('Brand');
-  if (missing.length && isToday) showToast(`Tip: fill in ${missing.join(', ')} in Profile.`);
+// Called by the toggle buttons inside the report overlay
+async function switchReportBrand(brand) {
+  const picker  = document.getElementById('reportDatePicker');
+  const today   = todayKey();
+  const dateKey = (picker && picker.value) ? picker.value : today;
+  const isToday = dateKey === today;
+
+  let allSales = [];
+  if (isToday) {
+    allSales = cachedSales;
+  } else {
+    try {
+      const snap = await db.ref('users/' + CU + '/sales/' + dateKey).once('value');
+      allSales = Object.entries(snap.val() || {}).map(([id,v]) => ({id,...v})).sort((a,b) => (a.order||0)-(b.order||0));
+    } catch(e) { return; }
+  }
+  _buildDualReport(allSales, dateKey, currentProfile || {}, brand);
 }
 
 function closeReportOverlay() {
   document.getElementById('reportOverlay').classList.remove('open');
   if (_overlayStack[_overlayStack.length-1]==='report') { _overlayStack.pop(); history.back(); }
-  // Reset picker so next open defaults to today
   const picker = document.getElementById('reportDatePicker');
   if (picker) picker.value = '';
   const badge = document.getElementById('reportDateBadge');
   if (badge) badge.style.display = 'none';
+  // Remove brand toggle so it reinjects fresh on next open
+  const tog = document.getElementById('reportBrandToggle');
+  if (tog) tog.remove();
 }
 
 // ── ARCHIVE SEARCH ─────────────────────────────────────────────
@@ -2963,7 +3059,7 @@ function pickCat(el) {
 
 function getSelectedCat() {
   const sel = document.querySelector('.lsf-cat-option.selected');
-  return sel ? sel.dataset.cat : 'Smartphone / Phone';
+  return sel ? sel.dataset.cat : 'Cooker / Standing Cooker';
 }
 
 function setSelectedCat(cat) {
@@ -2978,27 +3074,30 @@ function setSelectedCat(cat) {
     document.getElementById('lsfCatName').textContent  = found.dataset.cat;
     document.getElementById('lsfCatGroup').textContent = found.dataset.group || '';
   } else {
-    const fallback = { 'Phone':'Smartphone / Phone','Tablet':'Tablet','Accessory':'Earphones / Headphones','Other':'Other Accessory' };
+    const fallback = { 'Mika':'Cooker / Standing Cooker','Samsung':'Samsung TV' };
     const mapped = fallback[cat];
     if (mapped) setSelectedCat(mapped);
     else {
       document.getElementById('lsfCatEmoji').textContent = '📦';
-      document.getElementById('lsfCatName').textContent  = cat || 'Smartphone / Phone';
-      document.getElementById('lsfCatGroup').textContent = 'Gadgets & Accessories';
+      document.getElementById('lsfCatName').textContent  = cat || 'Cooker / Standing Cooker';
+      document.getElementById('lsfCatGroup').textContent = 'Mika';
     }
   }
 }
 
 function catEmoji(cat) {
   const map = {
-    'Smartphone / Phone':'📱','Tablet':'💻','Laptop':'🖥️','Smartwatch':'⌚',
-    'Earphones / Headphones':'🎧','Charger / Cable':'🔌','Power Bank':'🔋',
-    'Phone Case / Cover':'🛡️','Memory / Storage':'💾','Other Accessory':'📦',
-    'Television':'📺','Sound System':'🔊','Home Theatre':'🎬','Radio / Hi-Fi':'📻',
-    'CCTV / Security':'📷','Other Electronic':'🔋',
-    'Refrigerator':'🧊','Microwave':'📦','Washing Machine':'🫧','Cooker / Oven':'🍳',
-    'Air Conditioner':'❄️','Blender / Juicer':'🥤','Other Appliance':'🔌',
-    'Phone':'📱','Accessory':'🎧','Other':'📦'
+    'Cooker / Standing Cooker':'🍳','Built-in Hob':'🔥','Built-in Oven':'🫕',
+    'Microwave Oven':'📡','Electric Kettle':'☕','Blender / Juicer':'🥤',
+    'Toaster':'🍞','Air Fryer':'🍟','Coffee Maker':'☕',
+    'Fridge / Refrigerator':'🧊','Freezer':'🧊','Washing Machine':'🫧',
+    'Water Dispenser':'💧','Standing Fan':'🌀','Air Conditioner':'❄️',
+    'Room Heater':'🔆','Other Mika':'📦',
+    'Samsung TV':'📺','Soundbar':'🔊',
+    'Samsung Fridge':'🧊','Samsung Washing Machine':'🫧','Samsung Microwave':'📡',
+    'Samsung Cooker':'🍳','Samsung Air Conditioner':'❄️','Samsung Dishwasher':'🫧',
+    'Samsung Phone':'📱','Samsung Tablet':'💻','Samsung Wearable':'⌚',
+    'Other Samsung':'📦'
   };
   return map[cat] || '📦';
 }
@@ -3028,4 +3127,4 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 </body>
-                                                                                                                                                                       </html>
+      </html>
