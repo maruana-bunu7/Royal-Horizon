@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -214,7 +215,7 @@ body.theme-signup .wow-badge.negative{background:rgba(180,40,40,.08);border-colo
 .sales-hero-target{font-size:11px;opacity:.5;margin-top:6px;}
 .sales-hero-target span{font-weight:600;opacity:.8;}
 
-.sales-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:7px;min-height:0;max-height:100%;overscroll-behavior:contain;}
+.sales-list{overflow-y:auto;display:flex;flex-direction:column;gap:7px;min-height:0;flex:1;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
 .sale-item{background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;padding:10px 12px;display:flex;align-items:flex-start;gap:9px;transition:.2s;}
 .sale-item.sale-editing{border-color:rgba(90,160,120,.4);background:rgba(90,160,120,.06);}
 .sale-num{font-family:'Playfair Display';font-size:18px;font-weight:700;opacity:.3;min-width:22px;line-height:1.2;}
@@ -222,10 +223,10 @@ body.theme-signup .wow-badge.negative{background:rgba(180,40,40,.08);border-colo
 .sale-name{font-family:'Playfair Display';font-size:14px;font-weight:600;}
 .sale-meta{font-size:10px;opacity:.45;margin-top:2px;letter-spacing:.3px;}
 .sale-total{font-size:13px;font-weight:600;opacity:.8;white-space:nowrap;}
-.sale-edit-btn{opacity:.22;cursor:pointer;font-size:12px;background:none;border:none;color:inherit;transition:.2s;padding:2px;}
-.sale-edit-btn:hover{opacity:.85;color:rgba(90,160,120,.9);}
-.sale-del{opacity:.25;cursor:pointer;font-size:11px;background:none;border:none;color:inherit;transition:.2s;padding:2px;}
-.sale-del:hover{opacity:.8;color:#e05252;}
+.sale-edit-btn{opacity:.7;cursor:pointer;font-size:13px;background:rgba(90,160,120,.12);border:1px solid rgba(90,160,120,.28);color:rgba(90,160,120,.9);transition:.2s;padding:4px 8px;border-radius:8px;line-height:1;}
+.sale-edit-btn:hover{opacity:1;background:rgba(90,160,120,.22);}
+.sale-del{opacity:.7;cursor:pointer;font-size:13px;background:rgba(220,80,80,.1);border:1px solid rgba(220,80,80,.25);color:#e05252;transition:.2s;padding:4px 8px;border-radius:8px;line-height:1;}
+.sale-del:hover{opacity:1;background:rgba(220,80,80,.2);}
 
 .sales-bottom-bar{display:flex;gap:9px;align-items:center;padding-top:10px;border-top:1px solid rgba(128,128,128,.1);flex-shrink:0;}
 .sales-log-btn{flex:1;padding:12px 16px;background:rgba(128,128,128,.18);border:1px solid rgba(128,128,128,.28);border-radius:14px;cursor:pointer;font-family:'Playfair Display';font-size:15px;font-weight:600;color:inherit;transition:.25s;display:flex;align-items:center;justify-content:center;gap:7px;}
@@ -339,10 +340,10 @@ body.theme-signup .arch-search-input{background:rgba(255,255,255,.65);border-col
 .avatar-color-swatch.selected{border-color:#fff;box-shadow:0 0 0 2px var(--gold);}
 body.theme-signup .avatar-color-swatch.selected{border-color:#1a1a1a;}
 
-/* ── SWIPE-TO-DELETE ON SALE ITEMS ── */
-.sale-swipe-wrap{position:relative;overflow:hidden;border-radius:14px;}
-.sale-swipe-inner{transition:transform .25s cubic-bezier(0.2,0.8,0.2,1);touch-action:pan-y;}
-.sale-delete-reveal{position:absolute;right:0;top:0;bottom:0;width:72px;display:flex;align-items:center;justify-content:center;background:rgba(220,60,60,.85);border-radius:0 14px 14px 0;cursor:pointer;font-size:13px;font-weight:700;color:#fff;letter-spacing:.3px;}
+/* ── SALE ITEMS (button-based, no swipe) ── */
+.sale-swipe-wrap{position:relative;border-radius:14px;}
+.sale-swipe-inner{}
+.sale-delete-reveal{display:none;}
 
 /* ── DOCK BADGE ── */
 .dock-badge{position:absolute;top:6px;right:6px;min-width:8px;height:8px;border-radius:4px;background:#e05252;display:none;border:1.5px solid #000;}
@@ -903,7 +904,7 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
       </div>
 
       <!-- SLIDE 2: SALES LOG -->
-      <div class="workspace-card" style="display:flex;flex-direction:column;">
+      <div class="workspace-card" style="display:flex;flex-direction:column;overflow:hidden;">
         <div class="card-header" style="margin-bottom:8px;flex-shrink:0;">
           <h2>Sales Log</h2>
           <div style="font-size:10px;opacity:.4;text-transform:uppercase;letter-spacing:1px;" id="salesDateLabel"></div>
@@ -1060,7 +1061,6 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
             <div class="lsf-cat-option" data-cat="Water Dispenser" data-group="Mika" data-emoji="💧" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">💧</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Water Dispenser</div></div></div>
             <div class="lsf-cat-group-header">🔵 Mika — Home Comfort</div>
             <div class="lsf-cat-option" data-cat="Standing Fan" data-group="Mika" data-emoji="🌀" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🌀</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Standing / Table Fan</div></div></div>
-            <div class="lsf-cat-option" data-cat="Box Fan" data-group="Mika" data-emoji="🌀" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🌀</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Box Fan</div></div></div>
             <div class="lsf-cat-option" data-cat="Air Conditioner" data-group="Mika" data-emoji="❄️" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">❄️</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Air Conditioner</div></div></div>
             <div class="lsf-cat-option" data-cat="Room Heater" data-group="Mika" data-emoji="🔆" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🔆</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Room Heater</div></div></div>
             <div class="lsf-cat-option" data-cat="Other Mika" data-group="Mika" data-emoji="📦" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📦</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Other Mika Product</div></div></div>
@@ -1069,7 +1069,6 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
             <div class="lsf-cat-option" data-cat="Soundbar" data-group="Samsung" data-emoji="🔊" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🔊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Soundbar / Home Theatre</div></div></div>
             <div class="lsf-cat-group-header">🔴 Samsung — Home Appliances</div>
             <div class="lsf-cat-option" data-cat="Samsung Fridge" data-group="Samsung" data-emoji="🧊" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🧊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Fridge / Refrigerator</div></div></div>
-            <div class="lsf-cat-option" data-cat="Samsung Freezer" data-group="Samsung" data-emoji="🧊" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🧊</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Freezer</div></div></div>
             <div class="lsf-cat-option" data-cat="Samsung Washing Machine" data-group="Samsung" data-emoji="🫧" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🫧</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Washing Machine</div></div></div>
             <div class="lsf-cat-option" data-cat="Samsung Microwave" data-group="Samsung" data-emoji="📡" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">📡</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Microwave Oven</div></div></div>
             <div class="lsf-cat-option" data-cat="Samsung Cooker" data-group="Samsung" data-emoji="🍳" onclick="pickCat(this)"><span class="lsf-cat-option-emoji">🍳</span><div class="lsf-cat-option-info"><div class="lsf-cat-option-name">Cooker / Built-in Oven</div></div></div>
@@ -2011,15 +2010,14 @@ async function renderSalesLog() {
           <div class="sale-name">${esc(s.item)}${s.category?`<span class="sale-cat-badge">${catEmoji(s.category)} ${esc(s.category)}</span>`:''}</div>
           <div class="sale-meta">Model: ${esc(s.model||'—')} &nbsp;·&nbsp; S/N: ${esc(s.serial||'—')} &nbsp;·&nbsp; Qty: ${s.qty}</div>
         </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
           <div class="sale-total">Ksh ${(s.price * s.qty).toLocaleString()}</div>
-          <div style="display:flex;gap:6px;">
-            <button class="sale-edit-btn" onclick="editSale('${s.id}')">✎</button>
+          <div style="display:flex;gap:5px;">
+            <button class="sale-edit-btn" onclick="editSale('${s.id}')">✎ Edit</button>
             <button class="sale-del" onclick="deleteSale('${s.id}')">✕</button>
           </div>
         </div>
       </div>
-      <div class="sale-delete-reveal">Delete</div>
     </div>`).join('');
   setTimeout(attachSaleSwipe, 50);
 }
@@ -2382,9 +2380,12 @@ function _buildDualReport(allSales, dateKey, prof, activeBrand) {
     r += `No ${activeBrand} transactions recorded for this day.\n\n`;
   } else {
     r += `TRANSACTIONS (${sales.length})\n\n`;
+    // Compact: one line per sale
     sales.forEach((s, i) => {
-      r += `${i+1}. ${s.item}\n   Category : ${s.category || '—'}\n   Model : ${s.model || '—'}\n   S/N   : ${s.serial || '—'}\n   Qty   : ${s.qty}  ×  Ksh ${Number(s.price).toLocaleString()}\n   Total : Ksh ${(s.price * s.qty).toLocaleString()}\n`;
-      if (i < sales.length - 1) r += '\n';
+      const total = (s.price * s.qty).toLocaleString();
+      const model = s.model ? ` [${s.model}]` : '';
+      const qty   = s.qty > 1 ? ` ×${s.qty}` : '';
+      r += `${String(i+1).padStart(2,'0')}. ${s.item}${model}${qty} — Ksh ${total}\n`;
     });
     r += '\n';
   }
@@ -2500,31 +2501,8 @@ function filterArchive() {
   }, { passive: true });
 })();
 
-// ── SWIPE-TO-DELETE ON SALES LIST ─────────────────────────────
-function attachSaleSwipe() {
-  document.querySelectorAll('.sale-swipe-wrap').forEach(wrap => {
-    const inner = wrap.querySelector('.sale-swipe-inner');
-    const reveal = wrap.querySelector('.sale-delete-reveal');
-    if (!inner || inner._swipeAttached) return;
-    inner._swipeAttached = true;
-    let sx = 0, swiped = false;
-    inner.addEventListener('touchstart', e => { sx = e.touches[0].clientX; swiped = false; }, { passive: true });
-    inner.addEventListener('touchmove', e => {
-      const dx = e.touches[0].clientX - sx;
-      if (dx < -10) { inner.style.transform = `translateX(${Math.max(dx, -72)}px)`; swiped = true; }
-      else if (dx > 5 && swiped) { inner.style.transform = ''; swiped = false; }
-    }, { passive: true });
-    inner.addEventListener('touchend', () => {
-      const cur = parseFloat(inner.style.transform.replace('translateX(','')) || 0;
-      if (cur < -36) inner.style.transform = 'translateX(-72px)';
-      else { inner.style.transform = ''; swiped = false; }
-    }, { passive: true });
-    if (reveal) reveal.addEventListener('click', () => {
-      const id = wrap.dataset.id;
-      if (id) { inner.style.transform = ''; deleteSale(id); }
-    });
-  });
-}
+// ── SWIPE-TO-DELETE removed — buttons only ─────────────────────
+function attachSaleSwipe() { /* no-op: swipe replaced by Edit/Delete buttons */ }
 
 // ── AVATAR COLOUR PICKER ───────────────────────────────────────
 const AVATAR_ALL_COLORS = [
@@ -2780,7 +2758,13 @@ async function shareArchiveDayReport() {
     if (!entries.length) { r += 'No transactions recorded.\n\n'; }
     else {
       r += `TRANSACTIONS (${entries.length})\n\n`;
-      entries.forEach((e,i) => { r += `${i+1}. ${e.item}\n   Model : ${e.model||'—'} | S/N: ${e.serial||'—'}\n   Qty : ${e.qty} × Ksh ${Number(e.price).toLocaleString()} = Ksh ${(e.price*e.qty).toLocaleString()}\n\n`; });
+      entries.forEach((e,i) => {
+        const total = (e.price*e.qty).toLocaleString();
+        const model = e.model ? ` [${e.model}]` : '';
+        const qty   = e.qty > 1 ? ` ×${e.qty}` : '';
+        r += `${String(i+1).padStart(2,'0')}. ${e.item}${model}${qty} — Ksh ${total}\n`;
+      });
+      r += '\n';
     }
     r += `${line}\nTOTAL : Ksh ${total.toLocaleString()}\n`;
     if (pct) r += `ACHIEVEMENT : ${pct}%\n`;
@@ -3093,10 +3077,10 @@ function catEmoji(cat) {
     'Microwave Oven':'📡','Electric Kettle':'☕','Blender / Juicer':'🥤',
     'Toaster':'🍞','Air Fryer':'🍟','Coffee Maker':'☕',
     'Fridge / Refrigerator':'🧊','Freezer':'🧊','Washing Machine':'🫧',
-    'Water Dispenser':'💧','Standing Fan':'🌀','Box Fan':'🌀','Air Conditioner':'❄️',
+    'Water Dispenser':'💧','Standing Fan':'🌀','Air Conditioner':'❄️',
     'Room Heater':'🔆','Other Mika':'📦',
     'Samsung TV':'📺','Soundbar':'🔊',
-    'Samsung Fridge':'🧊','Samsung Freezer':'🧊','Samsung Washing Machine':'🫧','Samsung Microwave':'📡',
+    'Samsung Fridge':'🧊','Samsung Washing Machine':'🫧','Samsung Microwave':'📡',
     'Samsung Cooker':'🍳','Samsung Air Conditioner':'❄️','Samsung Dishwasher':'🫧',
     'Samsung Phone':'📱','Samsung Tablet':'💻','Samsung Wearable':'⌚',
     'Other Samsung':'📦'
