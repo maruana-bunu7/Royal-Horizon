@@ -16,6 +16,31 @@
 <style>
 :root{--bg-grey:#808080;--soft-white:#f4f4f4;--soft-black:#000000;--ui-speed:0.4s;--slide-speed:0.8s;--ui-curve:cubic-bezier(0.2,0.8,0.2,1);--slide-curve:cubic-bezier(0.4,0,0.2,1);--gold:#c8a84b;--gold-dim:rgba(200,168,75,.18);--gold-glow:rgba(200,168,75,.22);--gold-border:rgba(200,168,75,.38);}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:none;}
+/* Prevent accidental text selection on tap for all non-editable elements */
+body, .workspace-card, .floating-dock, .slide-dots, .header-row,
+.stat-box, .today-sales-strip, .monthly-hero, .sales-hero,
+.sale-item, .arch-day-card, .task2-item, .recent-item,
+.sales-bottom-bar, .card-header, h1, h2, h3, p, label,
+.dock-item, .dock-lbl, .slide-dot, .section-lbl, .stat-label,
+.stat-number, .sale-name, .sale-meta, .sale-total, .sale-num,
+.arch-day-date, .arch-day-total, .monthly-hero-pct, .monthly-earned,
+.sales-hero-total, .sales-hero-sub, .sales-hero-target,
+.sales-donut-center, .monthly-target-lbl, .monthly-projection,
+.wow-badge, .recent-tag, .task2-text, .task2-due,
+.tasks-footer-count, .sales-chart-lbl, .sales-chart-val,
+.lsf-label, .lsf-editing-banner, .log-sale-header h2,
+.overlay-header h2, .profile-static, .profile-label,
+.profile-section-title, .loading-wordmark {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+/* Re-enable selection for actual inputs */
+input, textarea, select, [contenteditable] {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  user-select: text;
+}
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg-grey);height:100vh;display:flex;justify-content:center;align-items:center;transition:background var(--ui-speed) var(--ui-curve);overflow:hidden;color:#222;}
 body.theme-login{background:#000000;color:#e0e0e0;}
 body.theme-signup{background:var(--soft-white);color:#1a1a1a;}
@@ -231,6 +256,17 @@ body:not(.theme-login):not(.theme-signup) .lsf-submit-btn{background:#f0f0f0;col
 .lsf-cancel-btn:hover{background:rgba(128,128,128,.1);}
 .lsf-editing-banner{background:rgba(90,160,120,.1);border:1px solid rgba(90,160,120,.28);border-radius:12px;padding:9px 14px;font-size:12px;opacity:.8;display:none;}
 .lsf-editing-banner.visible{display:block;}
+
+/* Past-date logging banner */
+.lsf-date-row{display:flex;align-items:center;gap:10px;background:rgba(200,168,75,.07);border:1px solid var(--gold-border);border-radius:13px;padding:10px 14px;margin-bottom:2px;}
+.lsf-date-icon{font-size:18px;flex-shrink:0;}
+.lsf-date-info{flex:1;min-width:0;}
+.lsf-date-title{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;opacity:.5;margin-bottom:4px;}
+.lsf-date-input{width:100%;background:transparent;border:none;color:inherit;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;padding:0;cursor:pointer;}
+.lsf-date-input::-webkit-calendar-picker-indicator{opacity:.4;filter:invert(1);cursor:pointer;}
+body.theme-signup .lsf-date-input::-webkit-calendar-picker-indicator{filter:none;}
+.lsf-past-badge{font-size:10px;font-weight:600;letter-spacing:.5px;padding:2px 7px;border-radius:8px;background:rgba(200,168,75,.18);border:1px solid var(--gold-border);color:var(--gold);margin-top:3px;display:none;}
+.lsf-past-badge.visible{display:inline-block;}
 
 /* ARCHIVE */
 .arch-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;}
@@ -876,6 +912,15 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
     </div>
     <div class="log-sale-body">
       <div class="lsf-editing-banner" id="lsfEditingBanner">✎ Editing existing sale — tap Update to save changes.</div>
+      <!-- Sale Date (defaults to today; can be set to any past date) -->
+      <div class="lsf-date-row">
+        <div class="lsf-date-icon">📅</div>
+        <div class="lsf-date-info">
+          <div class="lsf-date-title">Sale Date</div>
+          <input class="lsf-date-input" type="date" id="lsfSaleDate" onchange="onSaleDateChange()">
+          <div class="lsf-past-badge" id="lsfPastBadge">Logging for past day</div>
+        </div>
+      </div>
       <div>
         <label class="lsf-label">Item Name</label>
         <input class="lsf-input" id="lsfItem" placeholder="e.g. Samsung Galaxy S25 Ultra" autocomplete="off" oninput="clearFieldErr('lsfItem','lsfItemErr')">
@@ -1899,17 +1944,30 @@ async function renderSalesBarChart() {
   }).join('');
 }
 
+function onSaleDateChange() {
+  const val = document.getElementById('lsfSaleDate').value;
+  const today = todayKey();
+  const badge = document.getElementById('lsfPastBadge');
+  if (badge) badge.classList.toggle('visible', val !== '' && val !== today);
+}
+
 function openLogSaleSheet(id) {
   applyOverlayTheme(document.getElementById('logSaleSheet'));
   document.getElementById('logSaleSheet').classList.add('open');
   pushOverlayState('logSale');
+  // Seed date field with today
+  const todayVal = todayKey();
+  const dateEl = document.getElementById('lsfSaleDate');
   if (!id) {
     ['lsfItem','lsfModel','lsfSerial','lsfPrice'].forEach(i => { document.getElementById(i).value = ''; });
     document.getElementById('lsfQty').value = '1';
+    if (dateEl) { dateEl.value = todayVal; dateEl.max = todayVal; }
     document.getElementById('lsfSubmitBtn').textContent = 'Log Sale';
     document.getElementById('lsfCancelEditBtn').style.display = 'none';
     document.getElementById('lsfEditingBanner').classList.remove('visible');
     document.getElementById('logSaleSheetTitle').textContent = 'Log a Sale';
+    const badge = document.getElementById('lsfPastBadge');
+    if (badge) badge.classList.remove('visible');
     setSelectedCat('Smartphone / Phone');
     clearAllSaleErrors();
     editingSaleId = null;
@@ -1958,11 +2016,14 @@ async function submitLogSale() {
   const price    = parseFloat(document.getElementById('lsfPrice').value);
   const qty      = parseInt(document.getElementById('lsfQty').value) || 1;
   const category = getSelectedCat();
+  const dateEl   = document.getElementById('lsfSaleDate');
+  const saleDate = (dateEl && dateEl.value) ? dateEl.value : todayKey();
   let valid = true;
   if (!item) { showFieldErr('lsfItem','lsfItemErr'); valid = false; }
   if (isNaN(price) || price <= 0) { showFieldErr('lsfPrice','lsfPriceErr'); valid = false; }
   if (!valid) return;
   if (editingSaleId) {
+    // When editing, keep original date (use todayKey() as fallback for legacy sales)
     try {
       await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + editingSaleId).update({ item, model, serial, price, qty, category });
       editingSaleId = null;
@@ -1972,16 +2033,20 @@ async function submitLogSale() {
     } catch(e) { showToast('Update failed.'); }
     return;
   }
-  const key   = todayKey();
-  const label = new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  // Build a readable label for the date
+  const saleDateObj = new Date(saleDate + 'T00:00:00');
+  const label = saleDateObj.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  const isPastDay = saleDate !== todayKey();
   try {
-    await db.ref('users/' + CU + '/sales/' + key).push({ item, model, serial, price, qty, category, order: Date.now(), createdAt: Date.now() });
-    await db.ref('users/' + CU + '/salesArchiveMeta/' + key).set({ date: key, label });
+    await db.ref('users/' + CU + '/sales/' + saleDate).push({ item, model, serial, price, qty, category, order: Date.now(), createdAt: Date.now() });
+    await db.ref('users/' + CU + '/salesArchiveMeta/' + saleDate).set({ date: saleDate, label });
     closeLogSaleSheet();
     archiveDirty = true;
     // 5. Haptic feedback on sale logged
     if (navigator.vibrate) navigator.vibrate([20, 50, 20]);
-    showToast('Sale logged ✓');
+    showToast(isPastDay ? `Sale logged for ${label} ✓` : 'Sale logged ✓');
+    // If we just logged for a past day, refresh archive
+    if (isPastDay) renderArchiveSales();
   } catch(e) { showToast('Failed to save sale.'); }
 }
 
@@ -2264,7 +2329,9 @@ async function shareArchiveDayReport() {
 }
 
 function moveTrack(idx) {
-  document.getElementById('workspaceTrack').style.transform = `translateX(calc(-${idx*80}vw - ${idx*30}px))`;
+  const slideW = window.innerWidth * 0.80 + 30;
+  document.getElementById('workspaceTrack').style.transition = 'transform var(--slide-speed) var(--slide-curve)';
+  document.getElementById('workspaceTrack').style.transform = `translateX(${-(idx * slideW)}px)`;
   document.querySelectorAll('.workspace-card').forEach((c,i) => c.classList.toggle('active', i===idx));
   document.querySelectorAll('.dock-item').forEach((d,i) => d.classList.toggle('active', i===idx));
   // 2. Update slide indicator dots
@@ -2274,20 +2341,83 @@ function moveTrack(idx) {
   if (idx === 3) renderArchiveSales();
 }
 
-let tX = 0, tY = 0;
-document.getElementById('workspaceTrack').addEventListener('touchstart', e => {
-  tX = e.touches[0].clientX;
-  tY = e.touches[0].clientY;
-}, { passive: true });
+// ── LIVE DRAG SWIPE ──────────────────────────────────────────────
+(function() {
+  const track = document.getElementById('workspaceTrack');
+  const SLIDE_W = () => window.innerWidth * 0.80 + 30; // 80vw + 30px gap
+  const THRESHOLD = 45;   // px needed to commit a slide change
+  const RESIST   = 0.28;  // rubber-band resistance at edges
 
-document.getElementById('workspaceTrack').addEventListener('touchend', e => {
-  const dx = tX - e.changedTouches[0].clientX;
-  const dy = tY - e.changedTouches[0].clientY;
-  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
-    if (dx > 0 && currentSlide < 3) moveTrack(currentSlide + 1);
-    else if (dx < 0 && currentSlide > 0) moveTrack(currentSlide - 1);
+  let startX = 0, startY = 0, dragX = 0;
+  let isHoriz = null;   // null = undecided, true = horizontal, false = vertical
+  let dragging = false;
+
+  function baseOffset() {
+    return -(currentSlide * SLIDE_W());
   }
-}, { passive: true });
+
+  function applyDrag(delta) {
+    const base = baseOffset();
+    let offset = base + delta;
+    // rubber-band at edges
+    if (currentSlide === 0 && delta > 0) offset = base + delta * RESIST;
+    if (currentSlide === 3 && delta < 0) offset = base + delta * RESIST;
+    track.style.transition = 'none';
+    track.style.transform  = `translateX(${offset}px)`;
+  }
+
+  function snapBack() {
+    track.style.transition = `transform var(--slide-speed) var(--slide-curve)`;
+    track.style.transform  = `translateX(${baseOffset()}px)`;
+    // re-sync active classes without calling moveTrack (no side-effects needed)
+    document.querySelectorAll('.workspace-card').forEach((c,i)=>c.classList.toggle('active',i===currentSlide));
+    document.querySelectorAll('.dock-item').forEach((d,i)=>d.classList.toggle('active',i===currentSlide));
+    document.querySelectorAll('.slide-dot').forEach((d,i)=>d.classList.toggle('active',i===currentSlide));
+  }
+
+  track.addEventListener('touchstart', e => {
+    startX  = e.touches[0].clientX;
+    startY  = e.touches[0].clientY;
+    dragX   = 0;
+    isHoriz = null;
+    dragging = false;
+  }, { passive: true });
+
+  track.addEventListener('touchmove', e => {
+    const dx = e.touches[0].clientX - startX;
+    const dy = e.touches[0].clientY - startY;
+
+    // Determine direction on first decisive movement
+    if (isHoriz === null) {
+      if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return; // wait for intent
+      isHoriz = Math.abs(dx) > Math.abs(dy);
+    }
+
+    if (!isHoriz) return; // vertical scroll — let it pass through naturally
+    e.preventDefault();   // block page scroll during horizontal drag
+    dragging = true;
+    dragX = dx;
+    applyDrag(dx);
+  }, { passive: false });
+
+  track.addEventListener('touchend', e => {
+    if (!dragging || !isHoriz) { isHoriz = null; dragging = false; return; }
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > THRESHOLD) {
+      if (dx < 0 && currentSlide < 3) moveTrack(currentSlide + 1);
+      else if (dx > 0 && currentSlide > 0) moveTrack(currentSlide - 1);
+      else snapBack();
+    } else {
+      snapBack();
+    }
+    isHoriz = null; dragging = false; dragX = 0;
+  }, { passive: true });
+
+  track.addEventListener('touchcancel', () => {
+    snapBack();
+    isHoriz = null; dragging = false; dragX = 0;
+  }, { passive: true });
+})();
 
 let _overlayStack = [];
 
