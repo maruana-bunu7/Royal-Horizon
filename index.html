@@ -101,7 +101,7 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .error-msg{color:#e05252;font-size:12px;margin-bottom:12px;min-height:14px;text-align:left;}
 
 /* DASHBOARD */
-.dashboard-wrapper{position:fixed;top:0;left:0;width:100vw;height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:100;opacity:0;transition:.8s var(--slide-curve);background:inherit;}
+.dashboard-wrapper{position:fixed;top:0;left:0;width:100vw;height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:100;opacity:0;transition:.8s var(--slide-curve);}
 .header-row{position:absolute;top:40px;width:85%;display:flex;justify-content:space-between;align-items:center;}
 .header-right{display:flex;gap:14px;align-items:center;}
 .avatar-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;border:1.5px solid var(--gold-border);font-family:'Playfair Display',serif;flex-shrink:0;color:#fff;box-shadow:0 0 0 0 var(--gold-glow);}
@@ -116,9 +116,9 @@ body.theme-signup .theme-toggle{color:#1a1a1a;}
 body.theme-signup .avatar-btn{color:#1a1a1a !important;}
 
 /* CAROUSEL */
-.carousel-container{width:100%;height:100vh;display:flex;align-items:center;overflow:visible;padding:0 10%;}
+.carousel-container{width:100%;height:75vh;display:flex;align-items:center;overflow:visible;padding:0 10%;}
 .workspace-track{display:flex;gap:30px;will-change:transform;}
-.workspace-card{min-width:80vw;height:calc(100vh - 170px);margin-top:90px;background:rgba(128,128,128,.08);backdrop-filter:blur(15px);border:1px solid rgba(128,128,128,.15);border-radius:40px;padding:35px;opacity:.15;transform:scale(.92);transition:opacity var(--slide-speed) var(--slide-curve),transform var(--slide-speed) var(--slide-curve);display:flex;flex-direction:column;overflow:hidden;}
+.workspace-card{min-width:80vw;height:65vh;background:rgba(128,128,128,.08);backdrop-filter:blur(15px);border:1px solid rgba(128,128,128,.15);border-radius:40px;padding:35px;opacity:.15;transform:scale(.92);transition:opacity var(--slide-speed) var(--slide-curve),transform var(--slide-speed) var(--slide-curve);display:flex;flex-direction:column;overflow:hidden;}
 .workspace-card.active{opacity:1;transform:scale(1);background:rgba(0,0,0,.45);border-color:var(--gold-border);box-shadow:0 0 0 1px var(--gold-border),0 8px 40px var(--gold-glow),0 2px 12px rgba(0,0,0,.25);}
 
 /* SLIDE INDICATOR DOTS */
@@ -504,7 +504,7 @@ body.theme-signup .workspace-card {
   color: #1a1a1a;
 }
 body.theme-signup .workspace-card.active {
-  background: rgba(255,255,255,.75);
+  background: rgba(255,255,255,.82);
   border-color: var(--gold-border);
   box-shadow: 0 0 0 1px var(--gold-border), 0 8px 40px rgba(200,168,75,.14), 0 2px 16px rgba(0,0,0,.08);
   color: #1a1a1a;
@@ -3260,4 +3260,4 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 </body>
-  </html>
+</html>
