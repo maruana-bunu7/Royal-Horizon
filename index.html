@@ -820,7 +820,6 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
   <div class="header-row">
     <h1 id="greeting" style="font-weight:400;font-size:25px;">Workspace</h1>
     <div class="header-right">
-      <div class="theme-toggle" onclick="toggleDashboardTheme()">◐</div>
       <button class="avatar-btn" id="avatarBtn" onclick="openProfile()"></button>
     </div>
   </div>
@@ -848,7 +847,7 @@ body.theme-signup ::-webkit-scrollbar-thumb { background: rgba(160,150,135,.35);
             <div id="wowBadge" style="display:none;"></div>
           </div>
         </div>
-        <div class="insight-strip" id="topSellerStrip">
+        <div class="insight-strip" id="topSellerStrip" style="margin-bottom:12px;">
           <div class="insight-icon">🏆</div>
           <div class="insight-text">
             <div class="insight-label">Top Seller This Month</div>
@@ -1480,7 +1479,7 @@ function loadDashboard(instant) {
   ['portalOrb1','portalOrb2','portalOrb3'].forEach(id => {
     const el = document.getElementById(id); if (el) el.classList.remove('visible');
   });
-  document.body.setAttribute('class', 'theme-login');
+  applyDeviceTheme();
   const dash = document.getElementById('dashboard');
   dash.style.display = 'flex';
   moveTrack(0);
@@ -3138,10 +3137,14 @@ document.addEventListener('keydown', e => {
   if (e.key === 'n' && !typing && currentSlide === 1) { e.preventDefault(); document.getElementById('quickTaskInput').focus(); }
 });
 
-function toggleDashboardTheme() {
-  document.body.className = document.body.className === 'theme-login' ? 'theme-signup' : 'theme-login';
+function applyDeviceTheme() {
+  const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.body.className = dark ? 'theme-login' : 'theme-signup';
   document.querySelectorAll('.overlay-screen.open,.day-detail-overlay.open,.log-sale-sheet.open').forEach(el => applyOverlayTheme(el));
 }
+// Listen for OS-level theme changes and update in real time
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyDeviceTheme);
+function toggleDashboardTheme() { /* removed — theme now follows device */ }
 
 function applyOverlayTheme(el) {
   const light = document.body.className === 'theme-signup';
