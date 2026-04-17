@@ -433,7 +433,20 @@ select.modal-input{cursor:pointer;}
 .modal-btn.danger{background:rgba(220,80,80,.8);color:#fff;}
 .modal-btn.cancel{background:rgba(128,128,128,.15);color:inherit;}
 
-/* REPORT */
+/* ── SALE ITEM HOLD + CONTEXT MENU ── */
+.sale-item.sale-held{border-color:var(--gold-border)!important;background:var(--gold-dim)!important;transform:scale(.98);}
+.sale-ctx-menu{position:fixed;z-index:600;background:var(--sale-ctx-bg,#111);border:1px solid rgba(200,168,75,.28);border-radius:16px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.6);display:none;min-width:170px;}
+body.theme-signup .sale-ctx-menu{--sale-ctx-bg:#f0ece6;}
+.sale-ctx-menu.open{display:block;animation:catPanelIn .2s cubic-bezier(0.2,0.8,0.2,1);}
+.sale-ctx-item{display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:13px;cursor:pointer;transition:.15s;}
+.sale-ctx-item:hover{background:rgba(128,128,128,.12);}
+.sale-ctx-item.danger{color:#e05252;}
+.sale-ctx-item.danger:hover{background:rgba(220,80,80,.1);}
+
+/* ── ARCHIVE DAY HOLD HINT ── */
+.arch-day-card.arch-held{border-color:var(--gold-border)!important;background:var(--gold-dim)!important;transform:scale(.98);}
+
+/* REPORT CSS */
 .report-pre{font-family:'Courier New',Courier,monospace;font-size:12px;line-height:1.75;white-space:pre-wrap;background:rgba(128,128,128,.06);border:1px solid rgba(128,128,128,.12);border-radius:16px;padding:18px;overflow-x:auto;word-break:break-word;}
 
 /* TOAST */
@@ -911,7 +924,7 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
       <div id="greetingDate" style="font-size:11px;opacity:.38;letter-spacing:.4px;margin-top:2px;font-family:'Inter',sans-serif;"></div>
     </div>
     <div class="header-right">
-      <button class="avatar-btn" id="avatarBtn" onclick="openProfile()"></button>
+      <button class="avatar-btn" id="avatarBtn" onclick="haptic('light');openProfile()"></button>
     </div>
   </div>
   <div class="carousel-container">
@@ -1010,7 +1023,7 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
         </div>
 
         <!-- Pending Clients strip -->
-        <div class="db-clients-strip" id="dbClientsStrip" onclick="openPendingClients()">
+        <div class="db-clients-strip" id="dbClientsStrip" onclick="haptic('light');openPendingClients()">
           <div class="db-clients-icon">👥</div>
           <div class="db-clients-info">
             <div class="db-clients-title">Pending Clients</div>
@@ -1026,7 +1039,7 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
           <div class="task-quick-add">
             <input class="task-quick-input" id="quickTaskInput" placeholder="Add a task or note…" onkeydown="if(event.key==='Enter')addQuickTask()">
             <button class="task-due-toggle" id="taskDueToggle" onclick="toggleTaskDueRow()" title="Set due date & reminder">📅</button>
-            <button class="task-quick-btn" onclick="addQuickTask()">+</button>
+            <button class="task-quick-btn" onclick="haptic('medium');addQuickTask()">+</button>
           </div>
           <div class="task-due-row" id="taskDueRow">
             <input class="task-due-input" type="date" id="taskDueDate" placeholder="Date">
@@ -1072,10 +1085,10 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
         </div>
         <div class="sales-list" id="salesList"></div>
         <div class="sales-bottom-bar">
-          <button class="sales-log-btn" onclick="openLogSaleSheet()">
+          <button class="sales-log-btn" onclick="haptic('medium');openLogSaleSheet()">
             <span style="font-size:18px;line-height:1;">+</span> Log Sale
           </button>
-          <button class="sales-report-btn" onclick="generateSalesReport()">📋 Report</button>
+          <button class="sales-report-btn" onclick="haptic('light');generateSalesReport()">📋 Report</button>
         </div>
       </div>
 
@@ -1106,18 +1119,18 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
 
   <!-- SLIDE INDICATOR DOTS -->
   <div class="slide-dots" id="slideDots">
-    <div class="slide-dot active" onclick="moveTrack(0)"></div>
-    <div class="slide-dot" onclick="moveTrack(1)"></div>
-    <div class="slide-dot" onclick="moveTrack(2)"></div>
-    <div class="slide-dot" onclick="moveTrack(3)"></div>
+    <div class="slide-dot active" onclick="haptic('light');moveTrack(0)"></div>
+    <div class="slide-dot" onclick="haptic('light');moveTrack(1)"></div>
+    <div class="slide-dot" onclick="haptic('light');moveTrack(2)"></div>
+    <div class="slide-dot" onclick="haptic('light');moveTrack(3)"></div>
   </div>
 
   <!-- QUICK-LOG FAB (visible on Overview slide only) -->
-  <button class="quick-log-fab" id="quickLogFab" onclick="openLogSaleSheet()" title="Log a Sale">+</button>
+  <button class="quick-log-fab" id="quickLogFab" onclick="haptic('medium');openLogSaleSheet()" title="Log a Sale">+</button>
 
   <div class="floating-dock">
     <!-- Overview: refined grid/compass icon -->
-    <div class="dock-item active" onclick="moveTrack(0)" title="Overview">
+    <div class="dock-item active" onclick="haptic('light');moveTrack(0)" title="Overview">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"/>
         <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="currentColor" opacity="0.15" stroke="none"/>
@@ -1129,7 +1142,7 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
       <span class="dock-lbl">Overview</span>
     </div>
     <!-- Tasks: elegant checkmark with subtle geometry -->
-    <div class="dock-item" onclick="moveTrack(1)" title="Tasks" style="position:relative;">
+    <div class="dock-item" onclick="haptic('light');moveTrack(1)" title="Tasks" style="position:relative;">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="4"/>
         <polyline points="7.5,12 10.5,15 16.5,9"/>
@@ -1137,7 +1150,7 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
       <span class="dock-lbl">Today</span>
     </div>
     <!-- Sales: refined currency/chart icon -->
-    <div class="dock-item" onclick="moveTrack(2)" title="Sales Log">
+    <div class="dock-item" onclick="haptic('light');moveTrack(2)" title="Sales Log">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 2v2M12 20v2"/>
         <path d="M7.5 7.5C7.5 5.567 9.567 4 12 4s4.5 1.567 4.5 3.5S14.433 11 12 11s-4.5 1.567-4.5 3.5S9.567 20 12 20s4.5-1.567 4.5-3.5"/>
@@ -1145,7 +1158,7 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
       <span class="dock-lbl">Sales</span>
     </div>
     <!-- Archive: layered shelves icon -->
-    <div class="dock-item" onclick="moveTrack(3)" title="Archive">
+    <div class="dock-item" onclick="haptic('light');moveTrack(3)" title="Archive">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M2 6h20M2 12h20M2 18h20"/>
         <rect x="4" y="3" width="16" height="18" rx="2" stroke-width="1.4"/>
@@ -1332,7 +1345,7 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
           <input class="lsf-input lsf-qty" id="lsfQty" type="number" min="1" value="1" placeholder="1" autocomplete="off">
         </div>
       </div>
-      <button class="lsf-submit-btn" id="lsfSubmitBtn" onclick="submitLogSale()">Log Sale</button>
+      <button class="lsf-submit-btn" id="lsfSubmitBtn" onclick="haptic('medium');submitLogSale()">Log Sale</button>
       <button class="lsf-cancel-btn" id="lsfCancelEditBtn" onclick="cancelEditSale()" style="display:none;">✕ Cancel Edit</button>
     </div>
   </div>
@@ -1344,7 +1357,7 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
     <div class="overlay-header">
       <button class="back-btn" onclick="closeProfile()"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="19" cy="19" r="17.5" stroke="url(#bgo)" stroke-width="1.2" opacity=".7"/><circle cx="19" cy="19" r="13.5" stroke="url(#bgi)" stroke-width="1.8"/><line x1="21.5" y1="12.5" x2="14.5" y2="19" stroke="url(#bga)" stroke-width="1.8" stroke-linecap="round"/><line x1="14.5" y1="19" x2="21.5" y2="25.5" stroke="url(#bgb)" stroke-width="1.8" stroke-linecap="round"/><defs><linearGradient id="bgo" x1="1" y1="19" x2="37" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#9a7020" stop-opacity=".4"/><stop offset="50%" stop-color="#d4a83a"/><stop offset="100%" stop-color="#9a7020" stop-opacity=".4"/></linearGradient><linearGradient id="bgi" x1="5" y1="19" x2="33" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#b08030"/><stop offset="50%" stop-color="#f0cc60"/><stop offset="100%" stop-color="#b08030"/></linearGradient><linearGradient id="bga" x1="14.5" y1="12.5" x2="21.5" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffe898"/><stop offset="100%" stop-color="#c8a84b"/></linearGradient><linearGradient id="bgb" x1="14.5" y1="19" x2="21.5" y2="25.5" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#c8a84b"/><stop offset="100%" stop-color="#ffe898"/></linearGradient></defs></svg></button>
       <h2 style="font-size:21px;">My Profile</h2>
-      <button class="profile-edit-btn" id="profileEditBtn" onclick="toggleProfileEdit()">✎ Edit</button>
+      <button class="profile-edit-btn" id="profileEditBtn" onclick="haptic('light');toggleProfileEdit()">✎ Edit</button>
     </div>
     <div class="overlay-body">
       <div class="profile-id-card">
@@ -1376,7 +1389,7 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
         <div class="profile-field"><label class="profile-label">Evening Reminder</label><div class="profile-static" id="profileEveningReminderStatic"></div><input class="profile-input edit-shown" type="time" id="profileEveningReminder" style="display:none;"></div>
         <div class="profile-field"><label class="profile-label">Member Since</label><div class="profile-static" id="profileMemberSince"></div></div>
       </div>
-      <button class="profile-save-btn" id="profileSaveBtn" onclick="saveProfile()" style="display:none;">Save Changes</button>
+      <button class="profile-save-btn" id="profileSaveBtn" onclick="haptic('medium');saveProfile()" style="display:none;">Save Changes</button>
       <button class="signout-profile-btn" onclick="handleLogout()">Sign Out</button>
       <div class="danger-zone">
         <div class="danger-zone-inner">
@@ -1407,8 +1420,8 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
     <div class="overlay-body">
       <pre class="report-pre" id="reportText" style="min-height:60px;">Loading…</pre>
       <div style="display:flex;gap:10px;margin-top:14px;">
-        <button onclick="copyReport()" style="flex:1;padding:13px;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:14px;color:inherit;transition:.2s;" onmouseover="this.style.background='rgba(128,128,128,.25)'" onmouseout="this.style.background='rgba(128,128,128,.15)'">Copy Report</button>
-        <button onclick="shareReport()" style="flex:1;padding:13px;background:rgba(90,160,120,.12);border:1px solid rgba(90,160,120,.3);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:14px;color:inherit;transition:.2s;" onmouseover="this.style.background='rgba(90,160,120,.22)'" onmouseout="this.style.background='rgba(90,160,120,.12)'">Share ↗</button>
+        <button onclick="haptic('light');copyReport()" style="flex:1;padding:13px;background:rgba(128,128,128,.15);border:1px solid rgba(128,128,128,.2);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:14px;color:inherit;transition:.2s;" onmouseover="this.style.background='rgba(128,128,128,.25)'" onmouseout="this.style.background='rgba(128,128,128,.15)'">Copy Report</button>
+        <button onclick="haptic('medium');shareReport()" style="flex:1;padding:13px;background:rgba(90,160,120,.12);border:1px solid rgba(90,160,120,.3);border-radius:13px;cursor:pointer;font-family:'Playfair Display';font-size:14px;color:inherit;transition:.2s;" onmouseover="this.style.background='rgba(90,160,120,.22)'" onmouseout="this.style.background='rgba(90,160,120,.12)'">Share ↗</button>
       </div>
     </div>
   </div>
@@ -1432,13 +1445,25 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
   </div>
 </div>
 
+<!-- SALE ITEM CONTEXT MENU (long-press) -->
+<div class="sale-ctx-menu" id="saleCtxMenu">
+  <div class="sale-ctx-item" onclick="saleCtxEdit()">✎ &nbsp;Edit Sale</div>
+  <div class="sale-ctx-item danger" onclick="saleCtxDelete()">✕ &nbsp;Delete Sale</div>
+</div>
+
+<!-- ARCHIVE DAY CONTEXT MENU (long-press) -->
+<div class="sale-ctx-menu" id="archCtxMenu">
+  <div class="sale-ctx-item" onclick="archCtxReport()">📋 &nbsp;Share Report</div>
+  <div class="sale-ctx-item danger" onclick="archCtxDelete()">✕ &nbsp;Delete Day</div>
+</div>
+
 <!-- CONFIRM MODAL -->
 <div class="modal-overlay" id="confirmModal">
   <div class="modal-card">
     <h3 id="confirmTitle">Are you sure?</h3>
     <p id="confirmMsg" style="font-size:13px;opacity:.6;margin-bottom:4px;line-height:1.5;"></p>
     <div class="modal-actions">
-      <button class="modal-btn cancel" onclick="closeModal('confirmModal')">Cancel</button>
+      <button class="modal-btn cancel" onclick="haptic('light');closeModal('confirmModal')">Cancel</button>
       <button class="modal-btn danger" id="confirmOkBtn">Confirm</button>
     </div>
   </div>
@@ -1472,6 +1497,46 @@ const messaging = firebase.messaging();
 auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).catch(() => {});
 
 const AVATAR_COLORS = ['#8B7355','#6B8E7F','#7B6B8E','#8E7B6B','#5E8E8E','#8E6B7B','#6B7B8E','#7B8E6B'];
+
+// ── HAPTICS ───────────────────────────────────────────────────────
+function haptic(type) {
+  if (!navigator.vibrate) return;
+  if (type === 'light')   navigator.vibrate(8);
+  else if (type === 'medium') navigator.vibrate(18);
+  else if (type === 'heavy')  navigator.vibrate([20, 10, 20]);
+  else if (type === 'success') navigator.vibrate([10, 50, 20]);
+  else if (type === 'hold')   navigator.vibrate([15, 30, 15]);
+  else if (type === 'error')  navigator.vibrate([30, 20, 30]);
+}
+
+// ── MIKA CATEGORY → LDA / MDA / SDA ──────────────────────────────
+// LDA = Large Domestic Appliances
+// MDA = Medium Domestic Appliances
+// SDA = Small Domestic Appliances
+function _mikaCatTier(cat) {
+  const c = (cat || '').toLowerCase();
+  // LDA: major kitchen / home appliances — large, installed or freestanding
+  if (c.includes('cooker') || c.includes('standing cooker'))      return 'LDA';
+  if (c.includes('built-in hob') || c.includes('hob'))            return 'LDA';
+  if (c.includes('built-in oven') || c.includes('oven'))          return 'LDA';
+  if (c.includes('fridge') || c.includes('refrigerator'))         return 'LDA';
+  if (c.includes('freezer'))                                       return 'LDA';
+  if (c.includes('washing machine') || c.includes('washer'))      return 'LDA';
+  if (c.includes('air conditioner') || c.includes('ac'))          return 'LDA';
+  if (c.includes('dishwasher'))                                    return 'LDA';
+  // MDA: mid-size countertop / standalone
+  if (c.includes('microwave'))                                     return 'MDA';
+  if (c.includes('water dispenser'))                               return 'MDA';
+  if (c.includes('standing fan') || c.includes('table fan') || c.includes('fan')) return 'MDA';
+  if (c.includes('room heater') || c.includes('heater'))          return 'MDA';
+  // SDA: small countertop appliances
+  if (c.includes('kettle'))                                        return 'SDA';
+  if (c.includes('blender') || c.includes('juicer'))              return 'SDA';
+  if (c.includes('toaster'))                                       return 'SDA';
+  if (c.includes('air fryer'))                                     return 'SDA';
+  if (c.includes('coffee'))                                        return 'SDA';
+  return 'SDA'; // fallback
+}
 
 let CU = null, currentProfile = null;
 let cachedTasks = [], tasksListenerRef = null, tasksListenerFn = null;
@@ -1619,7 +1684,8 @@ async function handleLogin() {
   const username = document.getElementById('loginUser').value.trim().toLowerCase();
   const password = document.getElementById('loginPass').value;
   const err = document.getElementById('loginError');
-  if (!username || !password) { err.textContent = 'Please fill in all fields.'; return; }
+  if (!username || !password) { err.textContent = 'Please fill in all fields.'; haptic('error'); return; }
+  haptic('medium');
   try {
     const snap = await db.ref('usernames/' + username).once('value');
     if (!snap.exists()) { err.textContent = 'No account found with that username.'; return; }
@@ -1627,6 +1693,7 @@ async function handleLogin() {
     animateFormOut();
     await auth.signInWithEmailAndPassword(email, password);
   } catch(e) {
+    haptic('error');
     resetFormAnim();
     err.textContent = (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential')
       ? 'Incorrect password.' : (e.message || 'Login failed.');
@@ -1639,9 +1706,10 @@ async function handleSignup() {
   const email    = document.getElementById('signupEmail').value.trim();
   const password = document.getElementById('signupPass').value;
   const err = document.getElementById('signupError');
-  if (!name || !username || !email || !password) { err.textContent = 'Please fill in all fields.'; return; }
-  if (username.length < 3) { err.textContent = 'Username must be at least 3 characters.'; return; }
-  if (password.length < 6) { err.textContent = 'Password must be at least 6 characters.'; return; }
+  if (!name || !username || !email || !password) { err.textContent = 'Please fill in all fields.'; haptic('error'); return; }
+  if (username.length < 3) { err.textContent = 'Username must be at least 3 characters.'; haptic('error'); return; }
+  if (password.length < 6) { err.textContent = 'Password must be at least 6 characters.'; haptic('error'); return; }
+  haptic('medium');
   try {
     const unameSnap = await db.ref('usernames/' + username).once('value');
     if (unameSnap.exists()) { err.textContent = 'That username is already taken.'; return; }
@@ -1657,6 +1725,7 @@ async function handleSignup() {
     ]);
     animateFormOut();
   } catch(e) {
+    haptic('error');
     resetFormAnim();
     err.textContent = e.code === 'auth/email-already-in-use'
       ? 'That email is already registered.' : (e.message || 'Sign up failed.');
@@ -2004,6 +2073,7 @@ async function saveProfile() {
     scheduleDailyReminders();
     renderMonthlyHero();
     renderSalesDonut();
+    haptic('success');
     showToast('Profile saved ✓');
     profileEditMode = true;
     toggleProfileEdit();
@@ -2136,6 +2206,7 @@ function toggleTaskDueRow() {
 async function addQuickTask() {
   const inp = document.getElementById('quickTaskInput');
   const title = inp.value.trim(); if (!title) return;
+  haptic('medium');
   const dueDate = document.getElementById('taskDueDate')?.value || '';
   const dueTime = document.getElementById('taskDueTime')?.value || '';
   const priority = document.getElementById('taskPrioritySelect')?.value || '';
@@ -2153,8 +2224,7 @@ async function addQuickTask() {
 
 async function toggleTask2(id) {
   const t = cachedTasks.find(t => t.id === id); if (!t) return;
-  // 5. Haptic feedback on task completed
-  if (!t.done && navigator.vibrate) navigator.vibrate([10, 30, 10]);
+  if (!t.done) haptic('success'); else haptic('light');
   if (t.done) { scheduledTaskNotifs.delete(id+'_exact'); scheduledTaskNotifs.delete(id+'_early'); }
   await db.ref('users/' + CU + '/tasks/' + id).update({ done: !t.done });
 }
@@ -2250,7 +2320,13 @@ async function renderSalesLog() {
   }
   list.innerHTML = cachedSales.map((s,i) => `
     <div class="sale-swipe-wrap" data-id="${s.id}">
-      <div class="sale-swipe-inner sale-item${editingSaleId===s.id?' sale-editing':''}">
+      <div class="sale-swipe-inner sale-item${editingSaleId===s.id?' sale-editing':''}"
+        onmousedown="saleHoldStart('${s.id}',event)"
+        ontouchstart="saleHoldStart('${s.id}',event)"
+        onmouseup="saleHoldEnd()"
+        ontouchend="saleHoldEnd()"
+        onmouseleave="saleHoldEnd()"
+        ontouchcancel="saleHoldEnd()">
         <div class="sale-num">${i+1}</div>
         <div class="sale-info">
           <div class="sale-name">${esc(s.item)}${s.category?`<span class="sale-cat-badge">${catEmoji(s.category)} ${esc(s.category)}</span>`:''}</div>
@@ -2259,8 +2335,8 @@ async function renderSalesLog() {
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
           <div class="sale-total">Ksh ${(s.price * s.qty).toLocaleString()}</div>
           <div style="display:flex;gap:5px;">
-            <button class="sale-edit-btn" onclick="editSale('${s.id}')">✎ Edit</button>
-            <button class="sale-del" onclick="deleteSale('${s.id}')">✕</button>
+            <button class="sale-edit-btn" onclick="haptic('light');editSale('${s.id}')">✎ Edit</button>
+            <button class="sale-del" onclick="haptic('medium');deleteSale('${s.id}')">✕</button>
           </div>
         </div>
       </div>
@@ -2520,7 +2596,7 @@ async function submitLogSale() {
     await db.ref('users/' + CU + '/salesArchiveMeta/' + saleDate).set({ date: saleDate, label });
     closeLogSaleSheet();
     archiveDirty = true;
-    if (navigator.vibrate) navigator.vibrate([20, 50, 20]);
+    haptic('success');
     showToast(isPastDay ? `Sale logged for ${label} ✓` : 'Sale logged ✓');
     if (isPastDay) renderArchiveSales();
   } catch(e) { showToast('Failed to save sale.'); }
@@ -2585,11 +2661,11 @@ function _buildDualReport(allSales, dateKey, prof, activeBrand) {
     toggleWrap.id = 'reportBrandToggle';
     toggleWrap.style.cssText = 'display:flex;gap:8px;margin-bottom:14px;';
     toggleWrap.innerHTML = `
-      <button id="rbtMika" onclick="switchReportBrand('Mika')"
+      <button id="rbtMika" onclick="haptic('light');switchReportBrand('Mika')"
         style="flex:1;padding:9px;border-radius:11px;border:1.5px solid;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;color:inherit;">
         🔵 Mika Report
       </button>
-      <button id="rbtSamsung" onclick="switchReportBrand('Samsung')"
+      <button id="rbtSamsung" onclick="haptic('light');switchReportBrand('Samsung')"
         style="flex:1;padding:9px;border-radius:11px;border:1.5px solid;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;color:inherit;">
         🔴 Samsung Report
       </button>`;
@@ -2621,46 +2697,103 @@ function _buildDualReport(allSales, dateKey, prof, activeBrand) {
     return;
   }
 
-  // ── MIKA FORMAT (unchanged) ──
-  let r = `${activeBrand.toUpperCase()} SALES REPORT\n${line}\n`;
-  r += `Date     : ${dateStr}\n`;
-  r += `Outlet   : ${prof.outlet || '(not set)'}\n`;
-  r += `Officer  : ${prof.officialNames || '(not set)'}\n`;
-  r += `Brand    : ${activeBrand}\n`;
-  if (target > 0) r += `Target   : Ksh ${target.toLocaleString()}\n`;
-  r += `${line}\n\n`;
+  // ── MIKA FORMAT (mirrors Samsung IAL_QUICKMART style) ──
+  if (reportEl) reportEl.textContent = 'Loading MTD data…';
+  _buildMikaReport(allSales, sales, dateKey, dateStr, prof, target, pct, total, line, reportEl);
+}
 
-  if (!sales.length) {
-    r += `No ${activeBrand} transactions recorded for this day.\n\n`;
-  } else {
-    r += `TRANSACTIONS (${sales.length})\n\n`;
-    sales.forEach((s, i) => {
-      const total = (s.price * s.qty).toLocaleString();
+// ── MIKA REPORT — mirrors Samsung IAL_QUICKMART format ──────────
+async function _buildMikaReport(allSales, todaySales, dateKey, dateStr, prof, target, pct, dailyTotal, line, reportEl) {
+  const MIKA_TIERS = ['LDA', 'MDA', 'SDA'];
+
+  // Load MTD Mika sales
+  const prefix = dateKey.slice(0, 7);
+  let mtdAllSales = allSales.filter(s => (s.saleBrand || 'Mika') === 'Mika');
+
+  try {
+    const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
+    const meta = metaSnap.val() || {};
+    const pastDays = Object.keys(meta).filter(k => k.startsWith(prefix) && k !== dateKey);
+    if (pastDays.length) {
+      const snaps = await Promise.all(pastDays.map(d => db.ref('users/' + CU + '/sales/' + d).once('value')));
+      snaps.forEach(snap => {
+        Object.values(snap.val() || {}).forEach(e => {
+          if ((e.saleBrand || 'Mika') === 'Mika') mtdAllSales.push(e);
+        });
+      });
+    }
+  } catch(e) {}
+
+  // Build MTD tier map
+  const mtdTierMap = {};
+  mtdAllSales.forEach(s => {
+    const tier = _mikaCatTier(s.category);
+    if (!mtdTierMap[tier]) mtdTierMap[tier] = { count: 0, total: 0 };
+    mtdTierMap[tier].count += (s.qty || 1);
+    mtdTierMap[tier].total += (s.price * s.qty);
+  });
+
+  // Build today's tier map
+  const todayTierMap = {};
+  todaySales.forEach(s => {
+    const tier = _mikaCatTier(s.category);
+    if (!todayTierMap[tier]) todayTierMap[tier] = { count: 0, total: 0 };
+    todayTierMap[tier].count += (s.qty || 1);
+    todayTierMap[tier].total += (s.price * s.qty);
+  });
+
+  const mtdTotal = mtdAllSales.reduce((s, e) => s + (e.price * e.qty), 0);
+
+  // Build report string — same structure as Samsung format
+  let r = `*IAL_QUICKMART DAILY SALES REPORT*\n`;
+  r += `*${dateStr.replace(/\w+,\s/, '')}*\n`;
+  r += `*Branch: ${prof.outlet || '(not set)'}*\n`;
+  r += `*OCM: ${prof.officialNames || '(not set)'}*\n`;
+  r += `*Brand: Mika*\n`;
+  if (target > 0) r += `*Branch Target ${target.toLocaleString()}*\n`;
+
+  r += `\nMTD Performance: ${mtdTotal.toLocaleString()}/=\n`;
+  r += `MTD Breakdown:\n`;
+
+  MIKA_TIERS.forEach(tier => {
+    const d = mtdTierMap[tier];
+    const tierLabel = tier + ' (' + (tier === 'LDA' ? 'Large Appliances' : tier === 'MDA' ? 'Medium Appliances' : 'Small Appliances') + ')';
+    const pad = tierLabel.padEnd(32, '.');
+    if (d && d.count > 0) {
+      r += `${pad} (${d.count}x) ${d.total.toLocaleString()}/=\n`;
+    } else {
+      r += `${pad} NILL\n`;
+    }
+  });
+
+  r += `\nToday's Sales:\n`;
+  MIKA_TIERS.forEach(tier => {
+    const d = todayTierMap[tier];
+    if (d && d.count > 0) {
+      r += `${tier}- (${d.count}x) Ksh ${d.total.toLocaleString()}\n`;
+    } else {
+      r += `${tier}- NILL\n`;
+    }
+  });
+
+  if (todaySales.length > 0) {
+    r += `\nTRANSACTIONS (${todaySales.length})\n\n`;
+    todaySales.forEach((s, i) => {
+      const t = (s.price * s.qty).toLocaleString();
       const model = s.model ? ` [${s.model}]` : '';
       const qty   = s.qty > 1 ? ` ×${s.qty}` : '';
-      r += `${String(i+1).padStart(2,'0')}. ${s.item}${model}${qty} — Ksh ${total}\n`;
-    });
-    r += '\n';
-  }
-
-  r += `${line}\nDAILY TOTAL  : Ksh ${total.toLocaleString()}\nTRANSACTIONS : ${sales.length}\n`;
-  if (target > 0) r += `TARGET       : Ksh ${target.toLocaleString()}\nACHIEVEMENT  : ${pct}%\n`;
-
-  if (sales.length > 1) {
-    const catMap = {};
-    sales.forEach(s => {
-      const cat = s.category || 'Other';
-      if (!catMap[cat]) catMap[cat] = { count: 0, total: 0 };
-      catMap[cat].count += (s.qty || 1);
-      catMap[cat].total += (s.price * s.qty);
-    });
-    const catEntries = Object.entries(catMap).sort((a,b) => b[1].total - a[1].total);
-    r += `\n${line}\nBY CATEGORY\n\n`;
-    catEntries.forEach(([cat, data]) => {
-      r += `${cat.padEnd(26)} ${data.count} unit${data.count!==1?'s':''} · Ksh ${data.total.toLocaleString()}\n`;
+      r += `${String(i+1).padStart(2,'0')}. ${s.item}${model}${qty} — Ksh ${t}\n`;
     });
   }
 
+  r += `\n${line}\n`;
+  r += `DAILY TOTAL  : Ksh ${dailyTotal.toLocaleString()}\n`;
+  r += `TRANSACTIONS : ${todaySales.length}\n`;
+  if (target > 0) {
+    r += `TARGET       : Ksh ${target.toLocaleString()}\n`;
+  }
+
+  r += `\nBRANCH SUPPORT REQUIRED; None\n`;
   r += `${line}\nIdeal Appliances — Royal Horizon Workspace`;
 
   currentReportText = r;
@@ -2879,6 +3012,107 @@ function filterArchive() {
 // ── SWIPE-TO-DELETE removed — buttons only ─────────────────────
 function attachSaleSwipe() { /* no-op: swipe replaced by Edit/Delete buttons */ }
 
+// ── SALE ITEM HOLD-FOR-OPTIONS ────────────────────────────────────
+let _saleHoldTimer = null;
+let _saleCtxId = null;
+
+function saleHoldStart(id, e) {
+  saleHoldEnd();
+  _saleHoldTimer = setTimeout(() => {
+    _saleCtxId = id;
+    haptic('hold');
+    const inner = e.currentTarget || e.target.closest('.sale-swipe-inner');
+    document.querySelectorAll('.sale-swipe-inner').forEach(el => el.classList.remove('sale-held'));
+    if (inner) inner.classList.add('sale-held');
+    openSaleCtxMenu(e);
+  }, 480);
+}
+function saleHoldEnd() {
+  clearTimeout(_saleHoldTimer);
+  _saleHoldTimer = null;
+}
+function openSaleCtxMenu(e) {
+  const menu = document.getElementById('saleCtxMenu');
+  if (!menu) return;
+  const x = e.touches ? e.touches[0].clientX : e.clientX;
+  const y = e.touches ? e.touches[0].clientY : e.clientY;
+  menu.style.left = Math.min(x, window.innerWidth - 185) + 'px';
+  menu.style.top  = Math.min(y + 10, window.innerHeight - 110) + 'px';
+  menu.classList.add('open');
+  setTimeout(() => document.addEventListener('click', _closeSaleCtxOutside, { once: true }), 10);
+}
+function _closeSaleCtxOutside() { closeSaleCtxMenu(); }
+function closeSaleCtxMenu() {
+  document.getElementById('saleCtxMenu').classList.remove('open');
+  document.querySelectorAll('.sale-swipe-inner').forEach(el => el.classList.remove('sale-held'));
+  _saleCtxId = null;
+}
+function saleCtxEdit() {
+  const id = _saleCtxId;
+  closeSaleCtxMenu();
+  if (id) { haptic('light'); editSale(id); }
+}
+function saleCtxDelete() {
+  const id = _saleCtxId;
+  closeSaleCtxMenu();
+  if (id) { haptic('medium'); deleteSale(id); }
+}
+
+// ── ARCHIVE DAY HOLD-FOR-OPTIONS ──────────────────────────────────
+let _archHoldTimer = null;
+let _archCtxKey = null;
+
+function archHoldStart(dateKey, e) {
+  archHoldEnd();
+  _archHoldTimer = setTimeout(() => {
+    _archCtxKey = dateKey;
+    haptic('hold');
+    document.querySelectorAll('.arch-day-card').forEach(el => el.classList.remove('arch-held'));
+    const card = document.querySelector(`.arch-day-card[data-key="${dateKey}"]`);
+    if (card) card.classList.add('arch-held');
+    openArchCtxMenu(e);
+  }, 480);
+}
+function archHoldEnd() {
+  clearTimeout(_archHoldTimer);
+  _archHoldTimer = null;
+}
+function openArchCtxMenu(e) {
+  const menu = document.getElementById('archCtxMenu');
+  if (!menu) return;
+  const x = e.touches ? e.touches[0].clientX : e.clientX;
+  const y = e.touches ? e.touches[0].clientY : e.clientY;
+  menu.style.left = Math.min(x, window.innerWidth - 185) + 'px';
+  menu.style.top  = Math.min(y + 10, window.innerHeight - 110) + 'px';
+  menu.classList.add('open');
+  setTimeout(() => document.addEventListener('click', _closeArchCtxOutside, { once: true }), 10);
+}
+function _closeArchCtxOutside() { closeArchCtxMenu(); }
+function closeArchCtxMenu() {
+  document.getElementById('archCtxMenu').classList.remove('open');
+  document.querySelectorAll('.arch-day-card').forEach(el => el.classList.remove('arch-held'));
+  _archCtxKey = null;
+}
+function archCtxReport() {
+  const key = _archCtxKey;
+  closeArchCtxMenu();
+  if (!key) return;
+  haptic('light');
+  // Find label from cache
+  const d = archiveCached.find(x => x.date === key);
+  currentDayDetailKey = key;
+  currentDayDetailLabel = d ? d.label : key;
+  shareArchiveDayReport();
+}
+function archCtxDelete() {
+  const key = _archCtxKey;
+  closeArchCtxMenu();
+  if (!key) return;
+  haptic('medium');
+  // Simulate click on the del button for that day
+  deleteSingleArchiveDay(key, { stopPropagation: () => {} });
+}
+
 // ── AVATAR COLOUR PICKER ───────────────────────────────────────
 const AVATAR_ALL_COLORS = [
   '#8B7355','#6B8E7F','#7B6B8E','#8E7B6B','#5E8E8E','#8E6B7B','#6B7B8E','#7B8E6B',
@@ -3051,7 +3285,13 @@ function paintArchiveHTML(scroll) {
     const isSel = selectedArchiveDays.has(d.date);
     const safeLabel = esc(d.label).replace(/'/g, '&#39;');
     return header + `<div class="arch-day-card${isSel?' arch-selected':''}" data-key="${d.date}"
-        onclick="${archiveSelectMode ? `toggleArchiveDaySelect('${d.date}')` : `openDayDetail('${d.date}','${safeLabel}')`}">
+        onclick="${archiveSelectMode ? `toggleArchiveDaySelect('${d.date}')` : `openDayDetail('${d.date}','${safeLabel}')`}"
+        onmousedown="${archiveSelectMode ? '' : `archHoldStart('${d.date}',event)`}"
+        ontouchstart="${archiveSelectMode ? '' : `archHoldStart('${d.date}',event)`}"
+        onmouseup="archHoldEnd()"
+        ontouchend="archHoldEnd()"
+        onmouseleave="archHoldEnd()"
+        ontouchcancel="archHoldEnd()">
       ${archiveSelectMode ? `<div class="arch-checkbox">${isSel?'✓':''}</div>` : ''}
       <div class="arch-day-info">
         <div class="arch-day-date">${esc(d.label)}</div>
@@ -3348,7 +3588,7 @@ function showConfirm(title, msg, onOk, btnLabel='Confirm') {
   document.getElementById('confirmMsg').textContent   = msg;
   const btn = document.getElementById('confirmOkBtn');
   btn.textContent = btnLabel;
-  btn.onclick = () => { closeModal('confirmModal'); onOk(); };
+  btn.onclick = () => { haptic('medium'); closeModal('confirmModal'); onOk(); };
   document.getElementById('confirmModal').classList.add('open');
   pushOverlayState('confirm');
 }
@@ -3481,6 +3721,7 @@ function pcHoldStart(id, e) {
   pcHoldEnd();
   pcHoldTimer = setTimeout(() => {
     pcCtxTargetId = id;
+    haptic('hold');
     const card = document.getElementById('pcc-' + id);
     if (card) card.classList.add('pc-hold');
     openCtxMenu(e);
