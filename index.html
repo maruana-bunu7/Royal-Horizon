@@ -99,6 +99,12 @@ input,textarea,select{width:100%;background:transparent;border:none;color:inheri
 .theme-login .btn-submit{background:#f4f4f4;color:#000000;}
 .theme-signup .btn-submit{background:#000000;color:#f4f4f4;}
 .error-msg{color:#e05252;font-size:12px;margin-bottom:12px;min-height:14px;text-align:left;}
+/* USERNAME AVAILABILITY */
+.username-status{font-size:11px;margin-top:-12px;margin-bottom:10px;min-height:14px;display:flex;align-items:center;gap:5px;transition:.2s;}
+.username-status.checking{opacity:.45;}
+.username-status.available{color:rgba(80,190,120,.9);}
+.username-status.taken{color:#e05252;}
+body.theme-signup .username-status.available{color:rgba(20,130,70,.9);}
 
 /* DASHBOARD */
 .dashboard-wrapper{position:fixed;top:0;left:0;width:100vw;height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:100;opacity:0;transition:.8s var(--slide-curve);}
@@ -895,7 +901,8 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
       <input class="portal-input" type="password" id="loginPass" placeholder="••••••••">
       <div class="error-msg" id="loginError"></div>
       <button class="btn-submit" id="loginSubmitBtn" onclick="handleLogin()">Sign In</button>
-      <p onclick="resetPage()" style="margin-top:18px;font-size:12px;cursor:pointer;opacity:.5;">← Back</p>
+      <p onclick="handleForgotPassword()" style="margin-top:12px;font-size:12px;cursor:pointer;opacity:.5;">Forgot password?</p>
+      <p onclick="resetPage()" style="margin-top:6px;font-size:12px;cursor:pointer;opacity:.5;">← Back</p>
     </div>
   </div>
   <div id="signupPage" class="form-wrapper">
@@ -904,7 +911,8 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
       <label>Full Name</label>
       <input class="portal-input" type="text" id="signupName" placeholder="your name">
       <label>Username</label>
-      <input class="portal-input" type="text" id="signupUser" placeholder="choose a username">
+      <input class="portal-input" type="text" id="signupUser" placeholder="choose a username" oninput="checkUsernameAvailability(this.value)">
+      <div class="username-status" id="usernameStatus"></div>
       <label>Email</label>
       <input class="portal-input" type="email" id="signupEmail" placeholder="your@email.com">
       <label>Password</label>
@@ -1730,13 +1738,11 @@ async function handleLogin() {
   }
   haptic('medium');
   if (btn) { btn.disabled = true; btn.textContent = 'Signing in…'; }
-  err.textContent = '';
+  err.textContent = ''; err.style.color = '';
 
   try {
     const snap = await db.ref('usernames/' + username).once('value');
-    if (!snap.exists()) {
-      throw { message: 'Invalid username or password.' };
-    }
+    if (!snap.exists()) throw { message: 'Invalid username or password.' };
     const { email } = snap.val();
     animateFormOut();
     await auth.signInWithEmailAndPassword(email, password);
@@ -1744,11 +1750,68 @@ async function handleLogin() {
     haptic('error');
     resetFormAnim();
     if (btn) { btn.disabled = false; btn.textContent = 'Sign In'; }
-    err.textContent = e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found'
+    err.style.color = '';
+    err.textContent = (e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found')
       ? 'Invalid username or password.'
-      : e.message || 'Login failed. Please try again.';
+      : e.message || 'Login failed. Please check your connection and try again.';
   }
+}
+
+async function handleForgotPassword() {
+  const username = document.getElementById('loginUser').value.trim().toLowerCase();
+  const err = document.getElementById('loginError');
+  if (!username) {
+    err.style.color = '';
+    err.textContent = 'Enter your username above first.';
+    haptic('error'); return;
   }
+  try {
+    const snap = await db.ref('usernames/' + username).once('value');
+    if (!snap.exists()) {
+      err.style.color = '';
+      err.textContent = 'No account found with that username.';
+      haptic('error'); return;
+    }
+    const { email } = snap.val();
+    await auth.sendPasswordResetEmail(email);
+    err.style.color = 'rgba(90,190,130,.9)';
+    err.textContent = '✓ Reset link sent to your email.';
+    haptic('success');
+    setTimeout(() => { err.textContent = ''; err.style.color = ''; }, 5000);
+  } catch(e) {
+    haptic('error');
+    err.style.color = '';
+    err.textContent = 'Could not send reset email. Try again.';
+  }
+}
+
+let _usernameCheckTimer = null;
+async function checkUsernameAvailability(val) {
+  const status = document.getElementById('usernameStatus');
+  if (!status) return;
+  const username = (val || '').trim().toLowerCase();
+  clearTimeout(_usernameCheckTimer);
+  if (username.length < 3) { status.textContent = ''; status.className = 'username-status'; return; }
+  if (!/^[a-z0-9_]+$/.test(username)) {
+    status.className = 'username-status taken';
+    status.textContent = '✕ Letters, numbers and underscores only';
+    return;
+  }
+  status.className = 'username-status checking';
+  status.textContent = 'Checking…';
+  _usernameCheckTimer = setTimeout(async () => {
+    try {
+      const snap = await db.ref('usernames/' + username).once('value');
+      if (snap.exists()) {
+        status.className = 'username-status taken';
+        status.textContent = '✕ Username taken';
+      } else {
+        status.className = 'username-status available';
+        status.textContent = '✓ Available';
+      }
+    } catch(e) { status.textContent = ''; status.className = 'username-status'; }
+  }, 600);
+}
 
 async function handleSignup() {
   const name     = document.getElementById('signupName').value.trim();
@@ -1759,16 +1822,13 @@ async function handleSignup() {
   const btn      = document.getElementById('signupSubmitBtn');
 
   if (!name || !username || !email || !password) {
-    err.textContent = 'Please fill in all fields.';
-    haptic('error'); return;
+    err.textContent = 'Please fill in all fields.'; haptic('error'); return;
   }
   if (username.length < 3 || !/^[a-z0-9_]+$/.test(username)) {
-    err.textContent = 'Username: 3+ characters, letters/numbers/underscores only.';
-    haptic('error'); return;
+    err.textContent = 'Username: 3+ characters, letters/numbers/underscores only.'; haptic('error'); return;
   }
   if (password.length < 6) {
-    err.textContent = 'Password must be at least 6 characters.';
-    haptic('error'); return;
+    err.textContent = 'Password must be at least 6 characters.'; haptic('error'); return;
   }
 
   haptic('medium');
@@ -1776,13 +1836,9 @@ async function handleSignup() {
   err.textContent = '';
 
   try {
-    // Check username availability
     const unameSnap = await db.ref('usernames/' + username).once('value');
-    if (unameSnap.exists()) {
-      throw { message: 'That username is already taken.' };
-    }
+    if (unameSnap.exists()) throw { message: 'That username is already taken.' };
 
-    // Create Firebase Auth user
     const cred = await auth.createUserWithEmailAndPassword(email, password);
     const uid  = cred.user.uid;
     const now  = Date.now();
@@ -1796,13 +1852,11 @@ async function handleSignup() {
       emailVerified: false, createdAt: now,
     };
 
-    // Atomic write
     await db.ref().update({
       ['usernames/' + username]: { uid, email },
       ['users/' + uid + '/profile']: profile,
     });
 
-    // Send verification email
     try {
       await cred.user.sendEmailVerification({ url: window.location.origin });
     } catch(ve) { console.warn('Verification email error:', ve.message); }
@@ -1818,7 +1872,7 @@ async function handleSignup() {
       ? 'That email is already registered.'
       : e.message || 'Could not create account. Please try again.';
   }
-  }
+}
 
 // ══════════════════════════════════════════════════════════════════
 // EMAIL VERIFICATION SCREEN
@@ -2336,7 +2390,8 @@ function startTasksListener() {
     const val = snap.val() || {};
     cachedTasks = Object.entries(val)
       .map(([id, d]) => ({ id, title: d.title || '', done: d.done || false,
-        createdAt: d.createdAt || 0, dueDate: d.dueDate || '', dueTime: d.dueTime || '' }))
+        createdAt: d.createdAt || 0, dueDate: d.dueDate || '', dueTime: d.dueTime || '',
+        priority: d.priority || '' }))
       .sort((a, b) => a.createdAt - b.createdAt);
     renderTasksSlide();
     renderOverviewTasks();
@@ -2418,11 +2473,20 @@ function renderOverviewTasks() {
   const pendEl  = document.getElementById('statActive');
   if (totalEl) totalEl.textContent = cachedTasks.length;
   if (pendEl)  pendEl.textContent  = cachedTasks.filter(t => !t.done).length;
-  const recent = [...cachedTasks].filter(t => !t.done).slice(-3).reverse();
+  const PRIO_ORDER = { urgent: 0, medium: 1, low: 2, '': 3 };
+  const recent = [...cachedTasks]
+    .filter(t => !t.done)
+    .sort((a,b) => (PRIO_ORDER[a.priority||'']??3) - (PRIO_ORDER[b.priority||'']??3))
+    .slice(0, 3);
   const el = document.getElementById('recentList');
   if (!el) return;
   if (!recent.length) { el.innerHTML = `<div style="opacity:.3;font-size:12px">No pending tasks.</div>`; return; }
-  el.innerHTML = recent.map(t => `<div class="recent-item"><span>${esc(t.title)}</span><span class="recent-tag">Pending</span></div>`).join('');
+  const priMap = { urgent: ['🔴','#e05252'], medium: ['🟡','rgba(200,130,20,.9)'], low: ['🟢','rgba(70,150,110,.9)'] };
+  el.innerHTML = recent.map(t => {
+    const pri = priMap[t.priority||''];
+    const priBadge = pri ? `<span style="font-size:10px;margin-right:4px;">${pri[0]}</span>` : '';
+    return `<div class="recent-item"><span>${priBadge}${esc(t.title)}</span><span class="recent-tag">${t.priority||'Task'}</span></div>`;
+  }).join('');
 }
 
 function toggleTaskDueRow() {
@@ -2855,23 +2919,20 @@ async function submitLogSale() {
   if (!item) { showFieldErr('lsfItem','lsfItemErr'); valid = false; }
   if (isNaN(price) || price <= 0) { showFieldErr('lsfPrice','lsfPriceErr'); valid = false; }
   if (!valid) return;
-  // Disable button to prevent double-tap
+  // Lock button immediately and keep locked until full async flow completes
   if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
-  if (editingSaleId) {
-    try {
+  try {
+    if (editingSaleId) {
       await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + editingSaleId).update({ item, model, serial, price, qty, category, saleBrand });
       editingSaleId = null;
       closeLogSaleSheet();
       archiveDirty = true;
       showToast('Sale updated ✓');
-    } catch(e) { showToast('Update failed.'); }
-    if (btn) { btn.disabled = false; btn.textContent = 'Update Sale'; }
-    return;
-  }
-  const saleDateObj = new Date(saleDate + 'T00:00:00');
-  const label = saleDateObj.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
-  const isPastDay = saleDate !== todayKey();
-  try {
+      return;
+    }
+    const saleDateObj = new Date(saleDate + 'T00:00:00');
+    const label = saleDateObj.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+    const isPastDay = saleDate !== todayKey();
     await db.ref('users/' + CU + '/sales/' + saleDate).push({ item, model, serial, price, qty, category, saleBrand, order: Date.now(), createdAt: Date.now() });
     await db.ref('users/' + CU + '/salesArchiveMeta/' + saleDate).set({ date: saleDate, label });
     closeLogSaleSheet();
@@ -2879,8 +2940,12 @@ async function submitLogSale() {
     haptic('success');
     showToast(isPastDay ? `Sale logged for ${label} ✓` : 'Sale logged ✓');
     if (isPastDay) renderArchiveSales();
-  } catch(e) { showToast('Failed to save sale.'); }
-  if (btn) { btn.disabled = false; btn.textContent = 'Log Sale'; }
+  } catch(e) {
+    showToast('Failed to save sale. Please try again.');
+  } finally {
+    // Always re-enable button after completion
+    if (btn) { btn.disabled = false; btn.textContent = editingSaleId ? 'Update Sale' : 'Log Sale'; }
+  }
 }
 
 async function deleteSale(id) {
@@ -4285,8 +4350,15 @@ async function renderTodayVsYesterday() {
     const yUnits = yData.reduce((s, e) => s + (e.qty || 1), 0);
     const yRev   = yData.reduce((s, e) => s + ((e.price||0) * (e.qty||1)), 0);
 
+    if (!yData.length) {
+      if (unitsDelta) { unitsDelta.textContent = 'No data for yesterday'; unitsDelta.className = 'db-compare-delta'; unitsDelta.style.opacity = '.35'; }
+      if (revDelta)   { revDelta.textContent   = 'No data for yesterday'; revDelta.className   = 'db-compare-delta'; revDelta.style.opacity   = '.35'; }
+      return;
+    }
+
     const setDelta = (el, today, yest) => {
       if (!el) return;
+      el.style.opacity = '';
       if (yest === 0) { el.textContent = ''; return; }
       const diff = today - yest;
       const pct  = Math.round((diff / yest) * 100);
