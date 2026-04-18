@@ -3798,7 +3798,7 @@ async function editArchiveSale(dateKey, saleId) {
     _archiveEditDateKey = dateKey;
     _archiveEditSaleId  = saleId;
     editingSaleId = '__archive__'; // sentinel so submitLogSale knows it's an archive edit
-    openLogSaleSheet('edit');
+    // Populate fields BEFORE opening the sheet so data is visible immediately
     document.getElementById('lsfItem').value   = s.item || '';
     document.getElementById('lsfModel').value  = s.model || '';
     document.getElementById('lsfSerial').value = s.serial || '';
@@ -3811,9 +3811,11 @@ async function editArchiveSale(dateKey, saleId) {
     document.getElementById('lsfCancelEditBtn').style.display = 'block';
     document.getElementById('lsfEditingBanner').classList.add('visible');
     document.getElementById('logSaleSheetTitle').textContent = 'Edit Archived Sale';
-    // Set date to the archived date (read-only effectively)
+    // Set date to the archived date
     const dateEl = document.getElementById('lsfSaleDate');
     if (dateEl) { dateEl.value = dateKey; dateEl.max = todayKey(); }
+    // Open sheet last so fields are populated before the focus() timeout fires
+    openLogSaleSheet('edit');
   } catch(e) { showToast('Could not load sale.'); }
 }
 
