@@ -1,4 +1,7 @@
 {
+  "projects": {
+    "default": "royal-horizon"
+  },
   "functions": {
     "source": "functions"
   }
