@@ -1526,7 +1526,7 @@ const db        = firebase.database();
 const messaging = firebase.messaging();
 const functions = firebase.functions();
 
-auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).catch(() => {});
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
 const AVATAR_COLORS = ['#8B7355','#6B8E7F','#7B6B8E','#8E7B6B','#5E8E8E','#8E6B7B','#6B7B8E','#7B8E6B'];
 
