@@ -3496,9 +3496,14 @@ function openSaleCtxMenu(e) {
   menu.style.left = Math.min(x, window.innerWidth - 185) + 'px';
   menu.style.top  = Math.min(y + 10, window.innerHeight - 110) + 'px';
   menu.classList.add('open');
-  setTimeout(() => document.addEventListener('click', _closeSaleCtxOutside, { once: true }), 10);
+  setTimeout(() => document.addEventListener('click', _closeSaleCtxOutside, { once: true, capture: true }), 10);
 }
-function _closeSaleCtxOutside() { closeSaleCtxMenu(); }
+function _closeSaleCtxOutside(e) {
+  const menu = document.getElementById('saleCtxMenu');
+  if (menu && menu.contains(e.target)) return; // click inside menu — let it through
+  e.stopImmediatePropagation();
+  closeSaleCtxMenu();
+}
 function closeSaleCtxMenu() {
   document.getElementById('saleCtxMenu').classList.remove('open');
   document.querySelectorAll('.sale-swipe-inner').forEach(el => el.classList.remove('sale-held'));
@@ -3542,9 +3547,14 @@ function openArchCtxMenu(e) {
   menu.style.left = Math.min(x, window.innerWidth - 185) + 'px';
   menu.style.top  = Math.min(y + 10, window.innerHeight - 110) + 'px';
   menu.classList.add('open');
-  setTimeout(() => document.addEventListener('click', _closeArchCtxOutside, { once: true }), 10);
+  setTimeout(() => document.addEventListener('click', _closeArchCtxOutside, { once: true, capture: true }), 10);
 }
-function _closeArchCtxOutside() { closeArchCtxMenu(); }
+function _closeArchCtxOutside(e) {
+  const menu = document.getElementById('archCtxMenu');
+  if (menu && menu.contains(e.target)) return;
+  e.stopImmediatePropagation();
+  closeArchCtxMenu();
+}
 function closeArchCtxMenu() {
   document.getElementById('archCtxMenu').classList.remove('open');
   document.querySelectorAll('.arch-day-card').forEach(el => el.classList.remove('arch-held'));
@@ -4019,9 +4029,37 @@ async function shareArchiveDayReport() {
   } catch(e) { showToast('Could not generate report.'); }
 }
 
+function closeAllCtxMenus() {
+  // Close sale context menu
+  const sm = document.getElementById('saleCtxMenu');
+  if (sm && sm.classList.contains('open')) {
+    sm.classList.remove('open');
+    document.querySelectorAll('.sale-swipe-inner').forEach(el => el.classList.remove('sale-held'));
+    _saleCtxId = null;
+  }
+  // Close archive context menu
+  const am = document.getElementById('archCtxMenu');
+  if (am && am.classList.contains('open')) {
+    am.classList.remove('open');
+    document.querySelectorAll('.arch-day-card').forEach(el => el.classList.remove('arch-held'));
+    _archCtxKey = null;
+  }
+  // Close pending clients context menu
+  const pm = document.getElementById('pcCtxMenu');
+  if (pm && pm.classList.contains('open')) {
+    pm.classList.remove('open');
+    if (pcCtxTargetId) {
+      const card = document.getElementById('pcc-' + pcCtxTargetId);
+      if (card) card.classList.remove('pc-hold');
+    }
+    pcCtxTargetId = null;
+  }
+}
+
 function _syncFab(idx) {
   const fab = document.getElementById('quickLogFab');
   if (fab) fab.classList.toggle('hidden', idx !== 0);
+  closeAllCtxMenus();
 }
 
 function moveTrack(idx) {
@@ -4374,10 +4412,13 @@ function openCtxMenu(e) {
   menu.style.left = Math.min(x, vw - 175) + 'px';
   menu.style.top  = Math.min(y, vh - 160) + 'px';
   menu.classList.add('open');
-  setTimeout(() => document.addEventListener('click', closeCtxOutside, { once: true }), 10);
+  setTimeout(() => document.addEventListener('click', closeCtxOutside, { once: true, capture: true }), 10);
 }
 
-function closeCtxOutside() {
+function closeCtxOutside(e) {
+  const menu = document.getElementById('pcCtxMenu');
+  if (menu && menu.contains(e.target)) return;
+  e.stopImmediatePropagation();
   closeCtxMenu();
 }
 
