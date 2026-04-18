@@ -6,7 +6,7 @@ on:
       - main
     paths:
     - 'functions/**'
-          - 'firebase.json'
+    - 'firebase.json'
           
 jobs:
   deploy:
