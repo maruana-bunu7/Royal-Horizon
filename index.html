@@ -1683,52 +1683,102 @@ function resetPage() {
 async function handleLogin() {
   const username = document.getElementById('loginUser').value.trim().toLowerCase();
   const password = document.getElementById('loginPass').value;
-  const err = document.getElementById('loginError');
-  if (!username || !password) { err.textContent = 'Please fill in all fields.'; haptic('error'); return; }
+  const err      = document.getElementById('loginError');
+  const btn      = document.getElementById('loginSubmitBtn');
+
+  if (!username || !password) {
+    err.textContent = 'Please fill in all fields.';
+    haptic('error'); return;
+  }
   haptic('medium');
+  if (btn) { btn.disabled = true; btn.textContent = 'Signing in…'; }
+  err.textContent = '';
+
   try {
     const snap = await db.ref('usernames/' + username).once('value');
-    if (!snap.exists()) { err.textContent = 'No account found with that username.'; return; }
+    if (!snap.exists()) {
+      throw { message: 'Invalid username or password.' };
+    }
     const { email } = snap.val();
     animateFormOut();
     await auth.signInWithEmailAndPassword(email, password);
-  } catch(e) {
+  } catch (e) {
     haptic('error');
     resetFormAnim();
-    err.textContent = (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential')
-      ? 'Incorrect password.' : (e.message || 'Login failed.');
+    if (btn) { btn.disabled = false; btn.textContent = 'Sign In'; }
+    err.textContent = e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found'
+      ? 'Invalid username or password.'
+      : e.message || 'Login failed. Please try again.';
   }
-}
+  }
 
 async function handleSignup() {
   const name     = document.getElementById('signupName').value.trim();
   const username = document.getElementById('signupUser').value.trim().toLowerCase();
   const email    = document.getElementById('signupEmail').value.trim();
   const password = document.getElementById('signupPass').value;
-  const err = document.getElementById('signupError');
-  if (!name || !username || !email || !password) { err.textContent = 'Please fill in all fields.'; haptic('error'); return; }
-  if (username.length < 3) { err.textContent = 'Username must be at least 3 characters.'; haptic('error'); return; }
-  if (password.length < 6) { err.textContent = 'Password must be at least 6 characters.'; haptic('error'); return; }
+  const err      = document.getElementById('signupError');
+  const btn      = document.getElementById('signupSubmitBtn');
+
+  if (!name || !username || !email || !password) {
+    err.textContent = 'Please fill in all fields.';
+    haptic('error'); return;
+  }
+  if (username.length < 3 || !/^[a-z0-9_]+$/.test(username)) {
+    err.textContent = 'Username: 3+ characters, letters/numbers/underscores only.';
+    haptic('error'); return;
+  }
+  if (password.length < 6) {
+    err.textContent = 'Password must be at least 6 characters.';
+    haptic('error'); return;
+  }
+
   haptic('medium');
+  if (btn) { btn.disabled = true; btn.textContent = 'Creating account…'; }
+  err.textContent = '';
+
   try {
+    // Check username availability
     const unameSnap = await db.ref('usernames/' + username).once('value');
-    if (unameSnap.exists()) { err.textContent = 'That username is already taken.'; return; }
+    if (unameSnap.exists()) {
+      throw { message: 'That username is already taken.' };
+    }
+
+    // Create Firebase Auth user
     const cred = await auth.createUserWithEmailAndPassword(email, password);
     const uid  = cred.user.uid;
     const now  = Date.now();
-    const profile = { name, username, email, bio: '', color: AVATAR_COLORS[0],
-      outlet: '', officialNames: '', brand: '', branchTarget: '',
-      morningReminder: '10:00', eveningReminder: '18:00', createdAt: now };
-    await Promise.all([
-      db.ref('usernames/' + username).set({ uid, email }),
-      db.ref('users/' + uid + '/profile').set(profile),
-    ]);
+
+    const profile = {
+      name, username, email,
+      bio: '', color: '#8B7355', outlet: '',
+      officialNames: '', brand: '',
+      mikaTarget: '', samsungTarget: '',
+      morningReminder: '10:00', eveningReminder: '18:00',
+      emailVerified: false, createdAt: now,
+    };
+
+    // Atomic write
+    await db.ref().update({
+      ['usernames/' + username]: { uid, email },
+      ['users/' + uid + '/profile']: profile,
+    });
+
+    // Send verification email
+    try {
+      await cred.user.sendEmailVerification({ url: window.location.origin });
+    } catch(ve) { console.warn('Verification email error:', ve.message); }
+
     animateFormOut();
-  } catch(e) {
+    showVerificationScreen(email);
+
+  } catch (e) {
     haptic('error');
     resetFormAnim();
+    if (btn) { btn.disabled = false; btn.textContent = 'Create Account'; }
     err.textContent = e.code === 'auth/email-already-in-use'
-      ? 'That email is already registered.' : (e.message || 'Sign up failed.');
+      ? 'That email is already registered.'
+      : e.message || 'Could not create account. Please try again.';
   }
 }
 
