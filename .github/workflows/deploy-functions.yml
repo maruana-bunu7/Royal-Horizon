@@ -5,9 +5,9 @@ on:
     branches:
       - main
     paths:
-    - 'functions/**'
-    - 'firebase.json'
-          
+      - 'functions/**'
+      - 'firebase.json'
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -22,8 +22,4 @@ jobs:
         run: cd functions && npm install
 
       - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only functions --project royal-horizon
-        env:
-          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: npx firebase-tools deploy --only functions --project royal-horizon --token ${{ secrets.FIREBASE_TOKEN }}
