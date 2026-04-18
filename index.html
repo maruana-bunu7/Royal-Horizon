@@ -966,7 +966,7 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
             <div class="insight-value" id="topSellerValue">—</div>
           </div>
         </div>
-        <div class="monthly-hero" id="monthlyHero" style="display:none;">
+        <div class="monthly-hero" id="monthlyHero" style="display:none;cursor:pointer;" onclick="openMonthlyBreakdown()" title="Tap to see daily breakdown">
           <div class="monthly-hero-top">
             <div>
               <div class="monthly-hero-label">Monthly Target</div>
@@ -979,7 +979,10 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
           </div>
           <div class="monthly-hero-bottom">
             <div class="monthly-earned" id="monthlyEarned">Ksh 0</div>
-            <div class="monthly-target-lbl" id="monthlyTargetLbl"></div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
+              <div class="monthly-target-lbl" id="monthlyTargetLbl"></div>
+              <div style="font-size:9px;opacity:.25;letter-spacing:.5px;">Tap for daily breakdown</div>
+            </div>
           </div>
         </div>
         <div id="monthlyNoTarget" style="font-size:11px;opacity:.28;text-align:center;padding:8px 0;display:none;">Set a branch target in Profile to track monthly progress.</div>
@@ -1046,6 +1049,12 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
           <div class="db-section-lbl">Quick Task</div>
           <div class="task-quick-add">
             <input class="task-quick-input" id="quickTaskInput" placeholder="Add a task or note…" onkeydown="if(event.key==='Enter')addQuickTask()">
+            <select class="task-priority-select" id="taskPrioritySelect" title="Priority">
+              <option value="">— Pri</option>
+              <option value="urgent">🔴 Urgent</option>
+              <option value="medium">🟡 Med</option>
+              <option value="low">🟢 Low</option>
+            </select>
             <button class="task-due-toggle" id="taskDueToggle" onclick="toggleTaskDueRow()" title="Set due date & reminder">📅</button>
             <button class="task-quick-btn" onclick="haptic('medium');addQuickTask()">+</button>
           </div>
@@ -1569,6 +1578,8 @@ let taskFilter = 'all';
 let profileEditMode = false;
 let currentReportText = '';
 let editingSaleId = null;
+let _archiveEditDateKey = null;
+let _archiveEditSaleId  = null;
 let taskDueRowVisible = false;
 let _currentSaleBrand = 'Mika';
 let dailyReminderTimeouts = [];
@@ -2231,7 +2242,84 @@ async function renderMonthlyHero() {
     'of Ksh ' + combinedTarget.toLocaleString() + ' this month';
 }
 
-function openProfile() {
+async function openMonthlyBreakdown() {
+  haptic('light');
+  const prof = currentProfile || {};
+  const mikaTarget    = parseFloat(prof.mikaTarget) || 0;
+  const samsungTarget = parseFloat(prof.samsungTarget) || 0;
+  if (!mikaTarget && !samsungTarget) return;
+
+  // Build modal content
+  const prefix = currentMonthPrefix();
+  const today  = todayKey();
+
+  // Gather all days this month with sales
+  let allDays = {};
+  // Today
+  cachedSales.forEach(s => {
+    if (!allDays[today]) allDays[today] = 0;
+    allDays[today] += s.price * s.qty;
+  });
+  try {
+    const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
+    const meta = metaSnap.val() || {};
+    const pastDays = Object.keys(meta).filter(k => k.startsWith(prefix) && k !== today);
+    await Promise.all(pastDays.map(async d => {
+      const snap = await db.ref('users/' + CU + '/sales/' + d).once('value');
+      const total = Object.values(snap.val()||{}).reduce((s,e) => s+(e.price*e.qty),0);
+      allDays[d] = total;
+    }));
+  } catch(e) {}
+
+  const sortedDays = Object.entries(allDays).sort((a,b) => a[0].localeCompare(b[0]));
+  const combinedTarget = mikaTarget + samsungTarget;
+  const dailyAvg = combinedTarget / 30;
+  const monthTotal = sortedDays.reduce((s,[,v]) => s+v, 0);
+
+  let rows = sortedDays.map(([date, total]) => {
+    const isToday = date === today;
+    const d = new Date(date + 'T00:00:00');
+    const lbl = d.toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' });
+    const pct = Math.min((total / dailyAvg) * 100, 100);
+    const color = pct >= 100 ? 'rgba(60,200,100,.8)' : pct >= 70 ? 'rgba(200,170,50,.8)' : 'rgba(200,80,80,.7)';
+    return `<div style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+        <span style="font-size:12px;font-weight:600;${isToday?'color:var(--gold);':''}">${lbl}${isToday?' (Today)':''}</span>
+        <span style="font-size:12px;font-weight:700;">Ksh ${total.toLocaleString()}</span>
+      </div>
+      <div style="height:6px;background:rgba(128,128,128,.15);border-radius:4px;overflow:hidden;">
+        <div style="height:100%;width:${pct}%;background:${color};border-radius:4px;transition:width .6s;"></div>
+      </div>
+      <div style="font-size:10px;opacity:.4;margin-top:2px;">${pct.toFixed(0)}% of daily avg · Ksh ${Math.round(dailyAvg).toLocaleString()}</div>
+    </div>`;
+  }).join('');
+
+  if (!rows) rows = '<div style="opacity:.35;font-size:13px;padding:20px 0;text-align:center;">No sales recorded this month yet.</div>';
+
+  showConfirm(
+    `${new Date().toLocaleDateString('en-GB',{month:'long',year:'numeric'})} Breakdown`,
+    '',
+    () => {},
+    'Close'
+  );
+
+  // Inject content into modal
+  setTimeout(() => {
+    const msg = document.getElementById('confirmMsg');
+    if (msg) {
+      msg.innerHTML = `
+        <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:11px;opacity:.4;text-transform:uppercase;letter-spacing:1px;">Month Total</span>
+          <span style="font-family:'Playfair Display';font-size:18px;font-weight:700;">Ksh ${monthTotal.toLocaleString()}</span>
+        </div>
+        <div style="max-height:50vh;overflow-y:auto;padding-right:4px;">${rows}</div>`;
+      msg.style.textAlign = 'left';
+    }
+    // Replace Confirm button with just Close
+    const okBtn = document.getElementById('confirmOkBtn');
+    if (okBtn) { okBtn.textContent = 'Close'; okBtn.className = 'modal-btn cancel'; }
+  }, 10);
+}
   const prof = currentProfile || {};
   profileEditMode = false;
   const av = document.getElementById('profileAvatarLarge');
@@ -2922,6 +3010,16 @@ async function submitLogSale() {
   // Lock button immediately and keep locked until full async flow completes
   if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
   try {
+    if (editingSaleId === '__archive__') {
+      // Editing a sale from a past archive day
+      await db.ref('users/' + CU + '/sales/' + _archiveEditDateKey + '/' + _archiveEditSaleId).update({ item, model, serial, price, qty, category, saleBrand });
+      editingSaleId = null; _archiveEditDateKey = null; _archiveEditSaleId = null;
+      closeLogSaleSheet();
+      archiveDirty = true;
+      showToast('Archive sale updated ✓');
+      if (currentDayDetailKey) openDayDetail(currentDayDetailKey, currentDayDetailLabel);
+      return;
+    }
     if (editingSaleId) {
       await db.ref('users/' + CU + '/sales/' + todayKey() + '/' + editingSaleId).update({ item, model, serial, price, qty, category, saleBrand });
       editingSaleId = null;
@@ -3669,19 +3767,73 @@ async function openDayDetail(dateKey, label) {
     if (!entries.length) { body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">No entries for this day.</div>'; return; }
     const total = entries.reduce((s,e) => s + (e.price * e.qty), 0);
     body.innerHTML = entries.map((e,i) => `
-      <div style="background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;">
+      <div style="background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;" id="arch-sale-${e.id}">
         <div style="font-family:'Playfair Display';font-size:16px;font-weight:700;opacity:.3;min-width:20px;">${i+1}</div>
         <div style="flex:1;min-width:0;">
           <div style="font-family:'Playfair Display';font-size:14px;font-weight:600;">${esc(e.item)}</div>
           <div style="font-size:10px;opacity:.45;margin-top:2px;">Model: ${esc(e.model||'—')} · S/N: ${esc(e.serial||'—')} · Qty: ${e.qty}</div>
         </div>
-        <div style="font-size:13px;font-weight:600;white-space:nowrap;">Ksh ${(e.price * e.qty).toLocaleString()}</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+          <div style="font-size:13px;font-weight:600;white-space:nowrap;">Ksh ${(e.price * e.qty).toLocaleString()}</div>
+          <div style="display:flex;gap:5px;">
+            <button class="sale-edit-btn" onclick="editArchiveSale('${dateKey}','${e.id}')">✎</button>
+            <button class="sale-del" onclick="deleteArchiveSale('${dateKey}','${e.id}','${esc(e.item)}')">✕</button>
+          </div>
+        </div>
       </div>`).join('') +
       `<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0 0;border-top:1px solid rgba(128,128,128,.15);margin-top:4px;">
         <span style="font-size:12px;opacity:.4;text-transform:uppercase;letter-spacing:1.5px;">Total</span>
         <span style="font-family:'Playfair Display';font-size:22px;font-weight:700;">Ksh ${total.toLocaleString()}</span>
       </div>`;
   } catch(e) { body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">Failed to load.</div>'; }
+}
+
+async function editArchiveSale(dateKey, saleId) {
+  try {
+    const snap = await db.ref('users/' + CU + '/sales/' + dateKey + '/' + saleId).once('value');
+    const s = snap.val(); if (!s) return;
+    // Store the archive date context for the update
+    _archiveEditDateKey = dateKey;
+    _archiveEditSaleId  = saleId;
+    editingSaleId = '__archive__'; // sentinel so submitLogSale knows it's an archive edit
+    openLogSaleSheet('edit');
+    document.getElementById('lsfItem').value   = s.item || '';
+    document.getElementById('lsfModel').value  = s.model || '';
+    document.getElementById('lsfSerial').value = s.serial || '';
+    document.getElementById('lsfPrice').value  = s.price || '';
+    document.getElementById('lsfQty').value    = s.qty || 1;
+    selectSaleBrand(s.saleBrand || 'Mika');
+    setSelectedCat(s.category || 'Cooker / Standing Cooker');
+    clearAllSaleErrors();
+    document.getElementById('lsfSubmitBtn').textContent = 'Update Sale';
+    document.getElementById('lsfCancelEditBtn').style.display = 'block';
+    document.getElementById('lsfEditingBanner').classList.add('visible');
+    document.getElementById('logSaleSheetTitle').textContent = 'Edit Archived Sale';
+    // Set date to the archived date (read-only effectively)
+    const dateEl = document.getElementById('lsfSaleDate');
+    if (dateEl) { dateEl.value = dateKey; dateEl.max = todayKey(); }
+  } catch(e) { showToast('Could not load sale.'); }
+}
+
+async function deleteArchiveSale(dateKey, saleId, itemName) {
+  showConfirm('Delete Sale', `Remove "${itemName}" from archive?`, async () => {
+    try {
+      await db.ref('users/' + CU + '/sales/' + dateKey + '/' + saleId).remove();
+      // If no sales left for that day, clean up meta
+      const remaining = await db.ref('users/' + CU + '/sales/' + dateKey).once('value');
+      if (!remaining.exists() || !Object.keys(remaining.val()||{}).length) {
+        await db.ref('users/' + CU + '/salesArchiveMeta/' + dateKey).remove();
+        archiveDirty = true;
+        closeDayDetail();
+        renderArchiveSales();
+        showToast('Sale deleted — day removed from archive.');
+      } else {
+        archiveDirty = true;
+        openDayDetail(dateKey, currentDayDetailLabel); // refresh
+        showToast('Sale deleted ✓');
+      }
+    } catch(e) { showToast('Delete failed.'); }
+  }, 'Delete');
 }
 
 function closeDayDetail() {
