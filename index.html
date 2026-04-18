@@ -894,7 +894,7 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
       <label>Password</label>
       <input class="portal-input" type="password" id="loginPass" placeholder="••••••••">
       <div class="error-msg" id="loginError"></div>
-      <button class="btn-submit" onclick="handleLogin()">Sign In</button>
+      <button class="btn-submit" id="loginSubmitBtn" onclick="handleLogin()">Sign In</button>
       <p onclick="resetPage()" style="margin-top:18px;font-size:12px;cursor:pointer;opacity:.5;">← Back</p>
     </div>
   </div>
@@ -910,7 +910,7 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
       <label>Password</label>
       <input class="portal-input" type="password" id="signupPass" placeholder="min. 6 characters">
       <div class="error-msg" id="signupError"></div>
-      <button class="btn-submit" onclick="handleSignup()">Create Account</button>
+      <button class="btn-submit" id="signupSubmitBtn" onclick="handleSignup()">Create Account</button>
       <p onclick="resetPage()" style="margin-top:18px;font-size:12px;cursor:pointer;opacity:.5;">← Back</p>
     </div>
   </div>
@@ -1084,6 +1084,18 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
           <div class="sales-chart-bars" id="salesChartBars"></div>
         </div>
         <div class="sales-list" id="salesList"></div>
+        <div id="salesRunningTotal" style="
+          flex-shrink:0; display:none;
+          padding:9px 14px; margin:6px 0 0;
+          background:rgba(200,168,75,.08); border:1px solid var(--gold-border);
+          border-radius:14px; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex;gap:12px;align-items:center;">
+            <span style="font-size:10px;text-transform:uppercase;letter-spacing:1.4px;opacity:.45;">Running Total</span>
+            <span id="salesRunningMika" style="font-size:11px;opacity:.55;display:none;">🔵 <span id="salesRunningMikaVal">0</span></span>
+            <span id="salesRunningSamsung" style="font-size:11px;opacity:.55;display:none;">🔴 <span id="salesRunningSamsungVal">0</span></span>
+          </div>
+          <span style="font-family:'Playfair Display';font-size:16px;font-weight:700;color:var(--gold);" id="salesRunningTotalVal">Ksh 0</span>
+        </div>
         <div class="sales-bottom-bar">
           <button class="sales-log-btn" onclick="haptic('medium');openLogSaleSheet()">
             <span style="font-size:18px;line-height:1;">+</span> Log Sale
@@ -1381,7 +1393,8 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
         <div class="profile-field"><label class="profile-label">Outlet</label><div class="profile-static" id="profileOutletStatic"></div><input class="profile-input edit-shown" type="text" id="profileOutlet" placeholder="e.g. Nairobi Junction Mall" style="display:none;"></div>
         <div class="profile-field"><label class="profile-label">Official Names</label><div class="profile-static" id="profileOfficialNamesStatic"></div><input class="profile-input edit-shown" type="text" id="profileOfficialNames" placeholder="Full official names" style="display:none;"></div>
         <div class="profile-field"><label class="profile-label">Brand</label><div class="profile-static" id="profileBrandStatic"></div><input class="profile-input edit-shown" type="text" id="profileBrand" placeholder="e.g. Samsung, Tecno…" style="display:none;"></div>
-        <div class="profile-field"><label class="profile-label">Branch Target</label><div class="profile-static" id="profileBranchTargetStatic"></div><input class="profile-input edit-shown" type="number" id="profileBranchTarget" placeholder="e.g. 150000" min="0" style="display:none;"></div>
+        <div class="profile-field"><label class="profile-label">Mika Monthly Target (Ksh)</label><div class="profile-static" id="profileMikaTargetStatic"></div><input class="profile-input edit-shown" type="number" id="profileMikaTarget" placeholder="e.g. 150000" min="0" style="display:none;"></div>
+        <div class="profile-field"><label class="profile-label">Samsung Monthly Target (Ksh)</label><div class="profile-static" id="profileSamsungTargetStatic"></div><input class="profile-input edit-shown" type="number" id="profileSamsungTarget" placeholder="e.g. 200000" min="0" style="display:none;"></div>
       </div>
       <div class="profile-section-card">
         <div class="profile-section-title">Reminders & Settings</div>
@@ -1476,6 +1489,7 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-functions-compat.js"></script>
 
 <script>
 const firebaseConfig = {
@@ -1493,6 +1507,7 @@ appCheck.activate('6LdvTrUsAAAAAEcYkppU5JHvawph42rlHHzfNadO', true);
 const auth      = firebase.auth();
 const db        = firebase.database();
 const messaging = firebase.messaging();
+const functions = firebase.functions();
 
 auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).catch(() => {});
 
@@ -1636,11 +1651,32 @@ const authTimeout = setTimeout(() => {
 
 auth.onAuthStateChanged(async (user) => {
   if (!authResolved) { authResolved = true; clearTimeout(authTimeout); }
+
   if (user) {
     if (CU === user.uid) return;
     CU = user.uid;
+
+    // ── EMAIL VERIFICATION GATE ──────────────────────────────────
+    await user.reload();
+    const freshUser = auth.currentUser;
+
+    if (!freshUser.emailVerified) {
+      document.getElementById('loadingOverlay').style.display = 'none';
+      document.getElementById('portalContainer').style.display = 'none';
+      showVerificationScreen(freshUser.email);
+      return;
+    }
+    // ─────────────────────────────────────────────────────────────
+
     const snap = await db.ref('users/' + CU + '/profile').once('value');
     currentProfile = snap.val() || { name: 'Guest' };
+
+    // Sync verified flag to DB if needed
+    if (!currentProfile.emailVerified) {
+      await db.ref('users/' + CU + '/profile/emailVerified').set(true);
+      currentProfile.emailVerified = true;
+    }
+
     document.getElementById('portalContainer').style.display = 'none';
     loadDashboard(true);
     startTasksListener();
@@ -1649,8 +1685,10 @@ auth.onAuthStateChanged(async (user) => {
     initOfflineSupport();
     scheduleMidnightRollover();
     requestNotificationPermission();
+
   } else {
     CU = null; currentProfile = null;
+    hideVerificationScreen();
     showPortal();
     document.getElementById('loadingOverlay').style.display = 'none';
   }
@@ -1780,6 +1818,113 @@ async function handleSignup() {
       ? 'That email is already registered.'
       : e.message || 'Could not create account. Please try again.';
   }
+  }
+
+// ══════════════════════════════════════════════════════════════════
+// EMAIL VERIFICATION SCREEN
+// ══════════════════════════════════════════════════════════════════
+let _verifyPollInterval = null;
+
+function showVerificationScreen(email) {
+  document.getElementById('portalContainer').style.display = 'none';
+  const dash = document.getElementById('dashboard');
+  if (dash) { dash.style.display = 'none'; dash.style.opacity = '0'; }
+
+  const screen = document.getElementById('verifyScreen');
+  if (!screen) return;
+  document.getElementById('verifyEmailDisplay').textContent = email || 'your email';
+  screen.style.display = 'flex';
+
+  const resendBtn = document.getElementById('verifyResendBtn');
+  if (resendBtn) { resendBtn.disabled = false; resendBtn.textContent = 'Resend Email'; }
+  document.getElementById('verifyMsg').textContent = '';
+
+  clearInterval(_verifyPollInterval);
+  _verifyPollInterval = setInterval(async () => {
+    try {
+      await auth.currentUser?.reload();
+      if (auth.currentUser?.emailVerified) {
+        clearInterval(_verifyPollInterval);
+        onEmailVerified();
+      }
+    } catch(e) { /* ignore poll errors */ }
+  }, 4000);
+}
+
+function hideVerificationScreen() {
+  clearInterval(_verifyPollInterval);
+  const screen = document.getElementById('verifyScreen');
+  if (screen) screen.style.display = 'none';
+}
+
+async function onEmailVerified() {
+  hideVerificationScreen();
+  haptic('success');
+
+  const user = auth.currentUser;
+  if (!user) return;
+
+  CU = user.uid;
+  const snap = await db.ref('users/' + CU + '/profile').once('value');
+  currentProfile = snap.val() || { name: 'Guest' };
+
+  await db.ref('users/' + CU + '/profile/emailVerified').set(true);
+  currentProfile.emailVerified = true;
+
+  loadDashboard(false);
+  startTasksListener();
+  initSalesListener();
+  startClientsListener();
+  initOfflineSupport();
+  scheduleMidnightRollover();
+  requestNotificationPermission();
+
+  showToast('Email verified ✓ Welcome aboard!');
+}
+
+async function resendVerificationEmail() {
+  const btn = document.getElementById('verifyResendBtn');
+  const msg = document.getElementById('verifyMsg');
+
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+  haptic('light');
+
+  try {
+    const user = auth.currentUser;
+    if (!user) throw new Error('Not signed in.');
+
+    await user.sendEmailVerification({ url: window.location.origin });
+
+    msg.textContent = '✓ Email sent! Check your inbox (and spam folder).';
+    msg.style.color = 'rgba(90,190,130,.9)';
+
+    let secs = 60;
+    const timer = setInterval(() => {
+      secs--;
+      if (btn) btn.textContent = `Resend in ${secs}s`;
+      if (secs <= 0) {
+        clearInterval(timer);
+        if (btn) { btn.disabled = false; btn.textContent = 'Resend Email'; }
+      }
+    }, 1000);
+
+  } catch (e) {
+    haptic('error');
+    msg.textContent = e.message?.includes('too-many-requests')
+      ? 'Too many requests. Please wait a few minutes.'
+      : 'Could not send email. Please try again.';
+    msg.style.color = '#e05252';
+    if (btn) { btn.disabled = false; btn.textContent = 'Resend Email'; }
+  }
+}
+
+async function cancelVerification() {
+  clearInterval(_verifyPollInterval);
+  await auth.signOut();
+  hideVerificationScreen();
+  CU = null; currentProfile = null;
+  showPortal();
+  resetPage();
 }
 
 async function handleLogout() {
@@ -1962,42 +2107,74 @@ function computeMonthlyProjection() {
 async function renderMonthlyHero() {
   const hero      = document.getElementById('monthlyHero');
   const noTarget  = document.getElementById('monthlyNoTarget');
-  const target    = parseFloat((currentProfile || {}).branchTarget) || 0;
-  if (!target) {
+  const prof      = currentProfile || {};
+  const mikaTarget    = parseFloat(prof.mikaTarget) || 0;
+  const samsungTarget = parseFloat(prof.samsungTarget) || 0;
+  const combinedTarget = mikaTarget + samsungTarget;
+
+  if (!combinedTarget) {
     if (hero)     hero.style.display = 'none';
     if (noTarget) noTarget.style.display = 'block';
     return;
   }
   if (hero)     hero.style.display = 'block';
   if (noTarget) noTarget.style.display = 'none';
+
   const prefix = currentMonthPrefix();
-  let monthTotal = cachedSales.reduce((s, e) => s + (e.price * e.qty), 0);
+  const today  = todayKey();
+
+  // Split today's cached sales by brand
+  let mikaMTD    = cachedSales.filter(s => (s.saleBrand||'Mika') === 'Mika').reduce((s,e) => s + (e.price*e.qty), 0);
+  let samsungMTD = cachedSales.filter(s => (s.saleBrand||'Mika') === 'Samsung').reduce((s,e) => s + (e.price*e.qty), 0);
+
   try {
     const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
     const meta = metaSnap.val() || {};
-    const today = todayKey();
     const monthDays = Object.keys(meta).filter(k => k.startsWith(prefix) && k !== today);
     if (monthDays.length) {
       const snaps = await Promise.all(monthDays.map(d => db.ref('users/' + CU + '/sales/' + d).once('value')));
-      snaps.forEach(snap => { Object.values(snap.val() || {}).forEach(e => { monthTotal += (e.price * e.qty); }); });
+      snaps.forEach(snap => {
+        Object.values(snap.val() || {}).forEach(e => {
+          if ((e.saleBrand||'Mika') === 'Mika')    mikaMTD    += (e.price * e.qty);
+          else                                      samsungMTD += (e.price * e.qty);
+        });
+      });
     }
   } catch(e) {}
-  const rawPct  = (monthTotal / target) * 100;
+
+  const monthTotal = mikaMTD + samsungMTD;
+  const rawPct  = (monthTotal / combinedTarget) * 100;
   const pct     = Math.min(rawPct, 100);
-  const pctText = rawPct.toFixed(1) + '%';
-  let fillColor, statusText;
-  if (rawPct >= 100)     { fillColor = 'rgba(60,200,100,.85)';  statusText = '🎯 Target reached!'; }
-  else if (rawPct >= 80) { fillColor = 'rgba(90,190,130,.8)';   statusText = '🔥 Almost there'; }
-  else if (rawPct >= 50) { fillColor = 'rgba(200,170,50,.85)';  statusText = '📈 On track'; }
-  else if (rawPct >= 25) { fillColor = 'rgba(210,130,50,.8)';   statusText = '⚡ Keep going'; }
-  else                   { fillColor = 'rgba(200,80,80,.7)';    statusText = '🚀 Just started'; }
+
+  // Build sub-label showing per-brand progress
+  let statusText;
+  if (rawPct >= 100)     statusText = '🎯 Target reached!';
+  else if (rawPct >= 80) statusText = '🔥 Almost there';
+  else if (rawPct >= 50) statusText = '📈 On track';
+  else if (rawPct >= 25) statusText = '⚡ Keep going';
+  else                   statusText = '🚀 Just started';
+
+  let fillColor;
+  if (rawPct >= 100)     fillColor = 'rgba(60,200,100,.85)';
+  else if (rawPct >= 80) fillColor = 'rgba(90,190,130,.8)';
+  else if (rawPct >= 50) fillColor = 'rgba(200,170,50,.85)';
+  else if (rawPct >= 25) fillColor = 'rgba(210,130,50,.8)';
+  else                   fillColor = 'rgba(200,80,80,.7)';
+
   document.getElementById('monthlyFill').style.width      = pct + '%';
   document.getElementById('monthlyFill').style.background = fillColor;
-  document.getElementById('monthlyHeroPct').textContent   = pctText;
+  document.getElementById('monthlyHeroPct').textContent   = rawPct.toFixed(1) + '%';
   document.getElementById('monthlyHeroPct').style.color   = fillColor;
   document.getElementById('monthlyEarned').textContent    = 'Ksh ' + monthTotal.toLocaleString();
   document.getElementById('monthlyTargetLbl').textContent = statusText;
-  document.getElementById('monthlyHeroSub').textContent   = 'of Ksh ' + target.toLocaleString() + ' this month';
+
+  // Show per-brand breakdown in sub line
+  const parts = [];
+  if (mikaTarget > 0)    parts.push(`Mika ${((mikaMTD/mikaTarget)*100).toFixed(0)}%`);
+  if (samsungTarget > 0) parts.push(`Samsung ${((samsungMTD/samsungTarget)*100).toFixed(0)}%`);
+  document.getElementById('monthlyHeroSub').textContent =
+    parts.length ? parts.join(' · ') + ` of Ksh ${combinedTarget.toLocaleString()}` :
+    'of Ksh ' + combinedTarget.toLocaleString() + ' this month';
 }
 
 function openProfile() {
@@ -2016,8 +2193,10 @@ function openProfile() {
   document.getElementById('profileOutletStatic').textContent       = fmt(prof.outlet);
   document.getElementById('profileOfficialNamesStatic').textContent= fmt(prof.officialNames);
   document.getElementById('profileBrandStatic').textContent        = fmt(prof.brand);
-  const target = parseFloat(prof.branchTarget);
-  document.getElementById('profileBranchTargetStatic').textContent = target > 0 ? 'Ksh ' + target.toLocaleString() : '—';
+  const mikaTarget    = parseFloat(prof.mikaTarget);
+  const samsungTarget = parseFloat(prof.samsungTarget);
+  document.getElementById('profileMikaTargetStatic').textContent    = mikaTarget > 0 ? 'Ksh ' + mikaTarget.toLocaleString() : '—';
+  document.getElementById('profileSamsungTargetStatic').textContent = samsungTarget > 0 ? 'Ksh ' + samsungTarget.toLocaleString() : '—';
   document.getElementById('profileMorningReminderStatic').textContent = prof.morningReminder || '10:00';
   document.getElementById('profileEveningReminderStatic').textContent = prof.eveningReminder || '18:00';
   document.getElementById('profileMemberSince').textContent = prof.createdAt
@@ -2027,7 +2206,8 @@ function openProfile() {
   document.getElementById('profileOutlet').value          = prof.outlet || '';
   document.getElementById('profileOfficialNames').value   = prof.officialNames || '';
   document.getElementById('profileBrand').value           = prof.brand || '';
-  document.getElementById('profileBranchTarget').value    = prof.branchTarget || '';
+  document.getElementById('profileMikaTarget').value      = prof.mikaTarget || '';
+  document.getElementById('profileSamsungTarget').value   = prof.samsungTarget || '';
   document.getElementById('profileMorningReminder').value = prof.morningReminder || '10:00';
   document.getElementById('profileEveningReminder').value = prof.eveningReminder || '18:00';
   setProfileReadOnly(true);
@@ -2042,9 +2222,9 @@ function openProfile() {
 
 function setProfileReadOnly(readonly) {
   const editableInputIds = ['profileName','profileBio','profileOutlet','profileOfficialNames',
-    'profileBrand','profileBranchTarget','profileMorningReminder','profileEveningReminder'];
+    'profileBrand','profileMikaTarget','profileSamsungTarget','profileMorningReminder','profileEveningReminder'];
   const staticIds = ['profileNameStatic','profileBioStatic','profileOutletStatic',
-    'profileOfficialNamesStatic','profileBrandStatic','profileBranchTargetStatic',
+    'profileOfficialNamesStatic','profileBrandStatic','profileMikaTargetStatic','profileSamsungTargetStatic',
     'profileMorningReminderStatic','profileEveningReminderStatic'];
   editableInputIds.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = readonly ? 'none' : ''; });
   staticIds.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = readonly ? '' : 'none'; });
@@ -2061,7 +2241,8 @@ function toggleProfileEdit() {
     document.getElementById('profileOutlet').value          = prof.outlet || '';
     document.getElementById('profileOfficialNames').value   = prof.officialNames || '';
     document.getElementById('profileBrand').value           = prof.brand || '';
-    document.getElementById('profileBranchTarget').value    = prof.branchTarget || '';
+    document.getElementById('profileMikaTarget').value      = prof.mikaTarget || '';
+    document.getElementById('profileSamsungTarget').value   = prof.samsungTarget || '';
     document.getElementById('profileMorningReminder').value = prof.morningReminder || '10:00';
     document.getElementById('profileEveningReminder').value = prof.eveningReminder || '18:00';
     setProfileReadOnly(true);
@@ -2096,7 +2277,8 @@ async function saveProfile() {
     outlet: document.getElementById('profileOutlet').value.trim(),
     officialNames: document.getElementById('profileOfficialNames').value.trim(),
     brand: document.getElementById('profileBrand').value.trim(),
-    branchTarget: document.getElementById('profileBranchTarget').value.trim(),
+    mikaTarget: document.getElementById('profileMikaTarget').value.trim(),
+    samsungTarget: document.getElementById('profileSamsungTarget').value.trim(),
     morningReminder: document.getElementById('profileMorningReminder').value || '10:00',
     eveningReminder: document.getElementById('profileEveningReminder').value || '18:00',
   };
@@ -2113,8 +2295,10 @@ async function saveProfile() {
     document.getElementById('profileOutletStatic').textContent        = currentProfile.outlet || '—';
     document.getElementById('profileOfficialNamesStatic').textContent = currentProfile.officialNames || '—';
     document.getElementById('profileBrandStatic').textContent         = currentProfile.brand || '—';
-    const t = parseFloat(currentProfile.branchTarget);
-    document.getElementById('profileBranchTargetStatic').textContent  = t > 0 ? 'Ksh ' + t.toLocaleString() : '—';
+    const mt = parseFloat(currentProfile.mikaTarget);
+    const st = parseFloat(currentProfile.samsungTarget);
+    document.getElementById('profileMikaTargetStatic').textContent    = mt > 0 ? 'Ksh ' + mt.toLocaleString() : '—';
+    document.getElementById('profileSamsungTargetStatic').textContent = st > 0 ? 'Ksh ' + st.toLocaleString() : '—';
     document.getElementById('profileMorningReminderStatic').textContent = currentProfile.morningReminder || '10:00';
     document.getElementById('profileEveningReminderStatic').textContent = currentProfile.eveningReminder || '18:00';
     document.getElementById('greeting').innerText = timeGreeting(currentProfile.name);
@@ -2322,18 +2506,34 @@ function initSalesListener() {
 }
 
 function renderSalesDonut() {
-  const target  = parseFloat((currentProfile || {}).branchTarget) || 0;
-  const total   = cachedSales.reduce((s, e) => s + (e.price * e.qty), 0);
-  const circumf = 169.6;
+  const prof     = currentProfile || {};
+  const mikaSales    = cachedSales.filter(s => (s.saleBrand||'Mika') === 'Mika');
+  const samsungSales = cachedSales.filter(s => (s.saleBrand||'Mika') === 'Samsung');
+  const mikaTotal    = mikaSales.reduce((s,e) => s + (e.price * e.qty), 0);
+  const samsungTotal = samsungSales.reduce((s,e) => s + (e.price * e.qty), 0);
+  const total    = cachedSales.reduce((s, e) => s + (e.price * e.qty), 0);
+  const mikaTarget    = parseFloat(prof.mikaTarget) || 0;
+  const samsungTarget = parseFloat(prof.samsungTarget) || 0;
+  // For donut: use the brand that has a target set; if both, use combined ratio
+  let target = 0;
   let pct, pctText, fillColor;
-  if (target > 0) {
-    const dailyTarget = target / 30;
-    pct = Math.min((total / dailyTarget) * 100, 100);
+  if (mikaTarget > 0 && samsungTarget > 0) {
+    const dailyMika    = mikaTarget / 30;
+    const dailySamsung = samsungTarget / 30;
+    const dailyTotal   = dailyMika + dailySamsung;
+    pct = Math.min(((mikaTotal + samsungTotal) / dailyTotal) * 100, 100);
+    pctText = Math.round(pct) + '%';
+  } else if (mikaTarget > 0) {
+    pct = Math.min((mikaTotal / (mikaTarget / 30)) * 100, 100);
+    pctText = Math.round(pct) + '%';
+  } else if (samsungTarget > 0) {
+    pct = Math.min((samsungTotal / (samsungTarget / 30)) * 100, 100);
     pctText = Math.round(pct) + '%';
   } else {
     pct = Math.min(cachedSales.length * 10, 100);
     pctText = cachedSales.length > 0 ? cachedSales.length + '' : '0%';
   }
+  const circumf = 169.6;
   if (pct >= 100)     fillColor = 'rgba(60,200,100,.9)';
   else if (pct >= 80) fillColor = '#c8a84b';
   else if (pct >= 50) fillColor = '#b08030';
@@ -2348,10 +2548,14 @@ function renderSalesDonut() {
   const heroTarget = document.getElementById('salesHeroTarget');
   const heroTVal   = document.getElementById('salesHeroTargetVal');
   if (heroTotal) heroTotal.textContent = 'Ksh ' + total.toLocaleString();
-  if (target > 0 && heroTarget && heroTVal) {
-    const dailyTarget = Math.round(target / 30);
-    heroTVal.textContent = 'Ksh ' + dailyTarget.toLocaleString();
-    heroTarget.style.display = 'block';
+  if (mikaTarget > 0 || samsungTarget > 0) {
+    if (heroTarget && heroTVal) {
+      const parts = [];
+      if (mikaTarget > 0)    parts.push('Mika Ksh ' + Math.round(mikaTarget/30).toLocaleString());
+      if (samsungTarget > 0) parts.push('Samsung Ksh ' + Math.round(samsungTarget/30).toLocaleString());
+      heroTVal.textContent = parts.join(' · ');
+      heroTarget.style.display = 'block';
+    }
   } else if (heroTarget) {
     heroTarget.style.display = 'none';
   }
@@ -2392,6 +2596,32 @@ async function renderSalesLog() {
       </div>
     </div>`).join('');
   setTimeout(attachSaleSwipe, 50);
+
+  // Running total bar
+  const rtBar     = document.getElementById('salesRunningTotal');
+  const rtTotal   = document.getElementById('salesRunningTotalVal');
+  const rtMika    = document.getElementById('salesRunningMika');
+  const rtSamsung = document.getElementById('salesRunningSamsung');
+  const rtMikaV   = document.getElementById('salesRunningMikaVal');
+  const rtSamsV   = document.getElementById('salesRunningSamsungVal');
+  if (rtBar && cachedSales.length) {
+    const grandTotal   = cachedSales.reduce((s,e) => s + (e.price*e.qty), 0);
+    const mikaTotal    = cachedSales.filter(s=>(s.saleBrand||'Mika')==='Mika').reduce((s,e)=>s+(e.price*e.qty),0);
+    const samsungTotal = cachedSales.filter(s=>(s.saleBrand||'Mika')==='Samsung').reduce((s,e)=>s+(e.price*e.qty),0);
+    const hasBoth = mikaTotal > 0 && samsungTotal > 0;
+    rtTotal.textContent = 'Ksh ' + grandTotal.toLocaleString();
+    rtBar.style.display = 'flex';
+    if (rtMika && rtSamsung) {
+      rtMika.style.display    = hasBoth ? 'inline' : 'none';
+      rtSamsung.style.display = hasBoth ? 'inline' : 'none';
+      if (hasBoth) {
+        rtMikaV.textContent = mikaTotal >= 1000 ? (mikaTotal/1000).toFixed(1)+'k' : mikaTotal.toLocaleString();
+        rtSamsV.textContent = samsungTotal >= 1000 ? (samsungTotal/1000).toFixed(1)+'k' : samsungTotal.toLocaleString();
+      }
+    }
+  } else if (rtBar) {
+    rtBar.style.display = 'none';
+  }
 }
 
 async function renderOverviewSales() {
@@ -2736,7 +2966,9 @@ function _buildDualReport(allSales, dateKey, prof, activeBrand) {
   const dateObj  = new Date(dateKey + 'T00:00:00');
   const dateStr  = dateObj.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   const total    = sales.reduce((s,e) => s + (e.price * e.qty), 0);
-  const target   = parseFloat(prof.branchTarget) || 0;
+  const target   = activeBrand === 'Mika'
+    ? (parseFloat(prof.mikaTarget) || 0)
+    : (parseFloat(prof.samsungTarget) || 0);
   const pct      = target > 0 ? ((total / target) * 100).toFixed(1) : null;
   const line     = '─'.repeat(38);
 
@@ -3414,7 +3646,7 @@ async function shareArchiveDayReport() {
     const snap = await db.ref('users/' + CU + '/sales/' + currentDayDetailKey).once('value');
     const entries = Object.entries(snap.val() || {}).map(([id,v]) => ({id,...v})).sort((a,b) => a.order - b.order);
     const total  = entries.reduce((s,e) => s + (e.price * e.qty), 0);
-    const target = parseFloat(prof.branchTarget) || 0;
+    const target = (parseFloat(prof.mikaTarget) || 0) + (parseFloat(prof.samsungTarget) || 0);
     const pct    = target > 0 ? ((total / target) * 100).toFixed(1) : null;
     const line   = '─'.repeat(38);
     let r = `SALES REPORT — ${currentDayDetailLabel}\n${line}\n`;
@@ -3618,11 +3850,13 @@ function _handlePopState(e) {
   const top = _overlayStack[_overlayStack.length - 1];
   if (!top) return;
   _overlayStack.pop();
-  if (top === 'profile')   { document.getElementById('profileOverlay').classList.remove('open'); if (profileEditMode) { profileEditMode = false; setProfileReadOnly(true); document.getElementById('profileEditBtn').textContent='✎ Edit'; document.getElementById('profileEditBtn').classList.remove('active'); document.getElementById('profileSaveBtn').style.display='none'; } }
-  if (top === 'report')    { document.getElementById('reportOverlay').classList.remove('open'); }
-  if (top === 'dayDetail') { document.getElementById('dayDetailOverlay').classList.remove('open'); currentDayDetailKey=null; currentDayDetailLabel=null; }
-  if (top === 'logSale')   { document.getElementById('logSaleSheet').classList.remove('open'); }
-  if (top === 'confirm')   { document.getElementById('confirmModal').classList.remove('open'); }
+  if (top === 'profile')        { document.getElementById('profileOverlay').classList.remove('open'); if (profileEditMode) { profileEditMode = false; setProfileReadOnly(true); document.getElementById('profileEditBtn').textContent='✎ Edit'; document.getElementById('profileEditBtn').classList.remove('active'); document.getElementById('profileSaveBtn').style.display='none'; } }
+  if (top === 'report')         { document.getElementById('reportOverlay').classList.remove('open'); }
+  if (top === 'dayDetail')      { document.getElementById('dayDetailOverlay').classList.remove('open'); currentDayDetailKey=null; currentDayDetailLabel=null; }
+  if (top === 'logSale')        { document.getElementById('logSaleSheet').classList.remove('open'); }
+  if (top === 'confirm')        { document.getElementById('confirmModal').classList.remove('open'); }
+  if (top === 'pendingClients') { document.getElementById('pcOverlay').classList.remove('open'); }
+  if (top === 'clientForm')     { document.getElementById('pcFormSheet').classList.remove('open'); }
 }
 
 window.addEventListener('popstate', _handlePopState);
@@ -3855,6 +4089,7 @@ function openPendingClients() {
 
 function closePendingClients() {
   document.getElementById('pcOverlay').classList.remove('open');
+  if (_overlayStack[_overlayStack.length-1]==='pendingClients') { _overlayStack.pop(); history.back(); }
 }
 
 // ── Add / Edit Client Form ──
@@ -3893,6 +4128,7 @@ function openClientForm(editId) {
 
 function closeClientForm() {
   document.getElementById('pcFormSheet').classList.remove('open');
+  if (_overlayStack[_overlayStack.length-1]==='clientForm') { _overlayStack.pop(); history.back(); }
 }
 
 function selectClientStatus(btn) {
@@ -3952,8 +4188,11 @@ function renderDailyNudge() {
   const text  = document.getElementById('dbNudgeText');
   if (!nudge || !text) return;
 
-  const target  = parseFloat((currentProfile || {}).branchTarget) || 0;
-  const total   = cachedSales.reduce((s, e) => s + (e.price * e.qty), 0);
+  const prof     = currentProfile || {};
+  const mikaTarget    = parseFloat(prof.mikaTarget) || 0;
+  const samsungTarget = parseFloat(prof.samsungTarget) || 0;
+  const target  = mikaTarget + samsungTarget;
+  const total   = cachedSales.reduce((s, e) => s + (e.price||0)*(e.qty||1), 0);
   const count   = cachedSales.length;
   const h       = new Date().getHours();
 
@@ -4156,6 +4395,55 @@ function clearAllSaleErrors() {
   ['lsfItem','lsfPrice'].forEach((id,i) => { clearFieldErr(id, ['lsfItemErr','lsfPriceErr'][i]); });
 }
 </script>
+<!-- EMAIL VERIFICATION SCREEN -->
+<div id="verifyScreen" style="
+  display:none; position:fixed; inset:0; z-index:1000;
+  background:#000000; flex-direction:column; align-items:center;
+  justify-content:center; padding:40px 28px; text-align:center;
+  color:#e0e0e0;">
+
+  <div style="font-size:56px; margin-bottom:24px; animation:pulse 2s ease-in-out infinite;">✉️</div>
+
+  <h2 style="font-family:'Playfair Display',serif; font-size:26px; font-weight:700;
+    margin-bottom:12px; color:#e0e0e0;">Check your inbox</h2>
+
+  <p style="font-size:14px; opacity:.6; line-height:1.6; margin-bottom:6px;">
+    We sent a verification link to:
+  </p>
+  <p id="verifyEmailDisplay" style="font-size:14px; font-weight:600;
+    color:var(--gold); margin-bottom:28px; word-break:break-all;"></p>
+
+  <p style="font-size:12px; opacity:.45; line-height:1.7; margin-bottom:32px; max-width:300px;">
+    Click the link in the email to activate your account.
+    This page will update automatically once verified.
+  </p>
+
+  <div style="display:flex; align-items:center; gap:8px; margin-bottom:32px;
+    font-size:12px; opacity:.4; letter-spacing:.5px;">
+    <div style="width:7px; height:7px; border-radius:50%; background:var(--gold);
+      animation:pulse 1.2s ease-in-out infinite;"></div>
+    Waiting for verification…
+  </div>
+
+  <div id="verifyMsg" style="font-size:12px; min-height:18px; margin-bottom:20px;"></div>
+
+  <button id="verifyResendBtn" onclick="resendVerificationEmail()" style="
+    width:100%; max-width:280px; padding:14px;
+    background:rgba(200,168,75,.12); border:1px solid var(--gold-border);
+    border-radius:14px; cursor:pointer; font-family:'Playfair Display',serif;
+    font-size:15px; font-weight:600; color:var(--gold);
+    transition:.2s; margin-bottom:12px;">
+    Resend Email
+  </button>
+
+  <button onclick="cancelVerification()" style="
+    background:none; border:none; cursor:pointer;
+    font-size:12px; opacity:.35; color:inherit;
+    font-family:'Inter',sans-serif; padding:8px;">
+    ← Use a different account
+  </button>
+</div>
+
 <script>
 if ('serviceWorker' in navigator) {
   const swPath = new URL('sw.js', window.location.href).pathname;
