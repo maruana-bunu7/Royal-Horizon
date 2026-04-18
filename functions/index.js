@@ -1,4 +1,4 @@
-// trigger deploy
+// trigger deploy 2
 /**
  * Royal Horizon — Firebase Cloud Functions
  * ─────────────────────────────────────────
