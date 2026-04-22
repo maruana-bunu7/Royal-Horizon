@@ -959,12 +959,13 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
             <div id="wowBadge" style="display:none;"></div>
           </div>
         </div>
-        <div class="insight-strip" id="topSellerStrip" style="margin-bottom:12px;">
+        <div class="insight-strip" id="topSellerStrip" style="margin-bottom:12px;cursor:pointer;" onclick="haptic('light');openTopSellerList()">
           <div class="insight-icon">🏆</div>
           <div class="insight-text">
             <div class="insight-label">Top Seller This Month</div>
             <div class="insight-value" id="topSellerValue">—</div>
           </div>
+          <div style="font-size:15px;opacity:.35;flex-shrink:0;">›</div>
         </div>
         <div class="monthly-hero" id="monthlyHero" style="display:none;cursor:pointer;" onclick="openMonthlyBreakdown()" title="Tap to see daily breakdown">
           <div class="monthly-hero-top">
@@ -1049,12 +1050,6 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
           <div class="db-section-lbl">Quick Task</div>
           <div class="task-quick-add">
             <input class="task-quick-input" id="quickTaskInput" placeholder="Add a task or note…" onkeydown="if(event.key==='Enter')addQuickTask()">
-            <select class="task-priority-select" id="taskPrioritySelect" title="Priority">
-              <option value="">— Pri</option>
-              <option value="urgent">🔴 Urgent</option>
-              <option value="medium">🟡 Med</option>
-              <option value="low">🟢 Low</option>
-            </select>
             <button class="task-due-toggle" id="taskDueToggle" onclick="toggleTaskDueRow()" title="Set due date & reminder">📅</button>
             <button class="task-quick-btn" onclick="haptic('medium');addQuickTask()">+</button>
           </div>
@@ -2595,15 +2590,12 @@ async function addQuickTask() {
   haptic('medium');
   const dueDate = document.getElementById('taskDueDate')?.value || '';
   const dueTime = document.getElementById('taskDueTime')?.value || '';
-  const priority = document.getElementById('taskPrioritySelect')?.value || '';
   inp.value = '';
-  const sel = document.getElementById('taskPrioritySelect'); if (sel) sel.value = '';
   if (taskDueRowVisible) toggleTaskDueRow();
   try {
     const taskData = { title, done: false, createdAt: Date.now() };
     if (dueDate)   taskData.dueDate   = dueDate;
     if (dueTime)   taskData.dueTime   = dueTime;
-    if (priority)  taskData.priority  = priority;
     await db.ref('users/' + CU + '/tasks').push(taskData);
   } catch(e) { showToast('Could not save task.'); }
 }
@@ -2870,6 +2862,45 @@ async function renderTopSeller() {
   const [topItem, topQty] = entries[0];
   valEl.textContent = `${topItem} (${topQty} sold)`;
   strip.classList.add('visible');
+}
+
+async function openTopSellerList() {
+  if (!CU) return;
+  const prefix = currentMonthPrefix();
+  const counts = {};
+  cachedSales.forEach(s => { const k = s.item || 'Unknown'; counts[k] = (counts[k]||0) + (s.qty||1); });
+  try {
+    const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
+    const meta = metaSnap.val() || {};
+    const today = todayKey();
+    const monthDays = Object.keys(meta).filter(k => k.startsWith(prefix) && k !== today);
+    await Promise.all(monthDays.map(async day => {
+      const snap = await db.ref('users/' + CU + '/sales/' + day).once('value');
+      Object.values(snap.val() || {}).forEach(s => { const k = s.item || 'Unknown'; counts[k] = (counts[k]||0) + (s.qty||1); });
+    }));
+  } catch(e) {}
+  const entries = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+  if (!entries.length) { showToast('No sales recorded this month yet.'); return; }
+  const medals = ['🥇','🥈','🥉'];
+  const rows = entries.map(([item, qty], i) => {
+    const rankEl = medals[i] ? `<span style="font-size:16px;">${medals[i]}</span>` : `<span style="font-family:'Playfair Display';font-size:13px;font-weight:700;opacity:.35;min-width:20px;text-align:center;">${i+1}</span>`;
+    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(128,128,128,.1);">
+      <div style="flex-shrink:0;min-width:24px;text-align:center;">${rankEl}</div>
+      <div style="flex:1;min-width:0;font-family:'Playfair Display';font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(item)}</div>
+      <div style="font-size:13px;font-weight:700;color:var(--gold);flex-shrink:0;white-space:nowrap;">${qty} unit${qty!==1?'s':''}</div>
+    </div>`;
+  }).join('');
+  const monthLabel = new Date().toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  showConfirm(`🏆 Sales Ranking — ${monthLabel}`, '', () => {}, 'Close');
+  setTimeout(() => {
+    const msg = document.getElementById('confirmMsg');
+    if (msg) {
+      msg.innerHTML = `<div style="max-height:55vh;overflow-y:auto;padding-right:4px;">${rows}</div>`;
+      msg.style.textAlign = 'left';
+    }
+    const okBtn = document.getElementById('confirmOkBtn');
+    if (okBtn) { okBtn.textContent = 'Close'; okBtn.className = 'modal-btn cancel'; }
+  }, 10);
 }
 
 async function renderSalesBarChart() {
