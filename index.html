@@ -506,16 +506,6 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
 .day-detail-overlay{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;transition:.4s var(--ui-curve);transform:translateY(100%);opacity:0;pointer-events:none;overflow:hidden;}
 .day-detail-overlay.open{transform:translateY(0);opacity:1;pointer-events:all;}
 
-/* ── ARCHIVE SALE INLINE EDIT CARDS ── */
-.arch-sale-card{background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;margin-bottom:8px;overflow:hidden;transition:border-color .25s;}
-.arch-sale-card.arch-sale-expanded{border-color:var(--gold-border);background:rgba(200,168,75,.04);}
-.arch-sale-summary{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;-webkit-user-select:none;user-select:none;}
-.arch-sale-chevron{font-size:12px;opacity:.35;transition:transform .25s;}
-.arch-sale-panel{padding:0 14px 14px;border-top:1px solid rgba(128,128,128,.1);}
-body.theme-signup .arch-sale-card{background:rgba(255,255,255,.65);border-color:rgba(180,170,155,.25);}
-body.theme-signup .arch-sale-card.arch-sale-expanded{border-color:var(--gold-border);background:rgba(255,248,230,.5);}
-body.theme-signup .arch-sale-panel input{background:rgba(255,255,255,.7);border-color:rgba(180,170,155,.28);color:#1a1a1a;}
-
 /* ══ LIGHT MODE (theme-signup) OVERRIDES ══ */
 body.theme-signup {
   --lm-card:rgba(255,255,255,.72);
@@ -969,12 +959,13 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
             <div id="wowBadge" style="display:none;"></div>
           </div>
         </div>
-        <div class="insight-strip" id="topSellerStrip" style="margin-bottom:12px;">
+        <div class="insight-strip" id="topSellerStrip" style="margin-bottom:12px;cursor:pointer;" onclick="haptic('light');openTopSellerList()">
           <div class="insight-icon">🏆</div>
           <div class="insight-text">
             <div class="insight-label">Top Seller This Month</div>
             <div class="insight-value" id="topSellerValue">—</div>
           </div>
+          <div style="font-size:15px;opacity:.35;flex-shrink:0;">›</div>
         </div>
         <div class="monthly-hero" id="monthlyHero" style="display:none;cursor:pointer;" onclick="openMonthlyBreakdown()" title="Tap to see daily breakdown">
           <div class="monthly-hero-top">
@@ -1054,17 +1045,22 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
           <div class="db-clients-arrow">›</div>
         </div>
 
+        <!-- Notes strip -->
+        <div class="db-clients-strip" id="notesStrip" onclick="haptic('light');openNotesOverlay()" style="margin-top:8px;">
+          <div class="db-clients-icon">📝</div>
+          <div class="db-clients-info">
+            <div class="db-clients-title">Notes</div>
+            <div class="db-clients-preview" id="notesStripPreview">No notes yet</div>
+          </div>
+          <div class="db-clients-count" id="notesStripCount" style="display:none;"></div>
+          <div class="db-clients-arrow">›</div>
+        </div>
+
         <!-- Quick task add -->
         <div class="db-section" style="margin-top:10px;">
           <div class="db-section-lbl">Quick Task</div>
           <div class="task-quick-add">
             <input class="task-quick-input" id="quickTaskInput" placeholder="Add a task or note…" onkeydown="if(event.key==='Enter')addQuickTask()">
-            <select class="task-priority-select" id="taskPrioritySelect" title="Priority">
-              <option value="">— Pri</option>
-              <option value="urgent">🔴 Urgent</option>
-              <option value="medium">🟡 Med</option>
-              <option value="low">🟢 Low</option>
-            </select>
             <button class="task-due-toggle" id="taskDueToggle" onclick="toggleTaskDueRow()" title="Set due date & reminder">📅</button>
             <button class="task-quick-btn" onclick="haptic('medium');addQuickTask()">+</button>
           </div>
@@ -1208,6 +1204,44 @@ body.theme-signup .pc-ctx-menu{background:rgba(248,244,238,.97);border-color:rgb
   </div>
 </div>
 
+
+<!-- NOTES OVERLAY -->
+<div class="pc-overlay overlay-screen" id="notesOverlay">
+  <div class="pc-inner">
+    <div class="pc-header">
+      <button class="back-btn" onclick="closeNotesOverlay()"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="19" cy="19" r="17.5" stroke="url(#bgoN)" stroke-width="1.2" opacity=".7"/><circle cx="19" cy="19" r="13.5" stroke="url(#bgiN)" stroke-width="1.8"/><line x1="21.5" y1="12.5" x2="14.5" y2="19" stroke="url(#bgaN)" stroke-width="1.8" stroke-linecap="round"/><line x1="14.5" y1="19" x2="21.5" y2="25.5" stroke="url(#bgbN)" stroke-width="1.8" stroke-linecap="round"/><defs><linearGradient id="bgoN" x1="1" y1="19" x2="37" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#9a7020" stop-opacity=".4"/><stop offset="50%" stop-color="#d4a83a"/><stop offset="100%" stop-color="#9a7020" stop-opacity=".4"/></linearGradient><linearGradient id="bgiN" x1="5" y1="19" x2="33" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#b08030"/><stop offset="50%" stop-color="#f0cc60"/><stop offset="100%" stop-color="#b08030"/></linearGradient><linearGradient id="bgaN" x1="14.5" y1="12.5" x2="21.5" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffe898"/><stop offset="100%" stop-color="#c8a84b"/></linearGradient><linearGradient id="bgbN" x1="14.5" y1="19" x2="21.5" y2="25.5" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#c8a84b"/><stop offset="100%" stop-color="#ffe898"/></linearGradient></defs></svg></button>
+      <h2>Notes</h2>
+      <div style="width:38px;"></div>
+    </div>
+    <div class="pc-body" style="display:flex;flex-direction:column;gap:10px;padding-bottom:20px;">
+      <!-- Search -->
+      <input class="arch-search-input" id="notesSearchInput" placeholder="🔍 Search notes…" oninput="renderNotesOverlay()" autocomplete="off" style="margin:0;">
+      <!-- Tag filter -->
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <button class="task-filter-pill active" data-ntag="" onclick="setNoteTagFilter(this,'')">All</button>
+        <button class="task-filter-pill" data-ntag="idea" onclick="setNoteTagFilter(this,'idea')">💡 Idea</button>
+        <button class="task-filter-pill" data-ntag="followup" onclick="setNoteTagFilter(this,'followup')">🌙 Follow Up</button>
+        <button class="task-filter-pill" data-ntag="reminder" onclick="setNoteTagFilter(this,'reminder')">⚠️ Reminder</button>
+        <button class="task-filter-pill" data-ntag="observation" onclick="setNoteTagFilter(this,'observation')">👁 Observation</button>
+      </div>
+      <!-- Add note -->
+      <div style="display:flex;flex-direction:column;gap:7px;">
+        <textarea class="task-quick-input" id="noteInputOverlay" placeholder="Write a note…" rows="2" style="resize:none;line-height:1.5;padding:10px 13px;font-family:'Inter',sans-serif;" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();addNote();}"></textarea>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+          <span style="font-size:10px;opacity:.4;letter-spacing:1px;text-transform:uppercase;">Tag:</span>
+          <button class="task-filter-pill active" id="noteTagNone"    data-ntag-sel="" onclick="selectNoteTag(this,'')">None</button>
+          <button class="task-filter-pill" id="noteTagIdea"     data-ntag-sel="idea" onclick="selectNoteTag(this,'idea')">💡 Idea</button>
+          <button class="task-filter-pill" id="noteTagFollowup" data-ntag-sel="followup" onclick="selectNoteTag(this,'followup')">🌙 Follow Up</button>
+          <button class="task-filter-pill" id="noteTagReminder" data-ntag-sel="reminder" onclick="selectNoteTag(this,'reminder')">⚠️ Reminder</button>
+          <button class="task-filter-pill" id="noteTagObserv"   data-ntag-sel="observation" onclick="selectNoteTag(this,'observation')">👁 Observation</button>
+          <button class="sales-log-btn" onclick="haptic('medium');addNote()" style="margin-left:auto;flex:0;padding:8px 18px;font-size:13px;">+ Add</button>
+        </div>
+      </div>
+      <!-- Notes list -->
+      <div id="notesOverlayList" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+  </div>
+</div>
 
 <!-- PENDING CLIENTS OVERLAY -->
 <div class="pc-overlay overlay-screen" id="pcOverlay">
@@ -1711,6 +1745,7 @@ auth.onAuthStateChanged(async (user) => {
     startTasksListener();
     initSalesListener();
     startClientsListener();
+    startNotesListener();
     initOfflineSupport();
     scheduleMidnightRollover();
     requestNotificationPermission();
@@ -1950,6 +1985,7 @@ async function onEmailVerified() {
   startTasksListener();
   initSalesListener();
   startClientsListener();
+  startNotesListener();
   initOfflineSupport();
   scheduleMidnightRollover();
   requestNotificationPermission();
@@ -2330,8 +2366,6 @@ async function openMonthlyBreakdown() {
     if (okBtn) { okBtn.textContent = 'Close'; okBtn.className = 'modal-btn cancel'; }
   }, 10);
 }
-
-function openProfile() {
   const prof = currentProfile || {};
   profileEditMode = false;
   const av = document.getElementById('profileAvatarLarge');
@@ -2607,15 +2641,12 @@ async function addQuickTask() {
   haptic('medium');
   const dueDate = document.getElementById('taskDueDate')?.value || '';
   const dueTime = document.getElementById('taskDueTime')?.value || '';
-  const priority = document.getElementById('taskPrioritySelect')?.value || '';
   inp.value = '';
-  const sel = document.getElementById('taskPrioritySelect'); if (sel) sel.value = '';
   if (taskDueRowVisible) toggleTaskDueRow();
   try {
     const taskData = { title, done: false, createdAt: Date.now() };
     if (dueDate)   taskData.dueDate   = dueDate;
     if (dueTime)   taskData.dueTime   = dueTime;
-    if (priority)  taskData.priority  = priority;
     await db.ref('users/' + CU + '/tasks').push(taskData);
   } catch(e) { showToast('Could not save task.'); }
 }
@@ -2882,6 +2913,45 @@ async function renderTopSeller() {
   const [topItem, topQty] = entries[0];
   valEl.textContent = `${topItem} (${topQty} sold)`;
   strip.classList.add('visible');
+}
+
+async function openTopSellerList() {
+  if (!CU) return;
+  const prefix = currentMonthPrefix();
+  const counts = {};
+  cachedSales.forEach(s => { const k = s.item || 'Unknown'; counts[k] = (counts[k]||0) + (s.qty||1); });
+  try {
+    const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
+    const meta = metaSnap.val() || {};
+    const today = todayKey();
+    const monthDays = Object.keys(meta).filter(k => k.startsWith(prefix) && k !== today);
+    await Promise.all(monthDays.map(async day => {
+      const snap = await db.ref('users/' + CU + '/sales/' + day).once('value');
+      Object.values(snap.val() || {}).forEach(s => { const k = s.item || 'Unknown'; counts[k] = (counts[k]||0) + (s.qty||1); });
+    }));
+  } catch(e) {}
+  const entries = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+  if (!entries.length) { showToast('No sales recorded this month yet.'); return; }
+  const medals = ['🥇','🥈','🥉'];
+  const rows = entries.map(([item, qty], i) => {
+    const rankEl = medals[i] ? `<span style="font-size:16px;">${medals[i]}</span>` : `<span style="font-family:'Playfair Display';font-size:13px;font-weight:700;opacity:.35;min-width:20px;text-align:center;">${i+1}</span>`;
+    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(128,128,128,.1);">
+      <div style="flex-shrink:0;min-width:24px;text-align:center;">${rankEl}</div>
+      <div style="flex:1;min-width:0;font-family:'Playfair Display';font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(item)}</div>
+      <div style="font-size:13px;font-weight:700;color:var(--gold);flex-shrink:0;white-space:nowrap;">${qty} unit${qty!==1?'s':''}</div>
+    </div>`;
+  }).join('');
+  const monthLabel = new Date().toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  showConfirm(`🏆 Sales Ranking — ${monthLabel}`, '', () => {}, 'Close');
+  setTimeout(() => {
+    const msg = document.getElementById('confirmMsg');
+    if (msg) {
+      msg.innerHTML = `<div style="max-height:55vh;overflow-y:auto;padding-right:4px;">${rows}</div>`;
+      msg.style.textAlign = 'left';
+    }
+    const okBtn = document.getElementById('confirmOkBtn');
+    if (okBtn) { okBtn.textContent = 'Close'; okBtn.className = 'modal-btn cancel'; }
+  }, 10);
 }
 
 async function renderSalesBarChart() {
@@ -3496,14 +3566,9 @@ function openSaleCtxMenu(e) {
   menu.style.left = Math.min(x, window.innerWidth - 185) + 'px';
   menu.style.top  = Math.min(y + 10, window.innerHeight - 110) + 'px';
   menu.classList.add('open');
-  setTimeout(() => document.addEventListener('click', _closeSaleCtxOutside, { once: true, capture: true }), 10);
+  setTimeout(() => document.addEventListener('click', _closeSaleCtxOutside, { once: true }), 10);
 }
-function _closeSaleCtxOutside(e) {
-  const menu = document.getElementById('saleCtxMenu');
-  if (menu && menu.contains(e.target)) return; // click inside menu — let it through
-  e.stopImmediatePropagation();
-  closeSaleCtxMenu();
-}
+function _closeSaleCtxOutside() { closeSaleCtxMenu(); }
 function closeSaleCtxMenu() {
   document.getElementById('saleCtxMenu').classList.remove('open');
   document.querySelectorAll('.sale-swipe-inner').forEach(el => el.classList.remove('sale-held'));
@@ -3547,14 +3612,9 @@ function openArchCtxMenu(e) {
   menu.style.left = Math.min(x, window.innerWidth - 185) + 'px';
   menu.style.top  = Math.min(y + 10, window.innerHeight - 110) + 'px';
   menu.classList.add('open');
-  setTimeout(() => document.addEventListener('click', _closeArchCtxOutside, { once: true, capture: true }), 10);
+  setTimeout(() => document.addEventListener('click', _closeArchCtxOutside, { once: true }), 10);
 }
-function _closeArchCtxOutside(e) {
-  const menu = document.getElementById('archCtxMenu');
-  if (menu && menu.contains(e.target)) return;
-  e.stopImmediatePropagation();
-  closeArchCtxMenu();
-}
+function _closeArchCtxOutside() { closeArchCtxMenu(); }
 function closeArchCtxMenu() {
   document.getElementById('archCtxMenu').classList.remove('open');
   document.querySelectorAll('.arch-day-card').forEach(el => el.classList.remove('arch-held'));
@@ -3789,136 +3849,25 @@ async function openDayDetail(dateKey, label) {
     if (!entries.length) { body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">No entries for this day.</div>'; return; }
     const total = entries.reduce((s,e) => s + (e.price * e.qty), 0);
     body.innerHTML = entries.map((e,i) => `
-      <div class="arch-sale-card" id="arch-sale-${e.id}">
-        <!-- Summary row -->
-        <div class="arch-sale-summary" onclick="toggleArchiveSaleExpand('${e.id}')">
-          <div style="font-family:'Playfair Display';font-size:15px;font-weight:700;opacity:.3;min-width:22px;flex-shrink:0;">${i+1}</div>
-          <div style="flex:1;min-width:0;">
-            <div style="font-family:'Playfair Display';font-size:14px;font-weight:600;line-height:1.3;">${esc(e.item)}</div>
-            <div style="font-size:10px;opacity:.45;margin-top:2px;">Qty: ${e.qty} &nbsp;·&nbsp; Ksh ${(e.price * e.qty).toLocaleString()}</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
-            <button class="sale-del" onclick="event.stopPropagation();deleteArchiveSale('${dateKey}','${e.id}','${esc(e.item).replace(/'/g,"\'")}')">✕</button>
-            <span class="arch-sale-chevron" id="arch-chev-${e.id}" style="font-size:12px;opacity:.35;transition:.25s;">▾</span>
-          </div>
+      <div style="background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;" id="arch-sale-${e.id}">
+        <div style="font-family:'Playfair Display';font-size:16px;font-weight:700;opacity:.3;min-width:20px;">${i+1}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:'Playfair Display';font-size:14px;font-weight:600;">${esc(e.item)}</div>
+          <div style="font-size:10px;opacity:.45;margin-top:2px;">Model: ${esc(e.model||'—')} · S/N: ${esc(e.serial||'—')} · Qty: ${e.qty}</div>
         </div>
-        <!-- Inline edit panel -->
-        <div class="arch-sale-panel" id="arch-panel-${e.id}" style="display:none;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-            <div>
-              <div class="lsf-label" style="margin-bottom:4px;">Brand</div>
-              <div style="display:flex;gap:6px;">
-                <button type="button" onclick="archPanelBrand('${e.id}','Mika')" id="arch-brand-mika-${e.id}"
-                  style="flex:1;padding:7px 4px;border-radius:9px;border:1.5px solid rgba(128,128,128,.2);background:rgba(128,128,128,.08);color:inherit;font-size:11px;font-weight:600;cursor:pointer;transition:.2s;">🔵 Mika</button>
-                <button type="button" onclick="archPanelBrand('${e.id}','Samsung')" id="arch-brand-sam-${e.id}"
-                  style="flex:1;padding:7px 4px;border-radius:9px;border:1.5px solid rgba(128,128,128,.2);background:rgba(128,128,128,.08);color:inherit;font-size:11px;font-weight:600;cursor:pointer;transition:.2s;">🔴 Sam</button>
-              </div>
-            </div>
-            <div>
-              <div class="lsf-label" style="margin-bottom:4px;">Qty</div>
-              <input type="number" min="1" id="arch-qty-${e.id}" value="${e.qty||1}"
-                style="width:100%;padding:8px 10px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.14);border-radius:10px;color:inherit;font-family:'Inter',sans-serif;font-size:13px;">
-            </div>
-          </div>
-          <div style="margin-bottom:8px;">
-            <div class="lsf-label" style="margin-bottom:4px;">Item Name</div>
-            <input type="text" id="arch-item-${e.id}" value="${esc(e.item)}"
-              style="width:100%;padding:8px 10px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.14);border-radius:10px;color:inherit;font-family:'Inter',sans-serif;font-size:13px;">
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-            <div>
-              <div class="lsf-label" style="margin-bottom:4px;">Model</div>
-              <input type="text" id="arch-model-${e.id}" value="${esc(e.model||'')}"
-                style="width:100%;padding:8px 10px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.14);border-radius:10px;color:inherit;font-family:'Inter',sans-serif;font-size:13px;">
-            </div>
-            <div>
-              <div class="lsf-label" style="margin-bottom:4px;">Serial</div>
-              <input type="text" id="arch-serial-${e.id}" value="${esc(e.serial||'')}"
-                style="width:100%;padding:8px 10px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.14);border-radius:10px;color:inherit;font-family:'Inter',sans-serif;font-size:13px;">
-            </div>
-          </div>
-          <div style="margin-bottom:10px;">
-            <div class="lsf-label" style="margin-bottom:4px;">Price (Ksh)</div>
-            <input type="number" min="0" id="arch-price-${e.id}" value="${e.price||''}"
-              style="width:100%;padding:8px 10px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.14);border-radius:10px;color:inherit;font-family:'Inter',sans-serif;font-size:13px;">
-          </div>
-          <div style="display:flex;gap:8px;">
-            <button onclick="saveArchiveSaleInline('${dateKey}','${e.id}')"
-              style="flex:1;padding:10px;border-radius:11px;border:none;background:rgba(90,160,120,.18);border:1px solid rgba(90,160,120,.35);color:inherit;font-family:'Playfair Display';font-size:13px;font-weight:600;cursor:pointer;transition:.2s;">Save Changes</button>
-            <button onclick="toggleArchiveSaleExpand('${e.id}')"
-              style="padding:10px 14px;border-radius:11px;border:1px solid rgba(128,128,128,.2);background:transparent;color:inherit;font-size:12px;cursor:pointer;transition:.2s;">Cancel</button>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+          <div style="font-size:13px;font-weight:600;white-space:nowrap;">Ksh ${(e.price * e.qty).toLocaleString()}</div>
+          <div style="display:flex;gap:5px;">
+            <button class="sale-edit-btn" onclick="editArchiveSale('${dateKey}','${e.id}')">✎</button>
+            <button class="sale-del" onclick="deleteArchiveSale('${dateKey}','${e.id}','${esc(e.item)}')">✕</button>
           </div>
         </div>
       </div>`).join('') +
       `<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0 0;border-top:1px solid rgba(128,128,128,.15);margin-top:4px;">
         <span style="font-size:12px;opacity:.4;text-transform:uppercase;letter-spacing:1.5px;">Total</span>
-        <span style="font-family:'Playfair Display';font-size:22px;font-weight:700;" id="dayDetailTotal">Ksh ${total.toLocaleString()}</span>
+        <span style="font-family:'Playfair Display';font-size:22px;font-weight:700;">Ksh ${total.toLocaleString()}</span>
       </div>`;
-    // Seed brand buttons for each entry
-    entries.forEach(e => {
-      _archPanelBrandState[e.id] = e.saleBrand || 'Mika';
-      _applyArchPanelBrand(e.id, e.saleBrand || 'Mika');
-    });
   } catch(e) { body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">Failed to load.</div>'; }
-}
-
-// Track brand selection per panel
-const _archPanelBrandState = {};
-
-function toggleArchiveSaleExpand(saleId) {
-  const panel = document.getElementById('arch-panel-' + saleId);
-  const chev  = document.getElementById('arch-chev-'  + saleId);
-  const card  = document.getElementById('arch-sale-'  + saleId);
-  if (!panel) return;
-  const opening = panel.style.display === 'none';
-  // Close all other open panels first
-  document.querySelectorAll('.arch-sale-panel').forEach(p => { p.style.display = 'none'; });
-  document.querySelectorAll('.arch-sale-chevron').forEach(c => { c.style.transform = ''; });
-  document.querySelectorAll('.arch-sale-card').forEach(c => c.classList.remove('arch-sale-expanded'));
-  if (opening) {
-    panel.style.display = 'block';
-    if (chev) chev.style.transform = 'rotate(180deg)';
-    if (card) card.classList.add('arch-sale-expanded');
-    haptic('light');
-  }
-}
-
-function archPanelBrand(saleId, brand) {
-  _archPanelBrandState[saleId] = brand;
-  _applyArchPanelBrand(saleId, brand);
-}
-
-function _applyArchPanelBrand(saleId, brand) {
-  const gold = 'rgba(200,168,75,.3)'; const goldB = 'rgba(200,168,75,.6)';
-  const off  = 'rgba(128,128,128,.08)'; const offB = 'rgba(128,128,128,.2)';
-  const mikaBtn = document.getElementById('arch-brand-mika-' + saleId);
-  const samBtn  = document.getElementById('arch-brand-sam-'  + saleId);
-  if (mikaBtn) { mikaBtn.style.background = brand === 'Mika'    ? gold : off; mikaBtn.style.borderColor = brand === 'Mika'    ? goldB : offB; }
-  if (samBtn)  { samBtn.style.background  = brand === 'Samsung' ? gold : off; samBtn.style.borderColor  = brand === 'Samsung' ? goldB : offB; }
-}
-
-async function saveArchiveSaleInline(dateKey, saleId) {
-  const item   = document.getElementById('arch-item-'  + saleId)?.value.trim();
-  const model  = document.getElementById('arch-model-' + saleId)?.value.trim();
-  const serial = document.getElementById('arch-serial-'+ saleId)?.value.trim();
-  const price  = parseFloat(document.getElementById('arch-price-'+ saleId)?.value);
-  const qty    = parseInt(document.getElementById('arch-qty-'  + saleId)?.value) || 1;
-  const brand  = _archPanelBrandState[saleId] || 'Mika';
-  if (!item)            { showToast('Item name is required.'); return; }
-  if (isNaN(price) || price <= 0) { showToast('Enter a valid price.'); return; }
-  const saveBtn = document.querySelector(`#arch-panel-${saleId} button`);
-  if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving…'; }
-  try {
-    await db.ref('users/' + CU + '/sales/' + dateKey + '/' + saleId).update({ item, model, serial, price, qty, saleBrand: brand });
-    archiveDirty = true;
-    haptic('success');
-    showToast('Sale updated ✓');
-    // Refresh the day detail view
-    openDayDetail(dateKey, currentDayDetailLabel);
-  } catch(e) {
-    showToast('Save failed.');
-    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save Changes'; }
-  }
 }
 
 async function editArchiveSale(dateKey, saleId) {
@@ -3929,7 +3878,7 @@ async function editArchiveSale(dateKey, saleId) {
     _archiveEditDateKey = dateKey;
     _archiveEditSaleId  = saleId;
     editingSaleId = '__archive__'; // sentinel so submitLogSale knows it's an archive edit
-    // Populate fields BEFORE opening the sheet so data is visible immediately
+    openLogSaleSheet('edit');
     document.getElementById('lsfItem').value   = s.item || '';
     document.getElementById('lsfModel').value  = s.model || '';
     document.getElementById('lsfSerial').value = s.serial || '';
@@ -3942,11 +3891,9 @@ async function editArchiveSale(dateKey, saleId) {
     document.getElementById('lsfCancelEditBtn').style.display = 'block';
     document.getElementById('lsfEditingBanner').classList.add('visible');
     document.getElementById('logSaleSheetTitle').textContent = 'Edit Archived Sale';
-    // Set date to the archived date
+    // Set date to the archived date (read-only effectively)
     const dateEl = document.getElementById('lsfSaleDate');
     if (dateEl) { dateEl.value = dateKey; dateEl.max = todayKey(); }
-    // Open sheet last so fields are populated before the focus() timeout fires
-    openLogSaleSheet('edit');
   } catch(e) { showToast('Could not load sale.'); }
 }
 
@@ -4029,37 +3976,9 @@ async function shareArchiveDayReport() {
   } catch(e) { showToast('Could not generate report.'); }
 }
 
-function closeAllCtxMenus() {
-  // Close sale context menu
-  const sm = document.getElementById('saleCtxMenu');
-  if (sm && sm.classList.contains('open')) {
-    sm.classList.remove('open');
-    document.querySelectorAll('.sale-swipe-inner').forEach(el => el.classList.remove('sale-held'));
-    _saleCtxId = null;
-  }
-  // Close archive context menu
-  const am = document.getElementById('archCtxMenu');
-  if (am && am.classList.contains('open')) {
-    am.classList.remove('open');
-    document.querySelectorAll('.arch-day-card').forEach(el => el.classList.remove('arch-held'));
-    _archCtxKey = null;
-  }
-  // Close pending clients context menu
-  const pm = document.getElementById('pcCtxMenu');
-  if (pm && pm.classList.contains('open')) {
-    pm.classList.remove('open');
-    if (pcCtxTargetId) {
-      const card = document.getElementById('pcc-' + pcCtxTargetId);
-      if (card) card.classList.remove('pc-hold');
-    }
-    pcCtxTargetId = null;
-  }
-}
-
 function _syncFab(idx) {
   const fab = document.getElementById('quickLogFab');
   if (fab) fab.classList.toggle('hidden', idx !== 0);
-  closeAllCtxMenus();
 }
 
 function moveTrack(idx) {
@@ -4237,6 +4156,7 @@ function _handlePopState(e) {
   if (top === 'confirm')        { document.getElementById('confirmModal').classList.remove('open'); }
   if (top === 'pendingClients') { document.getElementById('pcOverlay').classList.remove('open'); }
   if (top === 'clientForm')     { document.getElementById('pcFormSheet').classList.remove('open'); }
+  if (top === 'notes')          { document.getElementById('notesOverlay').classList.remove('open'); noteEditingId = null; }
 }
 
 window.addEventListener('popstate', _handlePopState);
@@ -4276,7 +4196,7 @@ document.addEventListener('keydown', e => {
 function applyDeviceTheme() {
   const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   document.body.className = dark ? 'theme-login' : 'theme-signup';
-  document.querySelectorAll('.overlay-screen.open,.day-detail-overlay.open,.log-sale-sheet.open,.pc-form-sheet.open').forEach(el => applyOverlayTheme(el));
+  document.querySelectorAll('.overlay-screen.open,.day-detail-overlay.open,.log-sale-sheet.open,.pc-form-sheet.open,#notesOverlay.open').forEach(el => applyOverlayTheme(el));
 }
 // Listen for OS-level theme changes and update in real time
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyDeviceTheme);
@@ -4292,6 +4212,172 @@ let toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+// ═══════════════════════════════════════════
+// NOTES
+// ═══════════════════════════════════════════
+let cachedNotes = [];
+let notesListenerRef = null;
+let notesListenerFn = null;
+let noteTagFilter = '';
+let noteSelectedTag = '';
+let noteEditingId = null;
+
+function startNotesListener() {
+  if (!CU) return;
+  if (notesListenerRef) { notesListenerRef.off('value', notesListenerFn); }
+  notesListenerRef = db.ref('users/' + CU + '/notes');
+  notesListenerFn = (snap) => {
+    const val = snap.val() || {};
+    cachedNotes = Object.entries(val)
+      .map(([id, d]) => ({ id, ...d }))
+      .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || b.createdAt - a.createdAt);
+    renderNotesOverlay();
+    renderNotesStrip();
+  };
+  notesListenerRef.on('value', notesListenerFn);
+}
+
+function renderNotesStrip() {
+  const preview = document.getElementById('notesStripPreview');
+  const count   = document.getElementById('notesStripCount');
+  if (!preview) return;
+  const total = cachedNotes.length;
+  if (!total) {
+    preview.textContent = 'No notes yet';
+    if (count) count.style.display = 'none';
+  } else {
+    const pinned = cachedNotes.filter(n => n.pinned).length;
+    preview.textContent = pinned ? `${pinned} pinned · ${total} total` : `${total} note${total !== 1 ? 's' : ''}`;
+    if (count) { count.textContent = total; count.style.display = ''; }
+  }
+}
+
+function openNotesOverlay() {
+  const overlay = document.getElementById('notesOverlay');
+  applyOverlayTheme(overlay);
+  overlay.classList.add('open');
+  pushOverlayState('notes');
+  renderNotesOverlay();
+  setTimeout(() => { const inp = document.getElementById('noteInputOverlay'); if (inp) inp.focus(); }, 300);
+}
+
+function closeNotesOverlay() {
+  document.getElementById('notesOverlay').classList.remove('open');
+  if (_overlayStack[_overlayStack.length - 1] === 'notes') { _overlayStack.pop(); history.back(); }
+  noteEditingId = null;
+}
+
+function setNoteTagFilter(btn, tag) {
+  noteTagFilter = tag;
+  document.querySelectorAll('#notesOverlay .task-filter-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderNotesOverlay();
+}
+
+function selectNoteTag(btn, tag) {
+  noteSelectedTag = tag;
+  document.querySelectorAll('[data-ntag-sel]').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function fmtNoteTime(ts) {
+  const d = new Date(ts);
+  const now = new Date();
+  const diffD = Math.floor((now - d) / 86400000);
+  if (diffD === 0) return 'Today ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  if (diffD === 1) return 'Yesterday ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+
+const NOTE_TAG_LABELS = { idea: '💡 Idea', followup: '🌙 Follow Up', reminder: '⚠️ Reminder', observation: '👁 Observation' };
+
+function renderNotesOverlay() {
+  const list = document.getElementById('notesOverlayList');
+  if (!list) return;
+  const q = (document.getElementById('notesSearchInput')?.value || '').trim().toLowerCase();
+  let notes = cachedNotes;
+  if (noteTagFilter) notes = notes.filter(n => n.tag === noteTagFilter);
+  if (q) notes = notes.filter(n => n.text.toLowerCase().includes(q));
+  if (!notes.length) {
+    list.innerHTML = `<div style="text-align:center;opacity:.28;padding:28px 0;"><div style="font-size:26px;margin-bottom:8px;">📝</div><p style="font-family:'Playfair Display',serif;font-size:13px;font-style:italic;">No notes here yet.</p></div>`;
+    return;
+  }
+  list.innerHTML = notes.map(n => {
+    const tagLabel = n.tag ? `<span style="font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:2px 7px;border-radius:8px;background:rgba(200,168,75,.12);border:1px solid rgba(200,168,75,.25);opacity:.8;">${NOTE_TAG_LABELS[n.tag] || n.tag}</span>` : '';
+    const pinIcon  = n.pinned ? `<span style="font-size:11px;opacity:.6;">📌</span>` : '';
+    if (noteEditingId === n.id) {
+      return `<div class="task2-item" id="note-item-${n.id}" style="flex-direction:column;gap:8px;border-color:rgba(90,160,120,.4);background:rgba(90,160,120,.06);">
+        <textarea id="noteEditArea-${n.id}" style="width:100%;background:transparent;border:none;color:inherit;font-family:'Inter',sans-serif;font-size:14px;line-height:1.5;resize:none;" rows="3" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();saveNoteEdit('${n.id}');}">${esc(n.text)}</textarea>
+        <div style="display:flex;gap:7px;justify-content:flex-end;">
+          <button class="clear-done-btn" onclick="cancelNoteEdit()" style="opacity:.6;">Cancel</button>
+          <button class="sales-report-btn" onclick="saveNoteEdit('${n.id}')" style="font-size:12px;padding:6px 14px;">Save</button>
+        </div>
+      </div>`;
+    }
+    return `<div class="task2-item" id="note-item-${n.id}" style="${n.pinned ? 'border-color:rgba(200,168,75,.3);background:rgba(200,168,75,.04);' : ''}">
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">${pinIcon}${tagLabel}</div>
+        <div style="font-size:14px;line-height:1.5;word-break:break-word;">${esc(n.text)}</div>
+        <div style="font-size:10px;opacity:.38;margin-top:5px;letter-spacing:.3px;">${fmtNoteTime(n.createdAt)}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0;margin-left:6px;">
+        <button class="task2-del" onclick="toggleNotePin('${n.id}')" style="opacity:.45;font-size:13px;">${n.pinned ? '📌' : '📍'}</button>
+        <button class="sale-edit-btn" onclick="startNoteEdit('${n.id}')" style="font-size:11px;padding:3px 7px;">✎</button>
+        <button class="sale-del" onclick="deleteNote('${n.id}')" style="font-size:11px;padding:3px 7px;">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function addNote() {
+  const inp = document.getElementById('noteInputOverlay');
+  const text = (inp?.value || '').trim();
+  if (!text) return;
+  haptic('medium');
+  inp.value = '';
+  try {
+    await db.ref('users/' + CU + '/notes').push({
+      text, tag: noteSelectedTag, pinned: false, createdAt: Date.now()
+    });
+  } catch(e) { showToast('Could not save note.'); }
+}
+
+async function deleteNote(id) {
+  showConfirm('Delete Note', 'Remove this note? This cannot be undone.', async () => {
+    try { await db.ref('users/' + CU + '/notes/' + id).remove(); showToast('Note deleted.'); }
+    catch(e) { showToast('Delete failed.'); }
+  }, 'Delete');
+}
+
+async function toggleNotePin(id) {
+  const n = cachedNotes.find(n => n.id === id); if (!n) return;
+  haptic('light');
+  try { await db.ref('users/' + CU + '/notes/' + id + '/pinned').set(!n.pinned); }
+  catch(e) { showToast('Could not update note.'); }
+}
+
+function startNoteEdit(id) {
+  noteEditingId = id;
+  renderNotesOverlay();
+  setTimeout(() => {
+    const ta = document.getElementById('noteEditArea-' + id);
+    if (ta) { ta.focus(); ta.selectionStart = ta.value.length; }
+  }, 50);
+}
+
+function cancelNoteEdit() { noteEditingId = null; renderNotesOverlay(); }
+
+async function saveNoteEdit(id) {
+  const ta = document.getElementById('noteEditArea-' + id);
+  const text = (ta?.value || '').trim();
+  if (!text) return;
+  try {
+    await db.ref('users/' + CU + '/notes/' + id).update({ text });
+    noteEditingId = null;
+    showToast('Note updated ✓');
+  } catch(e) { showToast('Save failed.'); }
 }
 
 // ═══════════════════════════════════════════
@@ -4412,13 +4498,10 @@ function openCtxMenu(e) {
   menu.style.left = Math.min(x, vw - 175) + 'px';
   menu.style.top  = Math.min(y, vh - 160) + 'px';
   menu.classList.add('open');
-  setTimeout(() => document.addEventListener('click', closeCtxOutside, { once: true, capture: true }), 10);
+  setTimeout(() => document.addEventListener('click', closeCtxOutside, { once: true }), 10);
 }
 
-function closeCtxOutside(e) {
-  const menu = document.getElementById('pcCtxMenu');
-  if (menu && menu.contains(e.target)) return;
-  e.stopImmediatePropagation();
+function closeCtxOutside() {
   closeCtxMenu();
 }
 
@@ -4843,4 +4926,4 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 </body>
-</html>
+                                                                                                           </html>
