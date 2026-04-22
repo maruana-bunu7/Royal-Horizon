@@ -506,6 +506,16 @@ body.theme-signup .lsf-cat-panel{--cat-panel-bg:#ebebeb;}
 .day-detail-overlay{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;transition:.4s var(--ui-curve);transform:translateY(100%);opacity:0;pointer-events:none;overflow:hidden;}
 .day-detail-overlay.open{transform:translateY(0);opacity:1;pointer-events:all;}
 
+/* ── ARCHIVE SALE INLINE EDIT CARDS ── */
+.arch-sale-card{background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;margin-bottom:8px;overflow:hidden;transition:border-color .25s;}
+.arch-sale-card.arch-sale-expanded{border-color:var(--gold-border);background:rgba(200,168,75,.04);}
+.arch-sale-summary{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;-webkit-user-select:none;user-select:none;}
+.arch-sale-chevron{font-size:12px;opacity:.35;transition:transform .25s;}
+.arch-sale-panel{padding:0 14px 14px;border-top:1px solid rgba(128,128,128,.1);}
+body.theme-signup .arch-sale-card{background:rgba(255,255,255,.65);border-color:rgba(180,170,155,.25);}
+body.theme-signup .arch-sale-card.arch-sale-expanded{border-color:var(--gold-border);background:rgba(255,248,230,.5);}
+body.theme-signup .arch-sale-panel input{background:rgba(255,255,255,.7);border-color:rgba(180,170,155,.28);color:#1a1a1a;}
+
 /* ══ LIGHT MODE (theme-signup) OVERRIDES ══ */
 body.theme-signup {
   --lm-card:rgba(255,255,255,.72);
@@ -2320,6 +2330,8 @@ async function openMonthlyBreakdown() {
     if (okBtn) { okBtn.textContent = 'Close'; okBtn.className = 'modal-btn cancel'; }
   }, 10);
 }
+
+function openProfile() {
   const prof = currentProfile || {};
   profileEditMode = false;
   const av = document.getElementById('profileAvatarLarge');
@@ -3484,9 +3496,14 @@ function openSaleCtxMenu(e) {
   menu.style.left = Math.min(x, window.innerWidth - 185) + 'px';
   menu.style.top  = Math.min(y + 10, window.innerHeight - 110) + 'px';
   menu.classList.add('open');
-  setTimeout(() => document.addEventListener('click', _closeSaleCtxOutside, { once: true }), 10);
+  setTimeout(() => document.addEventListener('click', _closeSaleCtxOutside, { once: true, capture: true }), 10);
 }
-function _closeSaleCtxOutside() { closeSaleCtxMenu(); }
+function _closeSaleCtxOutside(e) {
+  const menu = document.getElementById('saleCtxMenu');
+  if (menu && menu.contains(e.target)) return; // click inside menu — let it through
+  e.stopImmediatePropagation();
+  closeSaleCtxMenu();
+}
 function closeSaleCtxMenu() {
   document.getElementById('saleCtxMenu').classList.remove('open');
   document.querySelectorAll('.sale-swipe-inner').forEach(el => el.classList.remove('sale-held'));
@@ -3530,9 +3547,14 @@ function openArchCtxMenu(e) {
   menu.style.left = Math.min(x, window.innerWidth - 185) + 'px';
   menu.style.top  = Math.min(y + 10, window.innerHeight - 110) + 'px';
   menu.classList.add('open');
-  setTimeout(() => document.addEventListener('click', _closeArchCtxOutside, { once: true }), 10);
+  setTimeout(() => document.addEventListener('click', _closeArchCtxOutside, { once: true, capture: true }), 10);
 }
-function _closeArchCtxOutside() { closeArchCtxMenu(); }
+function _closeArchCtxOutside(e) {
+  const menu = document.getElementById('archCtxMenu');
+  if (menu && menu.contains(e.target)) return;
+  e.stopImmediatePropagation();
+  closeArchCtxMenu();
+}
 function closeArchCtxMenu() {
   document.getElementById('archCtxMenu').classList.remove('open');
   document.querySelectorAll('.arch-day-card').forEach(el => el.classList.remove('arch-held'));
@@ -3767,25 +3789,136 @@ async function openDayDetail(dateKey, label) {
     if (!entries.length) { body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">No entries for this day.</div>'; return; }
     const total = entries.reduce((s,e) => s + (e.price * e.qty), 0);
     body.innerHTML = entries.map((e,i) => `
-      <div style="background:rgba(128,128,128,.07);border:1px solid rgba(128,128,128,.1);border-radius:14px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;" id="arch-sale-${e.id}">
-        <div style="font-family:'Playfair Display';font-size:16px;font-weight:700;opacity:.3;min-width:20px;">${i+1}</div>
-        <div style="flex:1;min-width:0;">
-          <div style="font-family:'Playfair Display';font-size:14px;font-weight:600;">${esc(e.item)}</div>
-          <div style="font-size:10px;opacity:.45;margin-top:2px;">Model: ${esc(e.model||'—')} · S/N: ${esc(e.serial||'—')} · Qty: ${e.qty}</div>
+      <div class="arch-sale-card" id="arch-sale-${e.id}">
+        <!-- Summary row -->
+        <div class="arch-sale-summary" onclick="toggleArchiveSaleExpand('${e.id}')">
+          <div style="font-family:'Playfair Display';font-size:15px;font-weight:700;opacity:.3;min-width:22px;flex-shrink:0;">${i+1}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-family:'Playfair Display';font-size:14px;font-weight:600;line-height:1.3;">${esc(e.item)}</div>
+            <div style="font-size:10px;opacity:.45;margin-top:2px;">Qty: ${e.qty} &nbsp;·&nbsp; Ksh ${(e.price * e.qty).toLocaleString()}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+            <button class="sale-del" onclick="event.stopPropagation();deleteArchiveSale('${dateKey}','${e.id}','${esc(e.item).replace(/'/g,"\'")}')">✕</button>
+            <span class="arch-sale-chevron" id="arch-chev-${e.id}" style="font-size:12px;opacity:.35;transition:.25s;">▾</span>
+          </div>
         </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
-          <div style="font-size:13px;font-weight:600;white-space:nowrap;">Ksh ${(e.price * e.qty).toLocaleString()}</div>
-          <div style="display:flex;gap:5px;">
-            <button class="sale-edit-btn" onclick="editArchiveSale('${dateKey}','${e.id}')">✎</button>
-            <button class="sale-del" onclick="deleteArchiveSale('${dateKey}','${e.id}','${esc(e.item)}')">✕</button>
+        <!-- Inline edit panel -->
+        <div class="arch-sale-panel" id="arch-panel-${e.id}" style="display:none;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+            <div>
+              <div class="lsf-label" style="margin-bottom:4px;">Brand</div>
+              <div style="display:flex;gap:6px;">
+                <button type="button" onclick="archPanelBrand('${e.id}','Mika')" id="arch-brand-mika-${e.id}"
+                  style="flex:1;padding:7px 4px;border-radius:9px;border:1.5px solid rgba(128,128,128,.2);background:rgba(128,128,128,.08);color:inherit;font-size:11px;font-weight:600;cursor:pointer;transition:.2s;">🔵 Mika</button>
+                <button type="button" onclick="archPanelBrand('${e.id}','Samsung')" id="arch-brand-sam-${e.id}"
+                  style="flex:1;padding:7px 4px;border-radius:9px;border:1.5px solid rgba(128,128,128,.2);background:rgba(128,128,128,.08);color:inherit;font-size:11px;font-weight:600;cursor:pointer;transition:.2s;">🔴 Sam</button>
+              </div>
+            </div>
+            <div>
+              <div class="lsf-label" style="margin-bottom:4px;">Qty</div>
+              <input type="number" min="1" id="arch-qty-${e.id}" value="${e.qty||1}"
+                style="width:100%;padding:8px 10px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.14);border-radius:10px;color:inherit;font-family:'Inter',sans-serif;font-size:13px;">
+            </div>
+          </div>
+          <div style="margin-bottom:8px;">
+            <div class="lsf-label" style="margin-bottom:4px;">Item Name</div>
+            <input type="text" id="arch-item-${e.id}" value="${esc(e.item)}"
+              style="width:100%;padding:8px 10px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.14);border-radius:10px;color:inherit;font-family:'Inter',sans-serif;font-size:13px;">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+            <div>
+              <div class="lsf-label" style="margin-bottom:4px;">Model</div>
+              <input type="text" id="arch-model-${e.id}" value="${esc(e.model||'')}"
+                style="width:100%;padding:8px 10px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.14);border-radius:10px;color:inherit;font-family:'Inter',sans-serif;font-size:13px;">
+            </div>
+            <div>
+              <div class="lsf-label" style="margin-bottom:4px;">Serial</div>
+              <input type="text" id="arch-serial-${e.id}" value="${esc(e.serial||'')}"
+                style="width:100%;padding:8px 10px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.14);border-radius:10px;color:inherit;font-family:'Inter',sans-serif;font-size:13px;">
+            </div>
+          </div>
+          <div style="margin-bottom:10px;">
+            <div class="lsf-label" style="margin-bottom:4px;">Price (Ksh)</div>
+            <input type="number" min="0" id="arch-price-${e.id}" value="${e.price||''}"
+              style="width:100%;padding:8px 10px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.14);border-radius:10px;color:inherit;font-family:'Inter',sans-serif;font-size:13px;">
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="saveArchiveSaleInline('${dateKey}','${e.id}')"
+              style="flex:1;padding:10px;border-radius:11px;border:none;background:rgba(90,160,120,.18);border:1px solid rgba(90,160,120,.35);color:inherit;font-family:'Playfair Display';font-size:13px;font-weight:600;cursor:pointer;transition:.2s;">Save Changes</button>
+            <button onclick="toggleArchiveSaleExpand('${e.id}')"
+              style="padding:10px 14px;border-radius:11px;border:1px solid rgba(128,128,128,.2);background:transparent;color:inherit;font-size:12px;cursor:pointer;transition:.2s;">Cancel</button>
           </div>
         </div>
       </div>`).join('') +
       `<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0 0;border-top:1px solid rgba(128,128,128,.15);margin-top:4px;">
         <span style="font-size:12px;opacity:.4;text-transform:uppercase;letter-spacing:1.5px;">Total</span>
-        <span style="font-family:'Playfair Display';font-size:22px;font-weight:700;">Ksh ${total.toLocaleString()}</span>
+        <span style="font-family:'Playfair Display';font-size:22px;font-weight:700;" id="dayDetailTotal">Ksh ${total.toLocaleString()}</span>
       </div>`;
+    // Seed brand buttons for each entry
+    entries.forEach(e => {
+      _archPanelBrandState[e.id] = e.saleBrand || 'Mika';
+      _applyArchPanelBrand(e.id, e.saleBrand || 'Mika');
+    });
   } catch(e) { body.innerHTML = '<div style="opacity:.3;font-size:13px;padding-top:20px;">Failed to load.</div>'; }
+}
+
+// Track brand selection per panel
+const _archPanelBrandState = {};
+
+function toggleArchiveSaleExpand(saleId) {
+  const panel = document.getElementById('arch-panel-' + saleId);
+  const chev  = document.getElementById('arch-chev-'  + saleId);
+  const card  = document.getElementById('arch-sale-'  + saleId);
+  if (!panel) return;
+  const opening = panel.style.display === 'none';
+  // Close all other open panels first
+  document.querySelectorAll('.arch-sale-panel').forEach(p => { p.style.display = 'none'; });
+  document.querySelectorAll('.arch-sale-chevron').forEach(c => { c.style.transform = ''; });
+  document.querySelectorAll('.arch-sale-card').forEach(c => c.classList.remove('arch-sale-expanded'));
+  if (opening) {
+    panel.style.display = 'block';
+    if (chev) chev.style.transform = 'rotate(180deg)';
+    if (card) card.classList.add('arch-sale-expanded');
+    haptic('light');
+  }
+}
+
+function archPanelBrand(saleId, brand) {
+  _archPanelBrandState[saleId] = brand;
+  _applyArchPanelBrand(saleId, brand);
+}
+
+function _applyArchPanelBrand(saleId, brand) {
+  const gold = 'rgba(200,168,75,.3)'; const goldB = 'rgba(200,168,75,.6)';
+  const off  = 'rgba(128,128,128,.08)'; const offB = 'rgba(128,128,128,.2)';
+  const mikaBtn = document.getElementById('arch-brand-mika-' + saleId);
+  const samBtn  = document.getElementById('arch-brand-sam-'  + saleId);
+  if (mikaBtn) { mikaBtn.style.background = brand === 'Mika'    ? gold : off; mikaBtn.style.borderColor = brand === 'Mika'    ? goldB : offB; }
+  if (samBtn)  { samBtn.style.background  = brand === 'Samsung' ? gold : off; samBtn.style.borderColor  = brand === 'Samsung' ? goldB : offB; }
+}
+
+async function saveArchiveSaleInline(dateKey, saleId) {
+  const item   = document.getElementById('arch-item-'  + saleId)?.value.trim();
+  const model  = document.getElementById('arch-model-' + saleId)?.value.trim();
+  const serial = document.getElementById('arch-serial-'+ saleId)?.value.trim();
+  const price  = parseFloat(document.getElementById('arch-price-'+ saleId)?.value);
+  const qty    = parseInt(document.getElementById('arch-qty-'  + saleId)?.value) || 1;
+  const brand  = _archPanelBrandState[saleId] || 'Mika';
+  if (!item)            { showToast('Item name is required.'); return; }
+  if (isNaN(price) || price <= 0) { showToast('Enter a valid price.'); return; }
+  const saveBtn = document.querySelector(`#arch-panel-${saleId} button`);
+  if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving…'; }
+  try {
+    await db.ref('users/' + CU + '/sales/' + dateKey + '/' + saleId).update({ item, model, serial, price, qty, saleBrand: brand });
+    archiveDirty = true;
+    haptic('success');
+    showToast('Sale updated ✓');
+    // Refresh the day detail view
+    openDayDetail(dateKey, currentDayDetailLabel);
+  } catch(e) {
+    showToast('Save failed.');
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save Changes'; }
+  }
 }
 
 async function editArchiveSale(dateKey, saleId) {
@@ -3796,7 +3929,7 @@ async function editArchiveSale(dateKey, saleId) {
     _archiveEditDateKey = dateKey;
     _archiveEditSaleId  = saleId;
     editingSaleId = '__archive__'; // sentinel so submitLogSale knows it's an archive edit
-    openLogSaleSheet('edit');
+    // Populate fields BEFORE opening the sheet so data is visible immediately
     document.getElementById('lsfItem').value   = s.item || '';
     document.getElementById('lsfModel').value  = s.model || '';
     document.getElementById('lsfSerial').value = s.serial || '';
@@ -3809,9 +3942,11 @@ async function editArchiveSale(dateKey, saleId) {
     document.getElementById('lsfCancelEditBtn').style.display = 'block';
     document.getElementById('lsfEditingBanner').classList.add('visible');
     document.getElementById('logSaleSheetTitle').textContent = 'Edit Archived Sale';
-    // Set date to the archived date (read-only effectively)
+    // Set date to the archived date
     const dateEl = document.getElementById('lsfSaleDate');
     if (dateEl) { dateEl.value = dateKey; dateEl.max = todayKey(); }
+    // Open sheet last so fields are populated before the focus() timeout fires
+    openLogSaleSheet('edit');
   } catch(e) { showToast('Could not load sale.'); }
 }
 
@@ -3894,9 +4029,37 @@ async function shareArchiveDayReport() {
   } catch(e) { showToast('Could not generate report.'); }
 }
 
+function closeAllCtxMenus() {
+  // Close sale context menu
+  const sm = document.getElementById('saleCtxMenu');
+  if (sm && sm.classList.contains('open')) {
+    sm.classList.remove('open');
+    document.querySelectorAll('.sale-swipe-inner').forEach(el => el.classList.remove('sale-held'));
+    _saleCtxId = null;
+  }
+  // Close archive context menu
+  const am = document.getElementById('archCtxMenu');
+  if (am && am.classList.contains('open')) {
+    am.classList.remove('open');
+    document.querySelectorAll('.arch-day-card').forEach(el => el.classList.remove('arch-held'));
+    _archCtxKey = null;
+  }
+  // Close pending clients context menu
+  const pm = document.getElementById('pcCtxMenu');
+  if (pm && pm.classList.contains('open')) {
+    pm.classList.remove('open');
+    if (pcCtxTargetId) {
+      const card = document.getElementById('pcc-' + pcCtxTargetId);
+      if (card) card.classList.remove('pc-hold');
+    }
+    pcCtxTargetId = null;
+  }
+}
+
 function _syncFab(idx) {
   const fab = document.getElementById('quickLogFab');
   if (fab) fab.classList.toggle('hidden', idx !== 0);
+  closeAllCtxMenus();
 }
 
 function moveTrack(idx) {
@@ -4249,10 +4412,13 @@ function openCtxMenu(e) {
   menu.style.left = Math.min(x, vw - 175) + 'px';
   menu.style.top  = Math.min(y, vh - 160) + 'px';
   menu.classList.add('open');
-  setTimeout(() => document.addEventListener('click', closeCtxOutside, { once: true }), 10);
+  setTimeout(() => document.addEventListener('click', closeCtxOutside, { once: true, capture: true }), 10);
 }
 
-function closeCtxOutside() {
+function closeCtxOutside(e) {
+  const menu = document.getElementById('pcCtxMenu');
+  if (menu && menu.contains(e.target)) return;
+  e.stopImmediatePropagation();
   closeCtxMenu();
 }
 
