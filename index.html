@@ -1570,7 +1570,9 @@ const db        = firebase.database();
 const messaging = firebase.messaging();
 const functions = firebase.functions();
 
-auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).catch(() => {});
+// Persistence must be set before the auth listener is registered,
+// otherwise onAuthStateChanged can fire with a stale null user on page load.
+const _persistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).catch(() => {});
 
 const AVATAR_COLORS = ['#8B7355','#6B8E7F','#7B6B8E','#8E7B6B','#5E8E8E','#8E6B7B','#6B7B8E','#7B8E6B'];
 
@@ -1712,43 +1714,61 @@ const authTimeout = setTimeout(() => {
   }
 }, 5000);
 
+// Bug 3 fix: register the listener only after persistence is applied,
+// preventing a spurious null-user fire that would flash the portal on page load.
+_persistenceReady.then(() => {
+
 auth.onAuthStateChanged(async (user) => {
   if (!authResolved) { authResolved = true; clearTimeout(authTimeout); }
 
   if (user) {
-    if (CU === user.uid) return;
-    CU = user.uid;
-
-    // ── EMAIL VERIFICATION GATE ──────────────────────────────────
-    await user.reload();
-    const freshUser = auth.currentUser;
-
-    if (!freshUser.emailVerified) {
+    // Bug 1 fix: always hide overlay on re-fire for the same user.
+    if (CU === user.uid) {
       document.getElementById('loadingOverlay').style.display = 'none';
-      document.getElementById('portalContainer').style.display = 'none';
-      showVerificationScreen(freshUser.email);
       return;
     }
-    // ─────────────────────────────────────────────────────────────
+    CU = user.uid;
 
-    const snap = await db.ref('users/' + CU + '/profile').once('value');
-    currentProfile = snap.val() || { name: 'Guest' };
+    // Bug 2 fix: wrap all async work so any network failure can't leave the spinner up forever.
+    try {
+      // ── EMAIL VERIFICATION GATE ────────────────────────────────
+      await user.reload();
+      const freshUser = auth.currentUser;
 
-    // Sync verified flag to DB if needed
-    if (!currentProfile.emailVerified) {
-      await db.ref('users/' + CU + '/profile/emailVerified').set(true);
-      currentProfile.emailVerified = true;
+      if (!freshUser.emailVerified) {
+        document.getElementById('loadingOverlay').style.display = 'none';
+        document.getElementById('portalContainer').style.display = 'none';
+        showVerificationScreen(freshUser.email);
+        return;
+      }
+      // ──────────────────────────────────────────────────────────
+
+      const snap = await db.ref('users/' + CU + '/profile').once('value');
+      currentProfile = snap.val() || { name: 'Guest' };
+
+      // Sync verified flag to DB if needed
+      if (!currentProfile.emailVerified) {
+        await db.ref('users/' + CU + '/profile/emailVerified').set(true);
+        currentProfile.emailVerified = true;
+      }
+
+      document.getElementById('portalContainer').style.display = 'none';
+      loadDashboard(true);
+      startTasksListener();
+      initSalesListener();
+      startClientsListener();
+      startNotesListener();
+      initOfflineSupport();
+      scheduleMidnightRollover();
+      requestNotificationPermission();
+
+    } catch (err) {
+      // Network or Firebase error during startup — fall back to portal gracefully.
+      console.error('Auth startup error:', err);
+      CU = null; currentProfile = null;
+      document.getElementById('loadingOverlay').style.display = 'none';
+      showPortal();
     }
-
-    document.getElementById('portalContainer').style.display = 'none';
-    loadDashboard(true);
-    startTasksListener();
-    initSalesListener();
-    startClientsListener();
-    startNotesListener();
-    initOfflineSupport();
-    scheduleMidnightRollover();
-    requestNotificationPermission();
 
   } else {
     CU = null; currentProfile = null;
@@ -1757,6 +1777,8 @@ auth.onAuthStateChanged(async (user) => {
     document.getElementById('loadingOverlay').style.display = 'none';
   }
 });
+
+}); // end _persistenceReady.then
 
 function showPortal() {
   document.getElementById('portalContainer').style.display = '';
@@ -4926,4 +4948,4 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 </body>
-                                                                                                           </html>
+</html>
