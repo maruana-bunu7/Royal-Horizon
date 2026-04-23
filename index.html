@@ -2995,7 +2995,7 @@ async function renderTopSeller() {
   const prefix = currentMonthPrefix();
   const counts = {};
   // Count from today's cached sales
-  cachedSales.forEach(s => { const k = s.item || 'Unknown'; counts[k] = (counts[k]||0) + (s.qty||1); });
+  cachedSales.forEach(s => { const k = s.model ? `${s.item} · ${s.model}` : (s.item || 'Unknown'); counts[k] = (counts[k]||0) + (s.qty||1); });
   // Count from this month's archive
   try {
     const metaSnap = await db.ref('users/' + CU + '/salesArchiveMeta').once('value');
@@ -3004,7 +3004,7 @@ async function renderTopSeller() {
     const monthDays = Object.keys(meta).filter(k => k.startsWith(prefix) && k !== today);
     await Promise.all(monthDays.map(async day => {
       const snap = await db.ref('users/' + CU + '/sales/' + day).once('value');
-      Object.values(snap.val() || {}).forEach(s => { const k = s.item || 'Unknown'; counts[k] = (counts[k]||0) + (s.qty||1); });
+      Object.values(snap.val() || {}).forEach(s => { const k = s.model ? `${s.item} · ${s.model}` : (s.item || 'Unknown'); counts[k] = (counts[k]||0) + (s.qty||1); });
     }));
   } catch(e) {}
   const entries = Object.entries(counts);
@@ -4950,10 +4950,10 @@ async function loadTopSellersData() {
   const monthName = new Date(prefix + '-01T00:00:00').toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
   if (periodEl) periodEl.textContent = monthName;
 
-  const counts = {}; // item -> { qty, revenue }
+  const counts = {};
   // Today's sales
   cachedSales.forEach(s => {
-    const k = s.item || 'Unknown';
+    const k = s.model ? `${s.item} · ${s.model}` : (s.item || 'Unknown');
     if (!counts[k]) counts[k] = { qty: 0, revenue: 0 };
     counts[k].qty += (s.qty || 1);
     counts[k].revenue += (s.price || 0) * (s.qty || 1);
@@ -4966,7 +4966,7 @@ async function loadTopSellersData() {
     await Promise.all(monthDays.map(async day => {
       const snap = await db.ref('users/' + CU + '/sales/' + day).once('value');
       Object.values(snap.val() || {}).forEach(s => {
-        const k = s.item || 'Unknown';
+        const k = s.model ? `${s.item} · ${s.model}` : (s.item || 'Unknown');
         if (!counts[k]) counts[k] = { qty: 0, revenue: 0 };
         counts[k].qty += (s.qty || 1);
         counts[k].revenue += (s.price || 0) * (s.qty || 1);
